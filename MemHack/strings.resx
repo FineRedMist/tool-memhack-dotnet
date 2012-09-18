@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<root>
+	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+		<xsd:element name="root" msdata:IsDataSet="true">
+			<xsd:complexType>
+				<xsd:choice maxOccurs="unbounded">
+					<xsd:element name="data">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" />
+							<xsd:attribute name="type" type="xsd:string" />
+							<xsd:attribute name="mimetype" type="xsd:string" />
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="resheader">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+							</xsd:sequence>
+							<xsd:attribute name="name" type="xsd:string" use="required" />
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:choice>
+			</xsd:complexType>
+		</xsd:element>
+	</xsd:schema>
+	<resheader name="ResMimeType">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="Version">
+		<value>1.0.0.0</value>
+	</resheader>
+	<resheader name="Reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="Writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="IdleProcessName" type="System.String">
+		<value>System Idle Process</value>
+	</data>
+	<data name="SystemName" type="System.String">
+		<value>System</value>
+	</data>
+	<data name="FindFirst" type="System.String">
+		<value>Find First</value>
+	</data>
+	<data name="ValueLabel" type="System.String">
+		<value>Value:</value>
+	</data>
+	<data name="SearchSizeLabel" type="System.String">
+		<value>Search Size:</value>
+	</data>
+	<data name="1Byte" type="System.String">
+		<value>1 Byte</value>
+	</data>
+	<data name="2Bytes" type="System.String">
+		<value>2 Bytes</value>
+	</data>
+	<data name="4Bytes" type="System.String">
+		<value>4 Bytes</value>
+	</data>
+	<data name="8Bytes" type="System.String">
+		<value>8 Bytes</value>
+	</data>
+	<data name="FindFirstValue" type="System.String">
+		<value>Find First Value</value>
+	</data>
+	<data name="Value" type="System.String">
+		<value>Value</value>
+	</data>
+	<data name="Address" type="System.String">
+		<value>Address</value>
+	</data>
+	<data name="MemoryHacker" type="System.String">
+		<value>Memory Hacker</value>
+	</data>
+	<data name="MemoryHackerFormatString" type="System.String">
+		<value>Memory Hacker - ({0}) {1}: {2}</value>
+	</data>
+	<data name="FindNext" type="System.String">
+		<value>Find Next</value>
+	</data>
+	<data name="AddressesFoundLabel" type="System.String">
+		<value>Addresses Found:</value>
+	</data>
+	<data name="Set" type="System.String">
+		<value>Set</value>
+	</data>
+	<data name="MessagesLabel" type="System.String">
+		<value>Messages:</value>
+	</data>
+	<data name="NoAddressesFound" type="System.String">
+		<value>No Addresses Found.</value>
+	</data>
+	<data name="SearchSize1Byte" type="System.String">
+		<value>Size: 1 Byte</value>
+	</data>
+	<data name="SearchSize2Bytes" type="System.String">
+		<value>Size: 2 Bytes</value>
+	</data>
+	<data name="SearchSize4Bytes" type="System.String">
+		<value>Size: 4 Bytes</value>
+	</data>
+	<data name="SearchSize8Bytes" type="System.String">
+		<value>Size: 8 Bytes</value>
+	</data>
+	<data name="ErrorFailedToConvert" type="System.String">
+		<value>Failed to convert the value indicated to a number.</value>
+	</data>
+	<data name="SearchingForFormatString" type="System.String">
+		<value>Searching for {0}</value>
+	</data>
+	<data name="FindFirstFoundFormatString" type="System.String">
+		<value>Find First found {0} addresses.</value>
+	</data>
+	<data name="FindFirstFailedFormatString" type="System.String">
+		<value>Find First failed: {0}</value>
+	</data>
+	<data name="FindFirstCanceled" type="System.String">
+		<value>Find First canceled</value>
+	</data>
+	<data name="SelectNext" type="System.String">
+		<value>Select the next value to search for.</value>
+	</data>
+	<data name="FindNextFoundFormatString" type="System.String">
+		<value>Find Next found {0} addresses.</value>
+	</data>
+	<data name="FindNextFailedFormatString" type="System.String">
+		<value>Find Next failed: {0}</value>
+	</data>
+	<data name="FindNextCanceled" type="System.String">
+		<value>Find Next canceled.</value>
+	</data>
+	<data name="SetValue" type="System.String">
+		<value>Set Value</value>
+	</data>
+	<data name="ErrorInvalidAddressFormatString" type="System.String">
+		<value>Invalid address: {0}</value>
+	</data>
+	<data name="ValueAtAddressFormatString" type="System.String">
+		<value>Value at address 0x{0} is: {1}</value>
+	</data>
+	<data name="ValueAtAddressSetFormatString" type="System.String">
+		<value>The value at 0x{0} set to: {1}</value>
+	</data>
+	<data name="ErrorValueNotSetFormatString" type="System.String">
+		<value>The error {0} occurred.  Value not set.</value>
+	</data>
+	<data name="ErrorSetValueFailedFormatString" type="System.String">
+		<value>Set Value failed: {0}</value>
+	</data>
+	<data name="SetValueCanceled" type="System.String">
+		<value>Set Value canceled.</value>
+	</data>
+	<data name="Unknown" type="System.String">
+		<value>&lt;Unknown&gt;</value>
+	</data>
+	<data name="ErrorProcessOpenFailed" type="System.String">
+		<value>The process selected failed to be opened for modifying.</value>
+	</data>
+	<data name="ErrorProcessUnmodifiable" type="System.String">
+		<value>This process cannot be modified.  Sorry!</value>
+	</data>
+	<data name="ErrorProcessThisOne" type="System.String">
+		<value>The process you selected is this one.  What are you thinking?</value>
+	</data>
+	<data name="ErrorProcessSelect" type="System.String">
+		<value>Please select a process before selecting to hack.</value>
+	</data>
+	<data name="Select" type="System.String">
+		<value>Select</value>
+	</data>
+	<data name="RunningProgramsLabel" type="System.String">
+		<value>Running programs:</value>
+	</data>
+	<data name="ProcessNameLabel" type="System.String">
+		<value>Service or Active Window Names:</value>
+	</data>
+	<data name="ID" type="System.String">
+		<value>ID</value>
+	</data>
+	<data name="Name" type="System.String">
+		<value>Name</value>
+	</data>
+	<data name="Title" type="System.String">
+		<value>Title</value>
+	</data>
+	<data name="ProgressTitle" type="System.String">
+		<value>Working...</value>
+	</data>
+	<data name="ToolTip_ProcessList" type="System.String">
+		<value>This is the list of processes currently available in the system.  Select a process to search and alter it's memory.</value>
+	</data>
+	<data name="ToolTip_FriendlyNames" type="System.String">
+		<value>This is the list of either window names or service names running under the selected process.</value>
+	</data>
+	<data name="ToolTip_SelectProcess" type="System.String">
+		<value>Selects the process to be modified.  It will be disabled if the process is not modifiable.</value>
+	</data>
+	<data name="ToolTip_ApplicationPath" type="System.String">
+		<value>This is the path to the application that started this process.</value>
+	</data>
+	<data name="ToolTip_MemHackDlg" type="System.String">
+		<value>MemHack is a tool to alter the memory of a running applications.</value>
+	</data>
+	<data name="ToolTip_AddressList" type="System.String">
+		<value>This lists the addresses found to contain the value searched for.  Use Find Next to reduce the size of the list.</value>
+	</data>
+	<data name="ToolTip_FindFirst" type="System.String">
+		<value>Select the memory size and value for the first value to search for.</value>
+	</data>
+	<data name="ToolTip_FindNext" type="System.String">
+		<value>Searches within the list of already found addresses for the next value.</value>
+	</data>
+	<data name="ToolTip_Set" type="System.String">
+		<value>Sets the value at the given address to a new value.</value>
+	</data>
+	<data name="ToolTip_Messages" type="System.String">
+		<value>Current status.  Errors, number of found addresses, and other messages appear here.</value>
+	</data>
+	<data name="ToolTip_MemDisplayDlg" type="System.String">
+		<value>Search for a specific value in memory using Find First and Find Next and then use Set to change the selected value.</value>
+	</data>
+	<data name="ToolTip_FindFirst1Byte" type="System.String">
+		<value>Searches each byte for the specified value.</value>
+	</data>
+	<data name="ToolTip_FindFirst2Bytes" type="System.String">
+		<value>Searches each byte pair for the specified value.</value>
+	</data>
+	<data name="ToolTip_FindFirst4Bytes" type="System.String">
+		<value>Searches each byte quad for the specified value.</value>
+	</data>
+	<data name="ToolTip_FindFirst8Bytes" type="System.String">
+		<value>Searches each 8 byte memory region for the specified value.</value>
+	</data>
+	<data name="ToolTip_FindFirstValue" type="System.String">
+		<value>Indicate the value to search for as a decimal or hexadecimal value.</value>
+	</data>
+	<data name="ToolTip_FindFirstDlg" type="System.String">
+		<value>Select the memory size and value for the first value to search for.</value>
+	</data>
+	<data name="ToolTip_FindFirstButton" type="System.String">
+		<value>Starts searching--may take a while.</value>
+	</data>
+	<data name="ToolTip_FindNextDlg" type="System.String">
+		<value>Searches within the list of already found addresses for the next value.  Change the value in the application to make this search more efficient.</value>
+	</data>
+	<data name="ToolTip_FindNextValue" type="System.String">
+		<value>Indicate the value to search for as a decimal or hexadecimal value.</value>
+	</data>
+	<data name="ToolTip_FindNextButton" type="System.String">
+		<value>Begin searching within the list of addresses already found.  May take a while.</value>
+	</data>
+	<data name="ToolTip_SetDlg" type="System.String">
+		<value>Sets the value at the given address to a new value.</value>
+	</data>
+	<data name="ToolTip_SetValue" type="System.String">
+		<value>Indicate the value to set as a decimal or hexadecimal value.</value>
+	</data>
+	<data name="ToolTip_SetButton" type="System.String">
+		<value>Set the value at the selected address.</value>
+	</data>
+	<data name="ToolTip_ProgressFormatString" type="System.String">
+		<value>{0}%</value>
+	</data>
+</root>

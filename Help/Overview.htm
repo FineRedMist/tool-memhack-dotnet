@@ -1,0 +1,19 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<Title>Overview</Title>
+</HEAD>
+<BODY>
+<H1>Overview</H1>
+
+<p>MemHack is a tool for altering the memory of another running application.  It was inspired by Cheat32 and made necessary for the game Lionheart and because Cheat32 had particular bugs that rendered it frustrating to use (such as altering the memory region specified in the value and not the selected address) and Lionheart was a great game up until you got out of Barcelona.
+
+<p>If you are using this program make sure you know what you are doing.  This application can seriously impair a running application from working correctly if improperly applied.  It is a tool.  If you prefer to hit your fingers instead of the nail, then I am not responsible for it.  Note that to make this a little less likely I filter memory to just those that are marked as read/write.  
+
+<p>This application may not work in all games either.  If an application moves the data around in memory that you are trying to search for or creates backups or checks values then it is not going to meet your needs and you may want to consider investigating a disassembler (and learning assembly) instead.
+
+<p>Note that there is a rare possibility of an address being erroneously missed if it crosses the boundary between two writable memory blocks.  I have not seen any issues with this yet however.
+
+</BODY>
+</HTML>

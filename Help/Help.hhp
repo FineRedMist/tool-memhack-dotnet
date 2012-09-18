@@ -1,0 +1,22 @@
+[OPTIONS]
+Auto Index=Yes
+Compatibility=1.1 or later
+Compiled file=..\MemHack.chm
+Contents file=Table of Contents.hhc
+Default topic=Overview.htm
+Display compile progress=No
+Full-text search=Yes
+Language=0x409 English (United States)
+Title=Memory Hacker Help
+
+
+[FILES]
+Overview.htm
+Requirements.htm
+ProcessList.htm
+ProcessEdit.htm
+LocalizingHelp.htm
+FutureVersions.htm
+
+[INFOTYPES]
+

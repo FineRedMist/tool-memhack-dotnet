@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<Title>The Process Editor</Title>
+</HEAD>
+<BODY>
+
+<H1>The Process Editor</H1>
+
+<img src="ProcessEdit.png"></img>
+
+<H2>Overview</H2>
+<p>The Process Editor is where editing of the application's memory happens.  The steps are:
+<ul>
+	<li>Search for the initial value and the expected size of the value you are searching for
+	<li>Change the value in a controlled way in the application
+	<li>Search again for the updated value
+	<li>Repeat the last two steps until you winnow down the number of addresses to one (or two in some cases)
+	<li>Set a new value for the relevant address
+</ul>
+
+<H2>Addresses Found</H2>
+<p>This is the list of addresses which will be periodically updated (roughly every 2 seconds).  If the list of addresses exceeds 2000, then the list is kept internally and nothing is displayed here.  Not that the number of addresses found from both a Find First and Find Next are also displayed both above and in the messages window.  You will not be able to set a value unless an entry is selected in this list.
+
+<H2>Find First</H2>
+<img src="FindFirstValue.png"></img>
+
+<H3>Search Size</H3>
+<p>Search size is based on the size the number could reach that you are looking for.  For example, if you know the number only ranges from 1 to 30 then you will want to use a single byte.  The breakdown is as follows:
+
+<p>For numbers that can be positive and negative:
+	<ul>
+		<li>-128 to 127: select 1 byte
+		<li>-32,768 to 32,767: select 2 bytes
+		<li>-2,147,483,648 to 2,147,483,647: select 4 bytes
+		<li>-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807: select 8 bytes
+	</ul>
+
+<p>For numbers that can be positive only:
+	<ul>
+		<li>0 to 255: select 1 byte
+		<li>0 to 65535: select 2 bytes
+		<li>0 to 4,294,967,295: select 4 bytes
+		<li>0 to 18,446,744,073,709,551,615: select 8 bytes
+	</ul>
+
+<H3>Value</H3>
+<p>Here you can put in a decimal or hexadecimal number.  The system will report an error in the message box if you put in a number outside the range.
+
+<H2>Find Next</H2>
+<img src="FindNextValue.png"></img>
+<p>You can enter a decimal or hexadecimal number for the value.  The system will report an error in the message box if you put in a number that is outside of the range specified from Find First.  Find Next will search through only the addresses already found to identify the remaining values that have the value specified here.
+
+<H2>Set</H2>
+<img src="SetValue.png"></img>
+<p>You can enter a decimal or hexadecimal number for the value that you want to set the address you have selected here.  
+
+</BODY>
+</HTML>
