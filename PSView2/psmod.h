@@ -9,7 +9,7 @@
 
 #pragma once
 using namespace System;
-using namespace System::Collections;
+using namespace System::Collections::Generic;
 using namespace System::Windows::Forms;
 
 namespace PSView2
@@ -50,6 +50,13 @@ namespace PSView2
 		HANDLE m_hProcess;
 		DWORD m_dwErr;
 		Type^ m_srchType;
+
+		ref class CRegion
+		{
+		public:
+			UInt32 addr;
+			UInt32 size;
+		};
 
 	public:
 		CProcessModifier() 
@@ -94,9 +101,11 @@ namespace PSView2
 		bool TestAndUpdate(const SSearchParams& srch, UValueTest& tst, BYTE c);
 		bool Compare(const SSearchParams& srch, const UValueTest& tst);
 		bool SetValueHelper(const SSearchParams& srch, UValueTest& tst);
-		DWORD AddRegions(WORD &wLastHigh, DWORD dwAddr, const MEMORY_BASIC_INFORMATION & mbi, ArrayList^ regions);
 
 		DWORD GetByteCount();
 		DWORD GetByteCount(Type^ type);
+
+	private:
+		DWORD AddRegions(WORD &wLastHigh, DWORD dwAddr, const MEMORY_BASIC_INFORMATION & mbi, List<CRegion^>^ regions);
 	};
 }

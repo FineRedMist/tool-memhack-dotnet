@@ -92,8 +92,8 @@ namespace PSView2
 	BOOL CALLBACK EnumWindowsProcHelper(HWND hwnd, LPARAM lparam)
 	{
 		// Get the list of processes
-		gcroot<SortedList^>* pinnedData = reinterpret_cast<gcroot<SortedList^>*>(lparam);
-		SortedList^ data = *pinnedData;
+		gcroot<SortedList<UInt32, CProcessInfo^>^>* pinnedData = reinterpret_cast<gcroot<SortedList<UInt32, CProcessInfo^>^>*>(lparam);
+		SortedList<UInt32, CProcessInfo^>^ data = *pinnedData;
 		DWORD dwProcess = 0;
 		DWORD dwThread = GetWindowThreadProcessId(hwnd, &dwProcess);
 		bool visible;
@@ -150,13 +150,13 @@ namespace PSView2
 	/*****************************************************
 	* class CProcessViewer implementation
 	*****************************************************/
-	SortedList^ CProcessViewer::GetProcessList(String^ IdleProcessName, String^ SystemName)
+	SortedList<UInt32, CProcessInfo^>^ CProcessViewer::GetProcessList(String^ IdleProcessName, String^ SystemName)
 	{
 		DWORD pdwList[1024];  // Supporting a maximum of 1024 processes at once
 		DWORD dwCount = 0;
 		DWORD dwNeeded = 0;
 		HANDLE hSnap = INVALID_HANDLE_VALUE;
-		SortedList^ res = gcnew SortedList();
+		auto res = gcnew SortedList<UInt32, CProcessInfo^>();
 		SC_HANDLE sc = 0;
 
 		// The toolhelp32 library helps enumerate processes, modules, heaps and many other 
@@ -207,7 +207,7 @@ namespace PSView2
 
 		{
 			// I pin the list so that I can ensure it won't move while enumerating windows
-			gcroot<SortedList^>* data = new gcroot<SortedList^>(res);
+			gcroot<SortedList<UInt32, CProcessInfo^>^>* data = new gcroot<SortedList<UInt32, CProcessInfo^>^>(res);
 
 			// This goes through the windows of the system so that each process can be updated with the list of 
 			// windows it has
@@ -254,7 +254,7 @@ namespace PSView2
 
 		for (int i = 0; i < res->Count; ++i)
 		{
-			CProcessInfo^ pr = dynamic_cast<CProcessInfo^>(res->GetByIndex(i));
+			CProcessInfo^ pr = res[res->Keys[i]];
 			pr->Sort();
 		}
 
@@ -360,7 +360,7 @@ namespace PSView2
 		szName = szProcessName;
 		szFullPath = nullptr;
 		szUser = nullptr;
-		rgFriendlyNames = gcnew ArrayList();
+		rgFriendlyNames = gcnew List<CFriendlyName^>();
 	}
 
 	String^ CProcessInfo::DefaultFriendlyName()

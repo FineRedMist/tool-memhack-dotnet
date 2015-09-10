@@ -358,14 +358,7 @@ namespace PSView2
 		return FindFirst(obj, nullptr);
 	}
 
-	ref class CRegion
-	{
-		public:
-			UInt32 addr;
-			UInt32 size;
-	};
-
-	DWORD CProcessModifier::AddRegions(WORD &wLastHigh, DWORD dwAddr, const MEMORY_BASIC_INFORMATION &mbi, ArrayList^ regions)
+	DWORD CProcessModifier::AddRegions(WORD &wLastHigh, DWORD dwAddr, const MEMORY_BASIC_INFORMATION &mbi, List<CRegion^>^ regions)
 	{
 		DWORD dwHighCount = 0;
 		// So it turns out that regions can span multiple 64k blocks, yeah!
@@ -401,7 +394,7 @@ namespace PSView2
 			delete m_addrs;
 		m_addrs = 0;
 
-		ArrayList^ regions = gcnew ArrayList();
+		auto regions = gcnew List<CRegion^>();
 		BYTE rgBuf[4096];
 		UValueTest tst;
 		tst.ull = 0;
@@ -590,7 +583,7 @@ namespace PSView2
 		DWORD dwRead, addr = 0;
 		MEMORY_BASIC_INFORMATION mbi;
 
-		ArrayList^ al = gcnew ArrayList();
+		auto al = gcnew List<CAddressValue^>();
 		addr = RESULT_NOT_FOUND;
 		for(m_addrs->First(); (addr = m_addrs->GetValue()) != RESULT_NOT_FOUND;)
 		{
@@ -612,7 +605,7 @@ namespace PSView2
 			m_addrs->Next();
 		}
 
-		return dynamic_cast<array<CAddressValue^>^>(al->ToArray(CAddressValue::typeid));
+		return al->ToArray();
 	}
 
 	UInt32 CProcessModifier::Count::get()

@@ -11,7 +11,7 @@ information about each process.
 
 #pragma once
 using namespace System;
-using namespace System::Collections;
+using namespace System::Collections::Generic;
 using namespace System::Windows::Forms;
 
 namespace PSView2
@@ -70,7 +70,7 @@ namespace PSView2
 		String^ szName;
 		String^ szFullPath;
 		String^ szUser;
-		ArrayList^ rgFriendlyNames;
+		List<CFriendlyName^>^ rgFriendlyNames;
 
 		CProcessInfo();
 
@@ -118,7 +118,7 @@ namespace PSView2
 		CProcessViewer() {}
 
 		// Returns the process list
-		SortedList^ GetProcessList(String^ IdleProcessName, String^ SystemName);
+		SortedList<UInt32, CProcessInfo^>^ GetProcessList(String^ IdleProcessName, String^ SystemName);
 
 	protected:
 		// Acquires the full path to the process

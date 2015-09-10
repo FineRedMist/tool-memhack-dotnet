@@ -1,6 +1,6 @@
 using System;
 using System.Drawing;
-using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Data;
@@ -25,7 +25,7 @@ namespace MemHack
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ListBox nameList;
 		private System.Windows.Forms.Label label2;
-		SortedList m_plist = new SortedList();
+		SortedList<uint, CProcessInfo> m_plist = new SortedList<uint, CProcessInfo>();
 		uint m_lastid = 0xFFFFFFFF;
 
 		private System.Threading.Timer m_timer = null;
@@ -115,12 +115,13 @@ namespace MemHack
 			PSView2.CProcessViewer pviewer = new CProcessViewer();
 			m_plist = pviewer.GetProcessList(Resources.IdleProcessName, Resources.SystemName);
 
-			SortedList sl = new SortedList();
+			var sl = new SortedList<uint, ListViewItem>();
 			// Remove old items
 			for(int i = 0; i < procList.Items.Count;)
 			{
 				uint id = IDFromPos(i);
-				if(m_plist[id] == null)
+                CProcessInfo info;
+				if(!m_plist.TryGetValue(id, out info))
 				{
 					procList.Items.RemoveAt(i);
 					continue;
@@ -132,9 +133,8 @@ namespace MemHack
 			ListViewItem lvi;
 			foreach(CProcessInfo s in m_plist.Values)
 			{
-				if(sl[s.ID] != null)
+				if(sl.TryGetValue(s.ID, out lvi))
 				{
-					lvi = (ListViewItem) sl[s.ID];
 					// this sort of construct is to help reduce the number of updates that occur to reduce flicker
 					if(lvi.SubItems[3].Text != s.DefaultFriendlyName())  
 						lvi.SubItems[3].Text = s.DefaultFriendlyName();
@@ -520,7 +520,7 @@ namespace MemHack
 			m_lastid = id;
 
 			CProcessInfo proc = (CProcessInfo) m_plist[id];
-			SortedList sortedNames = new SortedList();
+			var sortedNames = new SortedList<string, CFriendlyName>();
 			// I'm setting up some sorted names to make this quite a bit more clean
 			for(int i = 0; i < proc.Count; ++i)
 			{
@@ -545,7 +545,7 @@ namespace MemHack
 				++i;
 			}
 			// Sort the current list if it has changed (and there are entries to sort)
-			SortedList sl = new SortedList();
+			var sl = new SortedList<CFriendlyName, int>();
 			foreach(string s in nameList.Items)
 				sl[sortedNames[s]] = 1;
 
@@ -553,7 +553,8 @@ namespace MemHack
 			for(int i = 0; i < proc.Count; ++i)
 			{
 				CFriendlyName f = proc.FriendlyName(i);
-				if(sl[f] != null)
+                int value;
+				if(!sl.TryGetValue(f, out value))
 					continue;
 				sl[f] = 2;
 				nameList.Items.Insert(sl.IndexOfKey(f), f.Name);
@@ -676,9 +677,9 @@ namespace MemHack
 			}
 		}
 
-		// Implements the manual sorting of items by columns.
-		#region class ListViewItemComparer : IComparer
-		class ListViewItemComparer : IComparer 
+        // Implements the manual sorting of items by columns.
+        #region class ListViewItemComparer : System.Collections.IComparer
+        class ListViewItemComparer : System.Collections.IComparer
 		{
 			private int col;
 			private SortOrder so;
