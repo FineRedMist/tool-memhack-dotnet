@@ -7,7 +7,7 @@ using System.Data;
 using System.Resources;
 using System.Reflection;
 
-using PSView;
+using PSView2;
 
 namespace MemHack
 {
@@ -112,7 +112,7 @@ namespace MemHack
 				m_fRunning = true;
 			}
 			procList.BeginUpdate();
-			PSView.CProcessViewer pviewer = new CProcessViewer();
+			PSView2.CProcessViewer pviewer = new CProcessViewer();
 			m_plist = pviewer.GetProcessList(Resources.IdleProcessName, Resources.SystemName);
 
 			SortedList sl = new SortedList();
@@ -449,7 +449,7 @@ namespace MemHack
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
 			this.AccessibleName = resources.GetString("$this.AccessibleName");
-			this.AutoScale = false;
+			this.AutoScaleMode = AutoScaleMode.None;
 			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
 			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
 			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));

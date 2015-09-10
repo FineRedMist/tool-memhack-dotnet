@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
-using PSView;
+using PSView2;
 
 namespace MemHack
 {

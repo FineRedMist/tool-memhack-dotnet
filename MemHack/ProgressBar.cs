@@ -4,60 +4,80 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 
-using PSView;
+using PSView2;
 
 namespace MemHack
 {
 
-	/// <summary>
-	/// Summary description for ProgressBar.
-	/// </summary>
-	public class ProgressBar : System.Windows.Forms.Form, IProgressIndicator
-	{
-		private System.Windows.Forms.ProgressBar pBar;
-		/// <summary>
-		/// Required designer variable.
-		/// </summary>
-		private System.ComponentModel.Container components = null;
+    /// <summary>
+    /// Summary description for ProgressBar.
+    /// </summary>
+    public class ProgressBar : System.Windows.Forms.Form, IProgressIndicator
+    {
+        private const int InternalMax = 10000;
 
-		// Delegates for updating the UI
-		protected delegate void SetValueDelegate(int val);
-		protected delegate void SetMaximumDelegate(int val);
+        private System.Windows.Forms.ProgressBar pBar;
+        UInt64 mCurrentValue;
+        UInt64 mMaximumValue;
+
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.Container components = null;
+
+        // Delegates for updating the UI
+        protected delegate void SetValueDelegate(UInt64 val);
+        protected delegate void SetMaximumDelegate(UInt64 val);
 
 
-		SetValueDelegate setVal = null;
-		SetMaximumDelegate setMax = null;
-		public ProgressBar()
+        SetValueDelegate setVal = null;
+        SetMaximumDelegate setMax = null;
+        public ProgressBar()
+        {
+            //
+            // Required for Windows Form Designer support
+            //
+            InitializeComponent();
+
+            //
+            // TODO: Add any constructor code after InitializeComponent call
+            //
+
+            pBar.Maximum = InternalMax;
+
+            SetVal(0);
+            SetMax(InternalMax);
+
+            setVal = new SetValueDelegate(SetVal);
+            setMax = new SetMaximumDelegate(SetMax);
+            this.Text = Resources.ProgressTitle;
+        }
+
+        private void UpdateProgress()
+        {
+            double newVal = mCurrentValue;
+            newVal /= (mMaximumValue == 0 ? 1 : mMaximumValue);
+            newVal *= InternalMax;
+            pBar.Value = (int)(newVal);
+        }
+
+        // The below set of functions is for setting the value and maximum in a "safe" way.
+        // The UI requires that such updates be done on the thread that owns the UI so 
+        // I ensure that if necessary the update is marshalled to the thread for running
+        // through the implemented methods from IProgressIndicator
+        private void SetVal(UInt64 val)
 		{
-			//
-			// Required for Windows Form Designer support
-			//
-			InitializeComponent();
+            mCurrentValue = val;
+            UpdateProgress();
+        }
 
-			//
-			// TODO: Add any constructor code after InitializeComponent call
-			//
-
-			setVal = new SetValueDelegate(SetVal);
-			setMax = new SetMaximumDelegate(SetMax);
-			this.Text = Resources.ProgressTitle;
+        private void SetMax(UInt64 max)
+		{
+            mMaximumValue = max;
+            UpdateProgress();
 		}
 
-		// The below set of functions is for setting the value and maximum in a "safe" way.
-		// The UI requires that such updates be done on the thread that owns the UI so 
-		// I ensure that if necessary the update is marshalled to the thread for running
-		// through the implemented methods from IProgressIndicator
-		protected void SetVal(int val)
-		{
-			pBar.Value = val;
-		}
-
-		void SetMax(int max)
-		{
-			pBar.Maximum = max;
-		}
-
-		public void SetCurrent(int val)
+		public void SetCurrent(UInt64 val)
 		{
 			if(InvokeRequired)	// Check to see if I really need to invoke (in case I ever use this UI elsewhere)
 			{
@@ -71,7 +91,7 @@ namespace MemHack
 			}
 		}
 
-		public void SetMaximum(int max)
+		public void SetMaximum(UInt64 max)
 		{
 			if(InvokeRequired)	// Check to see if I really need to invoke (in case I ever use this UI elsewhere)
 			{

@@ -1,29 +1,33 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSView", "PSView\PSView.vcproj", "{CC33B630-9C5A-44C0-8D0B-E3114D816216}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemHack", "MemHack\MemHack.csproj", "{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}"
-	ProjectSection(ProjectDependencies) = postProject
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PSView2", "PSView2\PSView2.vcxproj", "{78C79669-73D5-4410-938F-D0226264EB1E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9A2FD5DF-CF24-424A-A143-FF531E2E112E}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(SolutionConfiguration) = preSolution
-		Debug = Debug
-		Release = Release
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
 	EndGlobalSection
-	GlobalSection(ProjectConfiguration) = postSolution
-		{CC33B630-9C5A-44C0-8D0B-E3114D816216}.Debug.ActiveCfg = Debug|Win32
-		{CC33B630-9C5A-44C0-8D0B-E3114D816216}.Debug.Build.0 = Debug|Win32
-		{CC33B630-9C5A-44C0-8D0B-E3114D816216}.Release.ActiveCfg = Release|Win32
-		{CC33B630-9C5A-44C0-8D0B-E3114D816216}.Release.Build.0 = Release|Win32
-		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Debug.ActiveCfg = Debug|.NET
-		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Debug.Build.0 = Debug|.NET
-		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Release.ActiveCfg = Release|.NET
-		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Release.Build.0 = Release|.NET
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Debug|x86.Build.0 = Debug|Any CPU
+		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Release|x86.ActiveCfg = Release|Any CPU
+		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Release|x86.Build.0 = Release|Any CPU
+		{78C79669-73D5-4410-938F-D0226264EB1E}.Debug|x86.ActiveCfg = Debug|Win32
+		{78C79669-73D5-4410-938F-D0226264EB1E}.Debug|x86.Build.0 = Debug|Win32
+		{78C79669-73D5-4410-938F-D0226264EB1E}.Release|x86.ActiveCfg = Release|Win32
+		{78C79669-73D5-4410-938F-D0226264EB1E}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-	EndGlobalSection
-	GlobalSection(ExtensibilityAddIns) = postSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
