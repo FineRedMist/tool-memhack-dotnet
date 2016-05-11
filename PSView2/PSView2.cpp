@@ -166,7 +166,10 @@ namespace PSView2
 		if (hSnap == 0 || hSnap == INVALID_HANDLE_VALUE)  // Couldn't snap, use a different method
 		{
 #ifdef DEBUG
+#pragma warning( push )
+#pragma warning( disable : 4189 )
 			DWORD dwErr = GetLastError();   // Debugging if I do see a failure
+#pragma warning( pop )
 #endif
 			if (!::EnumProcesses(pdwList, sizeof(pdwList), &dwNeeded))
 			{

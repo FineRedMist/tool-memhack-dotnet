@@ -7,7 +7,7 @@
 
 #pragma managed(push, off)
 
-#define DEBUG_BUFSIZE	256
+#define DEBUG_BUFSIZE	1024
 // Simple little debug function for convenience
 // Since the typical amount of memory scanned is large, this is expensive so it is by default off
 // determined by the static.  However to turn it on I can set a breakpoint in here to enable it
@@ -15,9 +15,9 @@
 #ifdef DEBUG
 void DebugPrint(const CHAR * FormatString, ...)
 {
-	static bool display = false;
+	static bool debugDisplay = false;
 
-	if (display)
+	if (debugDisplay)
 	{
 		CHAR outputString[DEBUG_BUFSIZE];
 
