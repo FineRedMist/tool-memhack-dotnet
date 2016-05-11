@@ -27,13 +27,13 @@
     <ClInclude Include="bitfield.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="psint.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="pslist.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="psmod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IProgressIndicator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -142,7 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bitfield.h" />
-    <ClInclude Include="psint.h" />
+    <ClInclude Include="IProgressIndicator.h" />
     <ClInclude Include="pslist.h" />
     <ClInclude Include="psmod.h" />
     <ClInclude Include="PSView2.h" />

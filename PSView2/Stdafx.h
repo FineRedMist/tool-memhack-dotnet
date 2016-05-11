@@ -15,7 +15,7 @@
 #include "bitfield.h"
 #include "PSView2.h"
 #include "pslist.h"
-#include "psint.h"
+#include "IProgressIndicator.h"
 #include "psmod.h"
 
 void DebugPrint(const CHAR * FormatString, ...);
