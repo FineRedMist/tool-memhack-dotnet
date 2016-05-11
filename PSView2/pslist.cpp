@@ -156,19 +156,19 @@ namespace PSView2
 
 	CAddressBlock::CAddressBlock()
 	{
-		m_high = 0;
-		m_lows = 0;
+		mHiWord = 0;
+		mLoWords = 0;
 	}
 
 	void CAddressBlock::Set(WORD wHigh, CMemBlock block)
 	{
-		m_high = wHigh;
+		mHiWord = wHigh;
 		DWORD dwCur = BIT_NOT_FOUND;
 		DWORD i = 0;
-		m_lows = new CShortList(block.InUse());
+		mLoWords = new CShortList(block.InUse());
 		while((dwCur = block.FindNextUsed(dwCur)) != BIT_NOT_FOUND)	// Use the built in bitfield search functions
 		{															// to find the next used bit
-			m_lows->SetValue((WORD) i, (USHORT) dwCur);
+			mLoWords->SetValue((WORD) i, (USHORT) dwCur);
 			++i;
 		}
 		assert(i == block.InUse());		// Make sure a match, should work fine however
@@ -176,63 +176,63 @@ namespace PSView2
 
 	CAddressBlock::~CAddressBlock()
 	{
-		if(m_lows)
-			delete m_lows;
+		if(mLoWords)
+			delete mLoWords;
 	}
 
 	DWORD CAddressBlock::GetValue(USHORT idx)
 	{
-		DWORD dwRes = m_lows->GetValue(idx);
+		DWORD dwRes = mLoWords->GetValue(idx);
 		if(dwRes == RESULT_NOT_FOUND)
 			return dwRes;
-		return MAKELONG(dwRes, m_high);
+		return MAKELONG(dwRes, mHiWord);
 	}
 
 	DWORD CAddressBlock::GetIndex(USHORT val)
 	{
-		return m_lows->GetIndex(val);
+		return mLoWords->GetIndex(val);
 	}
 
 	DWORD CAddressBlock::GetIndex(DWORD val)
 	{
-		if(HIWORD(val) != m_high)
+		if(HIWORD(val) != mHiWord)
 			return RESULT_NOT_FOUND;
-		return m_lows->GetValue(LOWORD(val));
+		return mLoWords->GetValue(LOWORD(val));
 	}
 
 	DWORD CAddressBlock::GetNext(USHORT val)
 	{
-		DWORD dwAddr = m_lows->GetNext(LOWORD(val));
+		DWORD dwAddr = mLoWords->GetNext(LOWORD(val));
 		if(dwAddr == RESULT_NOT_FOUND)
 			return RESULT_NOT_FOUND;
-		return MAKELONG(dwAddr, m_high);
+		return MAKELONG(dwAddr, mHiWord);
 	}
 
 	DWORD CAddressBlock::GetCount()
 	{
-		return m_lows->GetCount();
+		return mLoWords->GetCount();
 	}
 
 	WORD CAddressBlock::HighWord()
 	{
-		return m_high;
+		return mHiWord;
 	}
 
 	bool CAddressBlock::Delete(USHORT val)
 	{
-		return m_lows->Delete(val);
+		return mLoWords->Delete(val);
 	}
 
 	bool CAddressBlock::Delete(DWORD val)
 	{
-		if(HIWORD(val) != m_high)
+		if(HIWORD(val) != mHiWord)
 			return false;
-		return m_lows->Delete(LOWORD(val));
+		return mLoWords->Delete(LOWORD(val));
 	}
 
 	bool CAddressBlock::DeleteAt(USHORT idx)
 	{
-		return m_lows->DeleteAt(idx);
+		return mLoWords->DeleteAt(idx);
 	}
 
 

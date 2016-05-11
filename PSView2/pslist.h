@@ -87,12 +87,12 @@ namespace PSView2
 		bool DeleteAt(USHORT idx);
 
 	protected:
-		USHORT m_high;
-		CShortList *m_lows;
+		USHORT mHiWord;
+		CShortList *mLoWords;
 	};
 
 
-	// CAddressList manages the entire set of addresses
+	// CAddressList manages the entire set of addresses found for a value
 	class CAddressList
 	{
 	public:
