@@ -27,5 +27,4 @@ namespace PSView2
 		void SetMaximum(UInt64 Maximum);
 		void SetCurrent(UInt64 Progress);
 	};
-
-};
+}

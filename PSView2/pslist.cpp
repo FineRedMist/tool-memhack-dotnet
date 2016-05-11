@@ -15,7 +15,7 @@ namespace PSView2
 	{
 		assert(dwSize);
 		m_sh = new USHORT[dwSize];
-		if(!m_sh)
+		if (!m_sh)
 			throw gcnew System::OutOfMemoryException();
 		m_size = dwSize;
 		memset(m_sh, 0, dwSize * sizeof(USHORT));
@@ -27,8 +27,8 @@ namespace PSView2
 
 	CShortList::~CShortList()
 	{
-		if(m_sh)
-			 delete [] m_sh;
+		if (m_sh)
+			delete[] m_sh;
 	}
 
 
@@ -40,30 +40,30 @@ namespace PSView2
 
 	DWORD CShortList::GetValue(USHORT idx)
 	{
-		if(idx >= m_size)
+		if (idx >= m_size)
 			return RESULT_NOT_FOUND;
 		return m_sh[Translate(idx)];
 	}
 
 	DWORD CShortList::GetIndex(USHORT val)
 	{
-		if(m_size == 0)
+		if (m_size == 0)
 			return RESULT_NOT_FOUND;
 		// Have to use int--h could conceivably be assigned a -1 value
-		int l = 0, m = 0, h = (int) (m_size - 1);
+		int l = 0, m = 0, h = (int)(m_size - 1);
 		// Binary search for the value
-		while(l <= h)
+		while (l <= h)
 		{
 			m = ((h + l) >> 1);
-			if(m_sh[m] == val)
+			if (m_sh[m] == val)
 				break;
-			if(m_sh[m] < val)
+			if (m_sh[m] < val)
 				h = m - 1;
 			else
 				l = m + 1;
 		}
 
-		if(m_sh[m] == val)
+		if (m_sh[m] == val)
 			return Translate(m);	// Return the fake to the caller
 		return RESULT_NOT_FOUND;
 	}
@@ -71,26 +71,26 @@ namespace PSView2
 	// Returns the next value given a previous value
 	DWORD CShortList::GetNext(USHORT val)
 	{
-		if(m_size == 0)
+		if (m_size == 0)
 			return RESULT_NOT_FOUND;
 		// Have to use int--h could conceivably be assigned a -1 value
-		int l = 0, m = -1, h = (int) (m_size - 1);
+		int l = 0, m = -1, h = (int)(m_size - 1);
 		// Binary search for the value
-		while(l <= h)
+		while (l <= h)
 		{
 			m = ((h + l) >> 1);
-			if(m_sh[m] == val)
+			if (m_sh[m] == val)
 				break;
-			if(m_sh[m] < val)
+			if (m_sh[m] < val)
 				h = m - 1;
 			else
 				l = m + 1;
 		}
 
 		// If we actually found the old value, look for the next one
-		if(m_sh[m] == val)
+		if (m_sh[m] == val)
 		{
-			if(m != 0) 
+			if (m != 0)
 				return m_sh[m - 1];
 			return RESULT_NOT_FOUND;
 		}
@@ -99,7 +99,7 @@ namespace PSView2
 		//	If m_sh[m] was less than val then it moved h to m - 1 so m = l from the last pass.  m_sh[h] is > val and m_sh[l] < val so h has the next value
 		//	If m_sh[m] was greater than val then it moved l to m + 1 so h = m.  So again m_sh[h] > val and m_sh[l] < val so h has the next value
 		// Unless of course h < 0
-		if(h < 0)
+		if (h < 0)
 			return RESULT_NOT_FOUND;
 		return m_sh[h];
 
@@ -112,7 +112,7 @@ namespace PSView2
 
 	bool CShortList::SetValue(USHORT idx, USHORT val)
 	{
-		if(idx >= m_size)
+		if (idx >= m_size)
 			return false;
 		m_sh[Translate(idx)] = val;
 		return true;
@@ -136,19 +136,19 @@ namespace PSView2
 	{
 		DWORD idx = GetIndex(val);
 
-		if(idx == RESULT_NOT_FOUND)
+		if (idx == RESULT_NOT_FOUND)
 			return false;
 
-		return DeleteAt((USHORT) idx);
+		return DeleteAt((USHORT)idx);
 	}
 
 	bool CShortList::DeleteAt(USHORT idx)
 	{
-		if(idx >= m_size)
+		if (idx >= m_size)
 			return false;
 
 		DWORD id = Translate(idx);
-		memmove(&m_sh[id], &m_sh[id + 1], (m_size - id - 1) * sizeof(USHORT)); 
+		memmove(&m_sh[id], &m_sh[id + 1], (m_size - id - 1) * sizeof(USHORT));
 		m_sh[m_size - 1] = 0;
 		m_size--;
 		return true;
@@ -166,9 +166,9 @@ namespace PSView2
 		DWORD dwCur = BIT_NOT_FOUND;
 		DWORD i = 0;
 		mLoWords = new CShortList(block.InUse());
-		while((dwCur = block.FindNextUsed(dwCur)) != BIT_NOT_FOUND)	// Use the built in bitfield search functions
+		while ((dwCur = block.FindNextUsed(dwCur)) != BIT_NOT_FOUND)	// Use the built in bitfield search functions
 		{															// to find the next used bit
-			mLoWords->SetValue((WORD) i, (USHORT) dwCur);
+			mLoWords->SetValue((WORD)i, (USHORT)dwCur);
 			++i;
 		}
 		assert(i == block.InUse());		// Make sure a match, should work fine however
@@ -176,14 +176,14 @@ namespace PSView2
 
 	CAddressBlock::~CAddressBlock()
 	{
-		if(mLoWords)
+		if (mLoWords)
 			delete mLoWords;
 	}
 
 	DWORD CAddressBlock::GetValue(USHORT idx)
 	{
 		DWORD dwRes = mLoWords->GetValue(idx);
-		if(dwRes == RESULT_NOT_FOUND)
+		if (dwRes == RESULT_NOT_FOUND)
 			return dwRes;
 		return MAKELONG(dwRes, mHiWord);
 	}
@@ -195,7 +195,7 @@ namespace PSView2
 
 	DWORD CAddressBlock::GetIndex(DWORD val)
 	{
-		if(HIWORD(val) != mHiWord)
+		if (HIWORD(val) != mHiWord)
 			return RESULT_NOT_FOUND;
 		return mLoWords->GetValue(LOWORD(val));
 	}
@@ -203,7 +203,7 @@ namespace PSView2
 	DWORD CAddressBlock::GetNext(USHORT val)
 	{
 		DWORD dwAddr = mLoWords->GetNext(LOWORD(val));
-		if(dwAddr == RESULT_NOT_FOUND)
+		if (dwAddr == RESULT_NOT_FOUND)
 			return RESULT_NOT_FOUND;
 		return MAKELONG(dwAddr, mHiWord);
 	}
@@ -225,7 +225,7 @@ namespace PSView2
 
 	bool CAddressBlock::Delete(DWORD val)
 	{
-		if(HIWORD(val) != mHiWord)
+		if (HIWORD(val) != mHiWord)
 			return false;
 		return mLoWords->Delete(LOWORD(val));
 	}
@@ -253,8 +253,8 @@ namespace PSView2
 
 	CAddressList::~CAddressList()
 	{
-		if(m_blocks)
-			delete [] m_blocks;
+		if (m_blocks)
+			delete[] m_blocks;
 	}
 
 
@@ -263,7 +263,7 @@ namespace PSView2
 		WORD wHigh = HIWORD(dwAddr), wLow = LOWORD(dwAddr);
 		// If we are adding an address that is at a new HIWORD block, then we are done 
 		// with the previous one and we can "commit" it.
-		if(wHigh != m_high)
+		if (wHigh != m_high)
 			Complete();
 		m_high = wHigh;
 		m_block.Set(wLow);	// Flag the address in the memblock
@@ -272,7 +272,7 @@ namespace PSView2
 	void CAddressList::Complete()
 	{
 		// If there are no bits set, then no work
-		if(!m_block.InUse())
+		if (!m_block.InUse())
 		{
 			m_high = 0;
 			return;
@@ -290,23 +290,23 @@ namespace PSView2
 
 	DWORD CAddressList::FindBlockIndex(WORD wHigh)
 	{
-		if(m_curIndex == 0)
+		if (m_curIndex == 0)
 			return RESULT_NOT_FOUND;
 
-		WORD l = 0, m = 0, h = (WORD) (m_curIndex - 1);
+		WORD l = 0, m = 0, h = (WORD)(m_curIndex - 1);
 		// Binary search for the block
-		while(l <= h)
+		while (l <= h)
 		{
 			m = ((h + l) >> 1);
-			if(m_blocks[m].HighWord() == wHigh)
+			if (m_blocks[m].HighWord() == wHigh)
 				break;
-			if(m_blocks[m].HighWord() > wHigh)
+			if (m_blocks[m].HighWord() > wHigh)
 				h = m - 1;
 			else
 				l = m + 1;
 		}
 
-		if(m_blocks[m].HighWord() == wHigh)
+		if (m_blocks[m].HighWord() == wHigh)
 			return m;
 		return RESULT_NOT_FOUND;
 	}
@@ -314,7 +314,7 @@ namespace PSView2
 	CAddressBlock *CAddressList::FindBlock(WORD wHigh)
 	{
 		DWORD idx = FindBlockIndex(wHigh);
-		if(idx == RESULT_NOT_FOUND)
+		if (idx == RESULT_NOT_FOUND)
 			return 0;
 		return &m_blocks[idx];
 	}
@@ -325,10 +325,10 @@ namespace PSView2
 		WORD wHigh = HIWORD(dwAddr), wLow = LOWORD(dwAddr);
 		CAddressBlock *t = FindBlock(wHigh);
 
-		if(!t)
+		if (!t)
 			return false;
 
-		if(t->GetIndex(wLow) != RESULT_NOT_FOUND)
+		if (t->GetIndex(wLow) != RESULT_NOT_FOUND)
 			return true;
 
 		return false;
@@ -343,10 +343,10 @@ namespace PSView2
 	{
 		assert(m_blocks);
 
-		if(GetValue() == RESULT_NOT_FOUND)
+		if (GetValue() == RESULT_NOT_FOUND)
 			return false;
 
-		if(m_blocks[m_hiIdx].DeleteAt((USHORT) m_loIdx))
+		if (m_blocks[m_hiIdx].DeleteAt((USHORT)m_loIdx))
 		{
 			// Deleting at the current position will not be a problem.  Delete is 
 			// essentially equivalent to a Next as well so Next should not be called
@@ -371,21 +371,21 @@ namespace PSView2
 
 	DWORD CAddressList::GetValue()
 	{
-		if(m_hiIdx >= m_curIndex)
+		if (m_hiIdx >= m_curIndex)
 			return RESULT_NOT_FOUND;
 
-		if(m_loIdx >= m_blocks[m_hiIdx].GetCount())
+		if (m_loIdx >= m_blocks[m_hiIdx].GetCount())
 		{
 			++m_hiIdx;
 			m_loIdx = 0;
 		}
 
-		while(m_hiIdx < m_curIndex && m_blocks[m_hiIdx].GetCount() == 0)
+		while (m_hiIdx < m_curIndex && m_blocks[m_hiIdx].GetCount() == 0)
 			++m_hiIdx;
 
-		if(m_hiIdx >= m_curIndex)
+		if (m_hiIdx >= m_curIndex)
 			return RESULT_NOT_FOUND;
 
-		return m_blocks[m_hiIdx].GetValue((USHORT) m_loIdx);
+		return m_blocks[m_hiIdx].GetValue((USHORT)m_loIdx);
 	}
 }

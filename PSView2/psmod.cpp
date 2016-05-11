@@ -45,36 +45,36 @@ namespace PSView2
 		bool Read(DWORD dwAddr, BYTE *rgBuf, DWORD dwLen)
 		{
 			// If I already have the value in the buffer, just return it
-			if(dwAddr >= m_dwBufStart && dwAddr + dwLen <= m_dwBufStart + m_dwBufSize)
+			if (dwAddr >= m_dwBufStart && dwAddr + dwLen <= m_dwBufStart + m_dwBufSize)
 			{
 				memcpy(rgBuf, &(m_rgBuf[dwAddr - m_dwBufStart]), dwLen);
 				return true;
 			}
 
 			// I save the MEMORY_BASIC_INFORMATION because VirtualQueryEx is a really expensive call
-			if(dwAddr >= ((DWORD) mbi.BaseAddress) && dwAddr < ((DWORD) mbi.BaseAddress) + mbi.RegionSize &&
+			if (dwAddr >= ((DWORD)mbi.BaseAddress) && dwAddr < ((DWORD)mbi.BaseAddress) + mbi.RegionSize &&
 				!IsWritableMemory(mbi))
 				return false;
 
 			// Verifying the address is in a region that is appropriate to modify
-			if(dwAddr < ((DWORD) mbi.BaseAddress) || dwAddr >= ((DWORD) mbi.BaseAddress) + mbi.RegionSize)
+			if (dwAddr < ((DWORD)mbi.BaseAddress) || dwAddr >= ((DWORD)mbi.BaseAddress) + mbi.RegionSize)
 			{
-	#ifdef DEBUG
+#ifdef DEBUG
 				m_dwVirtualQueryCallCount++;
-	#endif
-				if(!VirtualQueryEx(m_hProcess, (LPVOID) dwAddr, &mbi, sizeof(mbi)))
+#endif
+				if (!VirtualQueryEx(m_hProcess, (LPVOID)dwAddr, &mbi, sizeof(mbi)))
 					return false;
-				if(!IsWritableMemory(mbi))
+				if (!IsWritableMemory(mbi))
 					return false;
 			}
 			DWORD dwBase = dwAddr & 0xFFFFFC00;	// Get the lowest 1k for the region
 			// How much is left from the dwBase address to read in?
-			DWORD dwSize = min(mbi.RegionSize - (dwBase - ((DWORD) mbi.BaseAddress)), sizeof(m_rgBuf));
+			DWORD dwSize = min(mbi.RegionSize - (dwBase - ((DWORD)mbi.BaseAddress)), sizeof(m_rgBuf));
 			DWORD dwRead = dwSize;
 #ifdef DEBUG
 			m_dwReadProcessMemoryCallCount++;
 #endif
-			if(!ReadProcessMemory(m_hProcess, (LPVOID) dwBase, m_rgBuf, dwSize, &dwRead) || dwRead != dwSize)
+			if (!ReadProcessMemory(m_hProcess, (LPVOID)dwBase, m_rgBuf, dwSize, &dwRead) || dwRead != dwSize)
 			{
 				// I might have corrupted the old data in the buffer, so I need to clear out the variables
 				// to ensure a future read doesn't get bogus data.
@@ -95,34 +95,34 @@ namespace PSView2
 	bool CProcessModifier::Open(UInt32 procID)
 	{
 		Close();
-		m_hProcess = OpenProcess( PROCESS_VM_OPERATION | PROCESS_SET_INFORMATION | PROCESS_VM_WRITE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, procID );
+		mProcessHandle = OpenProcess(PROCESS_VM_OPERATION | PROCESS_SET_INFORMATION | PROCESS_VM_WRITE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, procID);
 
-		if(m_hProcess != 0)
+		if (mProcessHandle != 0)
 		{
 			return true;
 		}
 		else
 		{
-			m_dwErr = ::GetLastError();
+			mLastProcessError = ::GetLastError();
 			return false;
 		}
 	}
 
 	void CProcessModifier::Close()
 	{
-		if(m_hProcess)
+		if (mProcessHandle)
 		{
-			m_dwErr = 0;
-			CloseHandle(m_hProcess);
-			delete m_addrs;
-			m_addrs = 0;
-			m_hProcess = 0;
+			mLastProcessError = 0;
+			CloseHandle(mProcessHandle);
+			delete mFoundAddresses;
+			mFoundAddresses = 0;
+			mProcessHandle = 0;
 		}
 	}
 
 	bool CProcessModifier::SetValueHelper(const SSearchParams& srch, UValueTest& tst)
 	{
-		switch(srch.dwBytes)
+		switch (srch.dwBytes)
 		{
 		case 1:
 			tst.c = srch.c;
@@ -142,22 +142,22 @@ namespace PSView2
 
 	bool CProcessModifier::Compare(const SSearchParams& srch, const UValueTest& tst)
 	{
-		switch(srch.dwBytes)
+		switch (srch.dwBytes)
 		{
 		case 1:
-			if(srch.c == tst.c)
+			if (srch.c == tst.c)
 				return true;
 			return false;
 		case 2:
-			if(srch.w == tst.w)
+			if (srch.w == tst.w)
 				return true;
 			return false;
 		case 4:
-			if(srch.dw == tst.dw)
+			if (srch.dw == tst.dw)
 				return true;
 			return false;
 		case 8:
-			if(srch.ull == tst.ull)
+			if (srch.ull == tst.ull)
 				return true;
 			return false;
 		};
@@ -166,7 +166,7 @@ namespace PSView2
 
 	bool CProcessModifier::TestAndUpdate(const SSearchParams& srch, UValueTest& tst, BYTE c)
 	{
-		for(DWORD i = 0; i < srch.dwBytes - 1; ++i)
+		for (DWORD i = 0; i < srch.dwBytes - 1; ++i)
 			tst.szBuf[i] = tst.szBuf[i + 1];
 		tst.szBuf[srch.dwBytes - 1] = c;
 		return Compare(srch, tst);
@@ -174,23 +174,23 @@ namespace PSView2
 
 	DWORD CProcessModifier::GetByteCount()
 	{
-		return GetByteCount(m_srchType);
+		return GetByteCount(mSearchType);
 	}
 	DWORD CProcessModifier::GetByteCount(Type^ t)
 	{
-		if(t == Byte::typeid || t == Char::typeid)
+		if (t == Byte::typeid || t == Char::typeid)
 		{
 			return 1;
 		}
-		else if(t == Int16::typeid || t == UInt16::typeid)
+		else if (t == Int16::typeid || t == UInt16::typeid)
 		{
 			return 2;
 		}
-		else if(t == Int32::typeid || t == UInt32::typeid)
+		else if (t == Int32::typeid || t == UInt32::typeid)
 		{
 			return 4;
 		}
-		else if(t == Int64::typeid || t == UInt64::typeid)
+		else if (t == Int64::typeid || t == UInt64::typeid)
 		{
 			return 8;
 		}
@@ -201,19 +201,19 @@ namespace PSView2
 	bool CProcessModifier::GetSearchParams(Object^ obj, SSearchParams& search)
 	{
 		search.dwBytes = GetByteCount(obj->GetType());
-		switch(search.dwBytes)
+		switch (search.dwBytes)
 		{
 		case 1:
-			search.c = (unsigned char) Convert::ToByte(obj);
+			search.c = (unsigned char)Convert::ToByte(obj);
 			return true;
 		case 2:
-			search.w = (unsigned short) Convert::ToUInt16(obj);
+			search.w = (unsigned short)Convert::ToUInt16(obj);
 			return true;
 		case 4:
-			search.dw = (unsigned int) Convert::ToUInt32(obj);
+			search.dw = (unsigned int)Convert::ToUInt32(obj);
 			return true;
 		case 8:
-			search.ull = (unsigned __int64) Convert::ToUInt64(obj);
+			search.ull = (unsigned __int64)Convert::ToUInt64(obj);
 			return true;
 		};
 		return false;
@@ -224,7 +224,7 @@ namespace PSView2
 		String^ s = nullptr;
 		UInt32 a;
 		DWORD dwProtect = mbi.Protect;
-		a = (DWORD) mbi.BaseAddress;
+		a = (DWORD)mbi.BaseAddress;
 
 		s = "Memory: 0x";
 		s = s->Concat(s, a.ToString("X8"));
@@ -232,7 +232,7 @@ namespace PSView2
 		a = mbi.RegionSize;
 		s = s->Concat(s, a.ToString());
 		s = s->Concat(s, " bytes (");
-		switch(mbi.State)
+		switch (mbi.State)
 		{
 		case MEM_COMMIT:
 			s = s->Concat(s, "commit, ");
@@ -250,9 +250,9 @@ namespace PSView2
 			s = s->Concat(s, "), ");
 			break;
 		};
-		if(mbi.State != MEM_FREE)
+		if (mbi.State != MEM_FREE)
 		{
-			switch(mbi.Type)
+			switch (mbi.Type)
 			{
 			case MEM_IMAGE:
 				s = s->Concat(s, "image, ");
@@ -275,78 +275,78 @@ namespace PSView2
 		{
 			s = s->Concat(s, "free, ");
 		}
-		if(!dwProtect && mbi.State == MEM_RESERVE)
+		if (!dwProtect && mbi.State == MEM_RESERVE)
 		{
 			s = s->Concat(s, "reserve");
 		}
-		if(dwProtect & PAGE_EXECUTE)
+		if (dwProtect & PAGE_EXECUTE)
 		{
 			s = s->Concat(s, "EXECUTE");
 			dwProtect -= PAGE_EXECUTE;
-			if(dwProtect)
+			if (dwProtect)
 				s = s->Concat(s, " | ");
 		}
-		if(dwProtect & PAGE_EXECUTE_READ)
+		if (dwProtect & PAGE_EXECUTE_READ)
 		{
 			s = s->Concat(s, "EXECUTE_READ");
 			dwProtect -= PAGE_EXECUTE_READ;
-			if(dwProtect)
+			if (dwProtect)
 				s = s->Concat(s, " | ");
 		}
-		if(dwProtect & PAGE_EXECUTE_READWRITE)
+		if (dwProtect & PAGE_EXECUTE_READWRITE)
 		{
 			s = s->Concat(s, "EXECUTE_READWRITE");
 			dwProtect -= PAGE_EXECUTE_READWRITE;
-			if(dwProtect)
+			if (dwProtect)
 				s = s->Concat(s, " | ");
 		}
-		if(dwProtect & PAGE_EXECUTE_WRITECOPY)
+		if (dwProtect & PAGE_EXECUTE_WRITECOPY)
 		{
 			s = s->Concat(s, "EXECUTE_WRITECOPY");
 			dwProtect -= PAGE_EXECUTE_WRITECOPY;
-			if(dwProtect)
+			if (dwProtect)
 				s = s->Concat(s, " | ");
 		}
-		if(dwProtect & PAGE_NOACCESS)
+		if (dwProtect & PAGE_NOACCESS)
 		{
 			s = s->Concat(s, "NOACCESS");
 			dwProtect -= PAGE_NOACCESS;
-			if(dwProtect)
+			if (dwProtect)
 				s = s->Concat(s, " | ");
 		}
-		if(dwProtect & PAGE_READONLY)
+		if (dwProtect & PAGE_READONLY)
 		{
 			s = s->Concat(s, "READONLY");
 			dwProtect -= PAGE_READONLY;
-			if(dwProtect)
+			if (dwProtect)
 				s = s->Concat(s, " | ");
 		}
-		if(dwProtect & PAGE_READWRITE)
+		if (dwProtect & PAGE_READWRITE)
 		{
 			s = s->Concat(s, "READWRITE");
 			dwProtect -= PAGE_READWRITE;
-			if(dwProtect)
+			if (dwProtect)
 				s = s->Concat(s, " | ");
 		}
-		if(dwProtect & PAGE_WRITECOPY)
+		if (dwProtect & PAGE_WRITECOPY)
 		{
 			s = s->Concat(s, "WRITECOPY");
 			dwProtect -= PAGE_WRITECOPY;
-			if(dwProtect)
+			if (dwProtect)
 				s = s->Concat(s, " | ");
 		}
-		if(dwProtect & PAGE_GUARD)
+		if (dwProtect & PAGE_GUARD)
 		{
 			s = s->Concat(s, "GUARD");
 			dwProtect -= PAGE_GUARD;
-			if(dwProtect)
+			if (dwProtect)
 				s = s->Concat(s, " | ");
 		}
-		if(dwProtect & PAGE_NOCACHE)
+		if (dwProtect & PAGE_NOCACHE)
 		{
 			s = s->Concat(s, "NOCACHE");
 			dwProtect -= PAGE_NOCACHE;
-			if(dwProtect)
+			if (dwProtect)
 				s = s->Concat(s, " | ");
 		}
 
@@ -364,35 +364,35 @@ namespace PSView2
 		// So it turns out that regions can span multiple 64k blocks, yeah!
 		// So loop through and count all the blocks that a region spans
 		WORD wLast = HIWORD(dwAddr + mbi.RegionSize - 1);
-		for(WORD wTemp = HIWORD(dwAddr); wTemp <= wLast; ++wTemp)
+		for (WORD wTemp = HIWORD(dwAddr); wTemp <= wLast; ++wTemp)
 		{
-			if(wLastHigh != wTemp || (wTemp == 0 && dwHighCount == 0))
+			if (wLastHigh != wTemp || (wTemp == 0 && dwHighCount == 0))
 			{
 				wLastHigh = wTemp;
 				dwHighCount++;
 			}
 		}
 		CRegion^ reg = gcnew CRegion();
-		reg->addr = dwAddr;
-		reg->size = mbi.RegionSize;
+		reg->StartAddress = dwAddr;
+		reg->AllocationSize = mbi.RegionSize;
 		regions->Add(reg);
 		return dwHighCount;
 	}
 
 	UInt64 CProcessModifier::FindFirst(Object^ obj, IProgressIndicator^ pb)
 	{
-		m_srchType = obj->GetType();
+		mSearchType = obj->GetType();
 		UInt64 count = 0;
 		SSearchParams search;
 #ifdef DEBUG
 		DWORD dwQueryCallCount = 0, dwReadCallCount = 0;
 #endif
-		if(!GetSearchParams(obj, search))
+		if (!GetSearchParams(obj, search))
 			return 0;
 
-		if(m_addrs)
-			delete m_addrs;
-		m_addrs = 0;
+		if (mFoundAddresses)
+			delete mFoundAddresses;
+		mFoundAddresses = 0;
 
 		auto regions = gcnew List<CRegion^>();
 		BYTE rgBuf[4096];
@@ -406,12 +406,12 @@ namespace PSView2
 		{
 			DWORD dwAddr = 0;
 			MEMORY_BASIC_INFORMATION mbi;
-			while(VirtualQueryEx(m_hProcess, (VOID *) dwAddr, &mbi, sizeof(mbi)))
+			while (VirtualQueryEx(mProcessHandle, (VOID *)dwAddr, &mbi, sizeof(mbi)))
 			{
 #ifdef DEBUG
 				dwQueryCallCount++;
 #endif
-				if(IsWritableMemory(mbi))
+				if (IsWritableMemory(mbi))
 				{
 					dwHighCount += AddRegions(wLastHigh, dwAddr, mbi, regions);
 					iMax += mbi.RegionSize;
@@ -421,56 +421,56 @@ namespace PSView2
 				dwAddr += mbi.RegionSize;
 			}
 		}
-		if(pb)
+		if (pb)
 		{
 			pb->SetCurrent(0);
 			pb->SetMaximum(iMax);
 		}
 
 		// Allocate the address list with the count of the high dwords
-		m_addrs = new CAddressList(dwHighCount);
+		mFoundAddresses = new CAddressList(dwHighCount);
 
 		iMax = 0;
-		for(int j = 0; j < regions->Count; ++j)
+		for (int j = 0; j < regions->Count; ++j)
 		{
 			CRegion^ reg = dynamic_cast<CRegion^>(regions[j]);
 
-			for(DWORD i = 0; i < reg->size; ++i)
+			for (DWORD i = 0; i < reg->AllocationSize; ++i)
 			{
-				if(i % 4096 == 0)
+				if (i % 4096 == 0)
 				{
 					dwCurPos = 0;
-					dwToRead = min(reg->size - i, sizeof(rgBuf));
+					dwToRead = min(reg->AllocationSize - i, sizeof(rgBuf));
 #ifdef DEBUG
 					dwReadCallCount++;
 #endif
-					if(!ReadProcessMemory(m_hProcess, ((BYTE *) reg->addr) + i, rgBuf, dwToRead, &dwRead))
+					if (!ReadProcessMemory(mProcessHandle, ((BYTE *)reg->StartAddress) + i, rgBuf, dwToRead, &dwRead))
 					{
-						m_dwErr = ::GetLastError();
+						mLastProcessError = ::GetLastError();
 						break; // This region no longer seems valid, give up.
 					}
 
-				if(pb)
-				{
-					pb->SetCurrent(iMax + i);
-				}
+					if (pb)
+					{
+						pb->SetCurrent(iMax + i);
+					}
 
 				}
 
-				if(TestAndUpdate(search, tst, rgBuf[dwCurPos++]) && i + 1 >= search.dwBytes)
+				if (TestAndUpdate(search, tst, rgBuf[dwCurPos++]) && i + 1 >= search.dwBytes)
 				{
-					UInt32 addr = reg->addr + i - search.dwBytes + 1;
-					m_addrs->Add(addr);
+					UInt32 addr = reg->StartAddress + i - search.dwBytes + 1;
+					mFoundAddresses->Add(addr);
 					count++;
 				}
 			}
-			if(pb)
+			if (pb)
 			{
-				iMax += reg->size;
+				iMax += reg->AllocationSize;
 				pb->SetCurrent(iMax);
 			}
 		}
-		m_addrs->Complete();
+		mFoundAddresses->Complete();
 		return count;
 	}
 
@@ -481,85 +481,85 @@ namespace PSView2
 
 	bool CProcessModifier::SetValue(UInt32 addr, Object^ obj)
 	{
-		if(m_srchType == nullptr)
+		if (mSearchType == nullptr)
 			return false;
-		if(m_srchType != obj->GetType())
+		if (mSearchType != obj->GetType())
 			return false;
 
 		UValueTest tst;
 		SSearchParams srch;
-		if(!GetSearchParams(obj, srch))
+		if (!GetSearchParams(obj, srch))
 			return false;
-		if(!SetValueHelper(srch, tst))
+		if (!SetValueHelper(srch, tst))
 			return false;
 
 		// Has to be a valid address that we previously found.
-		if(!m_addrs->Exists(addr))
+		if (!mFoundAddresses->Exists(addr))
 			return false;
 
 		// Make sure it is still a valid region.
 		MEMORY_BASIC_INFORMATION mbi;
-		if(!VirtualQueryEx(m_hProcess, (LPVOID) addr, &mbi, sizeof(mbi)))
+		if (!VirtualQueryEx(mProcessHandle, (LPVOID)addr, &mbi, sizeof(mbi)))
 			return false;
-		if(((DWORD) mbi.BaseAddress) > addr || addr > ((DWORD) mbi.BaseAddress) + mbi.RegionSize)
+		if (((DWORD)mbi.BaseAddress) > addr || addr > ((DWORD)mbi.BaseAddress) + mbi.RegionSize)
 			return false;
 
-		if(mbi.Protect != PAGE_READWRITE || mbi.State != MEM_COMMIT && mbi.Type != MEM_PRIVATE)
+		if (mbi.Protect != PAGE_READWRITE || mbi.State != MEM_COMMIT && mbi.Type != MEM_PRIVATE)
 			return false;
 
 		DWORD dwWritten;
-		if(!WriteProcessMemory(m_hProcess, (LPVOID) addr, tst.szBuf, srch.dwBytes, &dwWritten) || dwWritten != srch.dwBytes)
+		if (!WriteProcessMemory(mProcessHandle, (LPVOID)addr, tst.szBuf, srch.dwBytes, &dwWritten) || dwWritten != srch.dwBytes)
 			return false;
-		return true;		
+		return true;
 	}
 
 	UInt64 CProcessModifier::FindNext(Object^ obj, IProgressIndicator^ pb)
 	{
-		if(m_srchType == nullptr)
+		if (mSearchType == nullptr)
 			return FindFirst(obj);
-		if(m_srchType != obj->GetType())
+		if (mSearchType != obj->GetType())
 			return 0;
 
 		SSearchParams search;
 		UValueTest tst;
 		DWORD lastAddr, addr = 0;
-		if(!GetSearchParams(obj, search))
+		if (!GetSearchParams(obj, search))
 			return 0;
 
-		if(pb)
+		if (pb)
 		{
 			pb->SetCurrent(0);
-			pb->SetMaximum(m_addrs->Count());
+			pb->SetMaximum(mFoundAddresses->Count());
 		}
 
-		CApplicationMemoryBuffer buf(m_hProcess);
+		CApplicationMemoryBuffer buf(mProcessHandle);
 		lastAddr = addr = RESULT_NOT_FOUND;
 		volatile int i = 0;
-		for(m_addrs->First(); (addr = m_addrs->GetValue()) != RESULT_NOT_FOUND; ++i)
+		for (mFoundAddresses->First(); (addr = mFoundAddresses->GetValue()) != RESULT_NOT_FOUND; ++i)
 		{
-			if(pb)
+			if (pb)
 			{
 				pb->SetCurrent(i);
 			}
-			if(!buf.Read(addr, tst.szBuf, search.dwBytes) || !Compare(search, tst))
+			if (!buf.Read(addr, tst.szBuf, search.dwBytes) || !Compare(search, tst))
 			{
-				m_addrs->Delete();
+				mFoundAddresses->Delete();
 				continue;
 			}
 			lastAddr = addr;
-			m_addrs->Next();
+			mFoundAddresses->Next();
 		}
-		if(pb)
+		if (pb)
 		{
 			pb->SetCurrent(i);
 		}
 
-		return m_addrs->Count();
+		return mFoundAddresses->Count();
 	}
 
 	ULONGLONG GetTestValue(const UValueTest& tst, DWORD dwByteCount)
 	{
-		switch(dwByteCount)
+		switch (dwByteCount)
 		{
 		case 1:
 			return tst.c;
@@ -575,7 +575,7 @@ namespace PSView2
 
 	array<CAddressValue^>^ CProcessModifier::AddressValues::get()
 	{
-		if (m_srchType == nullptr)
+		if (mSearchType == nullptr)
 			return nullptr;
 
 		DWORD dwBytes = GetByteCount();
@@ -585,16 +585,16 @@ namespace PSView2
 
 		auto al = gcnew List<CAddressValue^>();
 		addr = RESULT_NOT_FOUND;
-		for(m_addrs->First(); (addr = m_addrs->GetValue()) != RESULT_NOT_FOUND;)
+		for (mFoundAddresses->First(); (addr = mFoundAddresses->GetValue()) != RESULT_NOT_FOUND;)
 		{
-			if(!VirtualQueryEx(m_hProcess, (LPVOID) addr, &mbi, sizeof(mbi)))
+			if (!VirtualQueryEx(mProcessHandle, (LPVOID)addr, &mbi, sizeof(mbi)))
 			{
-				m_addrs->Delete();
+				mFoundAddresses->Delete();
 				continue;
 			}
-			if(!ReadProcessMemory(m_hProcess, (LPVOID) addr, tst.szBuf, dwBytes, &dwRead) || dwRead != dwBytes)
+			if (!ReadProcessMemory(mProcessHandle, (LPVOID)addr, tst.szBuf, dwBytes, &dwRead) || dwRead != dwBytes)
 			{
-				m_addrs->Delete();
+				mFoundAddresses->Delete();
 				continue;
 			}
 
@@ -602,7 +602,7 @@ namespace PSView2
 			val->Address = addr;
 			val->Value = GetTestValue(tst, dwBytes);
 			al->Add(val);
-			m_addrs->Next();
+			mFoundAddresses->Next();
 		}
 
 		return al->ToArray();
@@ -610,9 +610,9 @@ namespace PSView2
 
 	UInt32 CProcessModifier::Count::get()
 	{
-		if(!m_addrs)
+		if (!mFoundAddresses)
 			return 0;
-		return (UInt32) m_addrs->Count();
+		return (UInt32)mFoundAddresses->Count();
 	}
 
 }

@@ -32,7 +32,7 @@ namespace PSView2
 
 	struct SSearchParams
 	{
-		union 
+		union
 		{
 			ULONGLONG ull;
 			DWORD dw;
@@ -46,25 +46,25 @@ namespace PSView2
 	public ref class CProcessModifier
 	{
 	private:
-		CAddressList *m_addrs;
-		HANDLE m_hProcess;
-		DWORD m_dwErr;
-		Type^ m_srchType;
+		CAddressList *mFoundAddresses;
+		HANDLE mProcessHandle;
+		DWORD mLastProcessError;
+		Type^ mSearchType;
 
 		ref class CRegion
 		{
 		public:
-			UInt32 addr;
-			UInt32 size;
+			UInt32 StartAddress;
+			UInt32 AllocationSize;
 		};
 
 	public:
-		CProcessModifier() 
+		CProcessModifier()
 		{
-			m_hProcess = 0;
-			m_dwErr = 0;
-			m_srchType = nullptr;
-			m_addrs = 0;
+			mProcessHandle = 0;
+			mLastProcessError = 0;
+			mSearchType = nullptr;
+			mFoundAddresses = 0;
 		}
 
 		bool Open(UInt32 procID);
@@ -72,7 +72,7 @@ namespace PSView2
 
 		property UInt32 LastError
 		{
-			UInt32 get() { return m_dwErr; }
+			UInt32 get() { return mLastProcessError; }
 		}
 
 		UInt64 FindFirst(Object^ obj);
