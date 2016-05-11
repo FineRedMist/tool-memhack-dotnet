@@ -215,3 +215,7 @@ FakesAssemblies/
 **/*.Server/GeneratedArtifacts
 **/*.Server/ModelManifest.xml
 _Pvt_Extensions
+
+# Visual Studio db files
+**/*.VC.db
+**/*.vc.opendb
