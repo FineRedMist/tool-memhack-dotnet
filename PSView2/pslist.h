@@ -16,7 +16,7 @@ using namespace System::Windows::Forms;
 
 // Used to track currently marked addresses that will
 // later be converted into a CShortList class
-typedef CBitField<65536>	CMemBlock;
+typedef BitField<65536>	CMemBlock;
 
 namespace PSView2
 {

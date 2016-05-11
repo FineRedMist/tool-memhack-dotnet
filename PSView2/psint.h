@@ -24,8 +24,8 @@ namespace PSView2
 	public interface class IProgressIndicator
 	{
 	public:
-		void SetMaximum(UInt64 maximum);
-		void SetCurrent(UInt64 progress);
+		void SetMaximum(UInt64 Maximum);
+		void SetCurrent(UInt64 Progress);
 	};
 
 };

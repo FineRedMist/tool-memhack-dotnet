@@ -18,4 +18,4 @@
 #include "psint.h"
 #include "psmod.h"
 
-void DebugPrint(const CHAR * str, ...);
+void DebugPrint(const CHAR * FormatString, ...);

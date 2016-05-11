@@ -13,20 +13,20 @@
 // determined by the static.  However to turn it on I can set a breakpoint in here to enable it
 
 #ifdef DEBUG
-void DebugPrint(const CHAR * str, ...)
+void DebugPrint(const CHAR * FormatString, ...)
 {
-	static bool fDisplay = false;
+	static bool display = false;
 
-	if (fDisplay)
+	if (display)
 	{
-		CHAR buf[DEBUG_BUFSIZE];
+		CHAR outputString[DEBUG_BUFSIZE];
 
-		va_list val;
-		va_start(val, str);
-		_vsnprintf_s(buf, DEBUG_BUFSIZE - 1, str, val); // Does not guarantee null termination
-		va_end(val);
-		buf[DEBUG_BUFSIZE - 1] = 0;
-		OutputDebugStringA(buf);
+		va_list varArgs;
+		va_start(varArgs, FormatString);
+		_vsnprintf_s(outputString, DEBUG_BUFSIZE - 1, FormatString, varArgs); // Does not guarantee null termination
+		va_end(varArgs);
+		outputString[DEBUG_BUFSIZE - 1] = 0;
+		OutputDebugStringA(outputString);
 	}
 }
 #else
