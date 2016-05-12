@@ -59,7 +59,7 @@ namespace ProcessTools
             }
 
             // Get the information for the list of processes
-            foreach(uint processId in processList)
+            foreach (uint processId in processList)
             {
                 result[processId] = GetProcessInfo(processId, idleProcessName, systemName);
             }
@@ -100,7 +100,7 @@ namespace ProcessTools
                 var windowInfo = maybeWindowInfo.Value;
 
                 // There are some classes of windows that I don't want to display so skip them
-                if (windowInfo.dwExStyle.HasFlag(WindowExtendedStyle.ToolWindow) 
+                if (windowInfo.dwExStyle.HasFlag(WindowExtendedStyle.ToolWindow)
                     || 0 != (windowInfo.dwStyle & (WindowStyle.Popup | WindowStyle.Child | WindowStyle.Disabled)))
                 {
                     return true;
