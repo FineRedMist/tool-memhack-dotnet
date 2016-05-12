@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProcessTools
 {
@@ -24,11 +20,11 @@ namespace ProcessTools
         {
             get
             {
-                return rgFriendlyNames.Count == 0 ? string.Empty : rgFriendlyNames[0].Name;
+                return FriendlyNames.Count == 0 ? string.Empty : FriendlyNames[0].Name;
             }
         }
 
-        List<ProcessFriendlyName> rgFriendlyNames;
+        List<ProcessFriendlyName> FriendlyNames;
 
         public ProcessInformation(uint processID, string processName)
         {
@@ -40,32 +36,32 @@ namespace ProcessTools
             Name = processName;
             FullPath = null;
             User = null;
-            rgFriendlyNames = new List<ProcessFriendlyName>();
+            FriendlyNames = new List<ProcessFriendlyName>();
         }
 
         public void Add(ProcessFriendlyName name)
         {
             if (name == null)
                 return;
-            rgFriendlyNames.Add(name);
-            rgFriendlyNames.Sort();
+            FriendlyNames.Add(name);
+            FriendlyNames.Sort();
         }
 
         public IEnumerator<ProcessFriendlyName> GetEnumerator()
         {
-            return rgFriendlyNames.GetEnumerator();
+            return FriendlyNames.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return rgFriendlyNames.GetEnumerator();
+            return FriendlyNames.GetEnumerator();
         }
 
         public int Count
         {
             get
             {
-                return rgFriendlyNames.Count;
+                return FriendlyNames.Count;
             }
         }
 
@@ -73,7 +69,7 @@ namespace ProcessTools
         {
             get
             {
-                return rgFriendlyNames[index];
+                return FriendlyNames[index];
             }
         }
     }
