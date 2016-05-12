@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemHack", "MemHack\MemHack.csproj", "{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}"
 EndProject
@@ -12,20 +12,38 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessTools", "ProcessTools\ProcessTools.csproj", "{BA71749F-D92D-4C7B-B11E-708CC61343FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Debug|x86.Build.0 = Debug|Any CPU
+		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Release|x86.ActiveCfg = Release|Any CPU
 		{8D5B9039-7CF8-48D5-89B0-9F98F70A2CFB}.Release|x86.Build.0 = Release|Any CPU
+		{78C79669-73D5-4410-938F-D0226264EB1E}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{78C79669-73D5-4410-938F-D0226264EB1E}.Debug|x86.ActiveCfg = Debug|Win32
 		{78C79669-73D5-4410-938F-D0226264EB1E}.Debug|x86.Build.0 = Debug|Win32
+		{78C79669-73D5-4410-938F-D0226264EB1E}.Release|Any CPU.ActiveCfg = Release|Win32
 		{78C79669-73D5-4410-938F-D0226264EB1E}.Release|x86.ActiveCfg = Release|Win32
 		{78C79669-73D5-4410-938F-D0226264EB1E}.Release|x86.Build.0 = Release|Win32
+		{BA71749F-D92D-4C7B-B11E-708CC61343FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA71749F-D92D-4C7B-B11E-708CC61343FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA71749F-D92D-4C7B-B11E-708CC61343FC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BA71749F-D92D-4C7B-B11E-708CC61343FC}.Debug|x86.Build.0 = Debug|Any CPU
+		{BA71749F-D92D-4C7B-B11E-708CC61343FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA71749F-D92D-4C7B-B11E-708CC61343FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA71749F-D92D-4C7B-B11E-708CC61343FC}.Release|x86.ActiveCfg = Release|Any CPU
+		{BA71749F-D92D-4C7B-B11E-708CC61343FC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

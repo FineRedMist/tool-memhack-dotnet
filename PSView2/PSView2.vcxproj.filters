@@ -39,9 +39,6 @@
     <ClInclude Include="AddressBlock.h">
       <Filter>Header Files\Internal</Filter>
     </ClInclude>
-    <ClInclude Include="IProgressIndicator.h">
-      <Filter>Header Files\Public</Filter>
-    </ClInclude>
     <ClInclude Include="Stdafx.h">
       <Filter>Header Files\Internal</Filter>
     </ClInclude>

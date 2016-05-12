@@ -143,7 +143,6 @@
   <ItemGroup>
     <ClInclude Include="AddressList.h" />
     <ClInclude Include="BitField.h" />
-    <ClInclude Include="IProgressIndicator.h" />
     <ClInclude Include="LoWordList.h" />
     <ClInclude Include="AddressBlock.h" />
     <ClInclude Include="ProcessFriendlyName.h" />
@@ -174,6 +173,11 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ProcessTools\ProcessTools.csproj">
+      <Project>{ba71749f-d92d-4c7b-b11e-708cc61343fc}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

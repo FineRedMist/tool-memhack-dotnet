@@ -15,7 +15,6 @@
 #include "BitField.h"
 #include "ProcessViewer.h"
 #include "AddressList.h"
-#include "IProgressIndicator.h"
 #include "ProcessModifier.h"
 
 void DebugPrint(const CHAR * FormatString, ...);

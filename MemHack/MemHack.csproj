@@ -127,7 +127,7 @@
     <Compile Include="MemHack.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ProgressBar.cs">
+    <Compile Include="ProgressBarWindow.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Resources.cs">
@@ -146,8 +146,8 @@
     <EmbeddedResource Include="MemHack.resx">
       <DependentUpon>MemHack.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ProgressBar.resx">
-      <DependentUpon>ProgressBar.cs</DependentUpon>
+    <EmbeddedResource Include="ProgressBarWindow.resx">
+      <DependentUpon>ProgressBarWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SetNext.resx">
       <DependentUpon>SetNext.cs</DependentUpon>
@@ -168,6 +168,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ProcessTools\ProcessTools.csproj">
+      <Project>{ba71749f-d92d-4c7b-b11e-708cc61343fc}</Project>
+      <Name>ProcessTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PSView2\PSView2.vcxproj">
       <Project>{78c79669-73d5-4410-938f-d0226264eb1e}</Project>
       <Name>PSView2</Name>
