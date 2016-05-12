@@ -24,16 +24,22 @@
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="bitfield.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pslist.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="psmod.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IProgressIndicator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BitField.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoWordList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AddressBlock.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AddressList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,10 +53,16 @@
     <ClCompile Include="Stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pslist.cpp">
+    <ClCompile Include="psmod.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="psmod.cpp">
+    <ClCompile Include="LoWordList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AddressBlock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AddressList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

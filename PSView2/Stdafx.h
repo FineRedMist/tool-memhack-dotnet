@@ -12,9 +12,9 @@
 #include <accctrl.h>
 #include <aclapi.h>
 #include <vcclr.h>
-#include "bitfield.h"
+#include "BitField.h"
 #include "PSView2.h"
-#include "pslist.h"
+#include "AddressList.h"
 #include "IProgressIndicator.h"
 #include "psmod.h"
 

@@ -428,7 +428,7 @@ namespace PSView2
 		}
 
 		// Allocate the address list with the count of the high dwords
-		mFoundAddresses = new CAddressList(dwHighCount);
+		mFoundAddresses = new AddressList(dwHighCount);
 
 		iMax = 0;
 		for (int j = 0; j < regions->Count; ++j)

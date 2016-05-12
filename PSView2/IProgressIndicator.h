@@ -10,6 +10,7 @@
 ******************************************************/
 
 #pragma once
+
 using namespace System;
 
 namespace PSView2

@@ -46,7 +46,7 @@ namespace PSView2
 	public ref class CProcessModifier
 	{
 	private:
-		CAddressList *mFoundAddresses;
+		AddressList *mFoundAddresses;
 		HANDLE mProcessHandle;
 		DWORD mLastProcessError;
 		Type^ mSearchType;
