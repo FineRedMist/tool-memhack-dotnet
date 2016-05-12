@@ -1,12 +1,9 @@
-﻿using System;
+﻿using ProcessTools.Windows;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ProcessTools.Windows;
-using System.Runtime.InteropServices;
-using System.Windows;
 using System.ComponentModel;
+using System.Runtime.InteropServices;
+using System.Text;
 
 namespace ProcessTools
 {
