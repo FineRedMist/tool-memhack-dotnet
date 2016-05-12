@@ -120,7 +120,7 @@ namespace ProcessTools
                 DateTime threadExitedTime, threadKernelTime, threadUserTime;
                 // I use the thread information to determine when the window is created.  Typically the first window
                 // created is really the interesting one so I sort them based on date created
-                using (var threadHandle = Interop.OpenThreadHandle(ThreadAccess.QUERY_INFORMATION, false, threadId))
+                using (var threadHandle = Interop.OpenThreadHandle(ThreadAccess.QueryInformation, false, threadId))
                 {
                     if (threadHandle != null)
                     {

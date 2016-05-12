@@ -256,15 +256,15 @@ namespace ProcessTools.Windows
     [Flags]
     internal enum ThreadAccess : int
     {
-        TERMINATE = (0x0001),
-        SUSPEND_RESUME = (0x0002),
-        GET_CONTEXT = (0x0008),
-        SET_CONTEXT = (0x0010),
-        SET_INFORMATION = (0x0020),
-        QUERY_INFORMATION = (0x0040),
-        SET_THREAD_TOKEN = (0x0080),
-        IMPERSONATE = (0x0100),
-        DIRECT_IMPERSONATION = (0x0200)
+        Terminate = (0x0001),
+        SuspendResume = (0x0002),
+        GetContext = (0x0008),
+        SetContext = (0x0010),
+        SetInformation = (0x0020),
+        QueryInformation = (0x0040),
+        SetThreadToken = (0x0080),
+        Impersonate = (0x0100),
+        DirectImpersonation = (0x0200)
     }
 
     [Flags]
@@ -335,14 +335,14 @@ namespace ProcessTools.Windows
 
         public static IEnumerable<PROCESSENTRY32> SnapProcesses()
         {
-            IntPtr hSnap = INVALID_HANDLE_VALUE;
-            hSnap = CreateToolhelp32Snapshot(SnapshotFlags.Process, 0);
-            if (hSnap == IntPtr.Zero || hSnap == INVALID_HANDLE_VALUE)  // Couldn't snap, use a different method
+            IntPtr snapHandle = INVALID_HANDLE_VALUE;
+            snapHandle = CreateToolhelp32Snapshot(SnapshotFlags.Process, 0);
+            if (snapHandle == IntPtr.Zero || snapHandle == INVALID_HANDLE_VALUE)  // Couldn't snap, use a different method
             {
                 yield break;
             }
 
-            var autoDisposer = new AutoDispose<IntPtr>(hSnap, (handle) => CloseHandle(handle));
+            var autoDisposer = new AutoDispose<IntPtr>(snapHandle, (handle) => CloseHandle(handle));
 
             PROCESSENTRY32 procEntry = new PROCESSENTRY32();
             procEntry.dwSize = (uint)Marshal.SizeOf(procEntry);
@@ -395,12 +395,12 @@ namespace ProcessTools.Windows
 
         public static string GetWindowText(IntPtr hWnd)
         {
-            StringBuilder szBuf = new StringBuilder(1024);
-            if (0 == GetWindowText(hWnd, szBuf, szBuf.Capacity))
+            StringBuilder textBuffer = new StringBuilder(1024);
+            if (0 == GetWindowText(hWnd, textBuffer, textBuffer.Capacity))
             {
                 return null;
             }
-            return szBuf.ToString();
+            return textBuffer.ToString();
         }
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -409,10 +409,10 @@ namespace ProcessTools.Windows
 
         public static Nullable<WINDOWINFO> GetWindowInfo(IntPtr hwnd)
         {
-            WINDOWINFO wi = new WINDOWINFO(true);
-            if (GetWindowInfo(hwnd, ref wi))
+            WINDOWINFO windowInfo = new WINDOWINFO(true);
+            if (GetWindowInfo(hwnd, ref windowInfo))
             {
-                return wi;
+                return windowInfo;
             }
             return null;
         }
@@ -447,32 +447,32 @@ namespace ProcessTools.Windows
         private static extern bool CloseServiceHandle(IntPtr hSCObject);
 
         public static IEnumerable<ENUM_SERVICE_STATUS_PROCESS> GetServices(
-            string machineName, string databaseName, AccessFlags dwAccess,   // From OpenSCManager
-            ServiceEnumType infoLevel, ServiceType dwServiceType, ServiceStateRequest dwServiceState // From EnumServicesStatusEx
+            string machineName, string databaseName, AccessFlags accessFlags,   // From OpenSCManager
+            ServiceEnumType infoLevel, ServiceType serviceType, ServiceStateRequest serviceStateRequest // From EnumServicesStatusEx
             )
         {
             List<ENUM_SERVICE_STATUS_PROCESS> results = new List<ENUM_SERVICE_STATUS_PROCESS>();
 
-            IntPtr handle = OpenSCManager(machineName, databaseName, dwAccess);
+            IntPtr handle = OpenSCManager(machineName, databaseName, accessFlags);
             if (handle == IntPtr.Zero)
             {
                 return null;
             }
 
-            IntPtr buf = IntPtr.Zero;
+            IntPtr serviceStatusBuffer = IntPtr.Zero;
 
             try
             {
-                uint iBytesNeeded = 0;
-                uint iServicesReturned = 0;
-                uint iResumeHandle = 0;
+                uint bytesNeeded = 0;
+                uint servicesReturned = 0;
+                uint resumeHandle = 0;
 
-                if (!EnumServicesStatusEx(handle, infoLevel, dwServiceType, dwServiceState, IntPtr.Zero, 0, out iBytesNeeded, out iServicesReturned, ref iResumeHandle, null))
+                if (!EnumServicesStatusEx(handle, infoLevel, serviceType, serviceStateRequest, IntPtr.Zero, 0, out bytesNeeded, out servicesReturned, ref resumeHandle, null))
                 {
                     // allocate our memory to receive the data for all the services (including the names)
-                    buf = Marshal.AllocHGlobal((int)iBytesNeeded);
+                    serviceStatusBuffer = Marshal.AllocHGlobal((int)bytesNeeded);
 
-                    if (!EnumServicesStatusEx(handle, infoLevel, dwServiceType, dwServiceState, buf, iBytesNeeded, out iBytesNeeded, out iServicesReturned, ref iResumeHandle, null))
+                    if (!EnumServicesStatusEx(handle, infoLevel, serviceType, serviceStateRequest, serviceStatusBuffer, bytesNeeded, out bytesNeeded, out servicesReturned, ref resumeHandle, null))
                     {
                         throw new Win32Exception(Marshal.GetLastWin32Error());
                     }
@@ -482,8 +482,8 @@ namespace ProcessTools.Windows
                     // check if 64 bit system which has different pack sizes
                     if (IntPtr.Size == 8)
                     {
-                        long pointer = buf.ToInt64();
-                        for (int i = 0; i < (int)iServicesReturned; i++)
+                        long pointer = serviceStatusBuffer.ToInt64();
+                        for (int i = 0; i < (int)servicesReturned; i++)
                         {
                             serviceStatus = (ENUM_SERVICE_STATUS_PROCESS)Marshal.PtrToStructure(new IntPtr(pointer), typeof(ENUM_SERVICE_STATUS_PROCESS));
                             results.Add(serviceStatus);
@@ -495,8 +495,8 @@ namespace ProcessTools.Windows
                     }
                     else
                     {
-                        int pointer = buf.ToInt32();
-                        for (int i = 0; i < (int)iServicesReturned; i++)
+                        int pointer = serviceStatusBuffer.ToInt32();
+                        for (int i = 0; i < (int)servicesReturned; i++)
                         {
                             serviceStatus = (ENUM_SERVICE_STATUS_PROCESS)Marshal.PtrToStructure(new IntPtr(pointer), typeof(ENUM_SERVICE_STATUS_PROCESS));
                             results.Add(serviceStatus);
@@ -518,9 +518,9 @@ namespace ProcessTools.Windows
                     CloseServiceHandle(handle);
                 }
 
-                if (buf != IntPtr.Zero)
+                if (serviceStatusBuffer != IntPtr.Zero)
                 {
-                    Marshal.FreeHGlobal(buf);
+                    Marshal.FreeHGlobal(serviceStatusBuffer);
                 }
             }
 
@@ -536,12 +536,12 @@ namespace ProcessTools.Windows
         public static UInt32[] EnumProcesses()
         {
             uint[] processList = new uint[1024];  // Supporting a maximum of 1024 processes at once
-            uint dwBytesReturned = 0;
+            uint bytesReturned = 0;
             for (int retries = 3; retries > 0; --retries)
             {
-                if (EnumProcesses(processList, (uint)(processList.Length * sizeof(uint)), out dwBytesReturned))
+                if (EnumProcesses(processList, (uint)(processList.Length * sizeof(uint)), out bytesReturned))
                 {
-                    int processesFound = (int)(dwBytesReturned / sizeof(uint));
+                    int processesFound = (int)(bytesReturned / sizeof(uint));
                     if (processesFound < processList.Length)
                     {
                         uint[] result = new uint[processesFound];
@@ -561,19 +561,19 @@ namespace ProcessTools.Windows
 
         public static IntPtr[] EnumProcessModules(IntPtr hProcess, uint countOfModulesToGet)
         {
-            IntPtr[] hMod = new IntPtr[countOfModulesToGet];
-            uint cbNeeded = 0;
-            uint cbProvided = (uint)(countOfModulesToGet * IntPtr.Size);
-            if (EnumProcessModules(hProcess, hMod, cbProvided, out cbNeeded))
+            IntPtr[] moduleHandles = new IntPtr[countOfModulesToGet];
+            uint bytesNeeded = 0;
+            uint bytesProvided = (uint)(countOfModulesToGet * IntPtr.Size);
+            if (EnumProcessModules(hProcess, moduleHandles, bytesProvided, out bytesNeeded))
             {
-                if (cbNeeded < cbProvided)
+                if (bytesNeeded < bytesProvided)
                 {
-                    int toCopy = (int) (cbNeeded / IntPtr.Size);
+                    int toCopy = (int) (bytesNeeded / IntPtr.Size);
                     IntPtr[] newResult = new IntPtr[toCopy];
-                    Array.Copy(hMod, newResult, toCopy);
+                    Array.Copy(moduleHandles, newResult, toCopy);
                     return newResult;
                 }
-                return hMod;
+                return moduleHandles;
             }
 
             return null;
@@ -585,10 +585,10 @@ namespace ProcessTools.Windows
         public static bool GetModuleBaseName(IntPtr hProcess, IntPtr hModule, out string baseName)
         {
             baseName = null;
-            StringBuilder szName = new StringBuilder(1024);
-            if (0 != GetModuleBaseName(hProcess, hModule, szName, (uint)szName.Capacity))
+            StringBuilder nameBuffer = new StringBuilder(1024);
+            if (0 != GetModuleBaseName(hProcess, hModule, nameBuffer, (uint)nameBuffer.Capacity))
             {
-                baseName = szName.ToString();
+                baseName = nameBuffer.ToString();
                 return true;
             }
             return false;
@@ -600,10 +600,10 @@ namespace ProcessTools.Windows
         public static bool GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, out string moduleFileName)
         {
             moduleFileName = null;
-            StringBuilder szName = new StringBuilder(1024);
-            if (0 != GetModuleFileNameEx(hProcess, hModule, szName, (uint)szName.Capacity))
+            StringBuilder nameBuffer = new StringBuilder(1024);
+            if (0 != GetModuleFileNameEx(hProcess, hModule, nameBuffer, (uint)nameBuffer.Capacity))
             {
-                moduleFileName = szName.ToString();
+                moduleFileName = nameBuffer.ToString();
                 return true;
             }
             return false;
