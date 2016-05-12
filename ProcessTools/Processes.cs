@@ -32,17 +32,17 @@ namespace ProcessTools
             foreach (var processEntry in Interop.SnapProcesses())
             {
                 // Set up the structures
-                ProcessInformation p = new ProcessInformation(processEntry.th32ProcessID, processEntry.szExeFile);
-                if (p.ID == 0) // The idle process has the zero id, so save myself some work by special casing it
+                ProcessInformation processInfo = new ProcessInformation(processEntry.th32ProcessID, processEntry.szExeFile);
+                if (processInfo.ID == 0) // The idle process has the zero id, so save myself some work by special casing it
                 {
-                    p.Add(new ProcessFriendlyName(idleProcessName));
+                    processInfo.Add(new ProcessFriendlyName(idleProcessName));
                 }
-                else if (p.ID == 4)
+                else if (processInfo.ID == 4)
                 {
-                    p.Add(new ProcessFriendlyName(systemName));
+                    processInfo.Add(new ProcessFriendlyName(systemName));
                 }
-                GetProcessFullPath(p);
-                result[p.ID] = p;
+                GetProcessFullPath(processInfo);
+                result[processInfo.ID] = processInfo;
             }
 
             return result;
@@ -78,13 +78,13 @@ namespace ProcessTools
 
             public bool EnumDesktopWindowsDelegate(IntPtr hwnd, IntPtr lParam)
             {
-                uint dwProcess = 0;
-                uint dwThread = Interop.GetWindowThreadProcessId(hwnd, out dwProcess);
+                uint processId = 0;
+                uint threadId = Interop.GetWindowThreadProcessId(hwnd, out processId);
                 bool visible;
-                DateTime date = DateTime.MinValue;
-                string name;
+                DateTime windowThreadDate = DateTime.MinValue;
+                string windowTitle;
 
-                if (dwThread == 0 || dwProcess == 0)    // We somehow mystically failed to get one of the thread or process ids
+                if (threadId == 0 || processId == 0)    // We somehow mystically failed to get one of the thread or process ids
                 {
                     return true;
                 }
@@ -107,8 +107,8 @@ namespace ProcessTools
                 }
 
                 // Get the text of the window
-                name = Interop.GetWindowText(hwnd);
-                if (string.IsNullOrEmpty(name))
+                windowTitle = Interop.GetWindowText(hwnd);
+                if (string.IsNullOrEmpty(windowTitle))
                 {
                     return true;
                 }
@@ -117,24 +117,25 @@ namespace ProcessTools
                 // which means I'll also have a bunch of others that I don't want to display in the list
                 visible = (wi.dwStyle & (WindowStyle.Minimize | WindowStyle.Visible)) != 0;
 
-                DateTime ftExited, ftKernel, ftUser;
+                DateTime threadExitedTime, threadKernelTime, threadUserTime;
                 // I use the thread information to determine when the window is created.  Typically the first window
                 // created is really the interesting one so I sort them based on date created
-                IntPtr hThread = Interop.OpenThread(ThreadAccess.QUERY_INFORMATION, false, dwThread);
-                if (hThread != IntPtr.Zero)
+                using (var hThread = Interop.OpenThreadHandle(ThreadAccess.QUERY_INFORMATION, false, threadId))
                 {
-                    Interop.GetThreadTimes(hThread, out date, out ftExited, out ftKernel, out ftUser);
-                    Interop.CloseHandle(hThread);
+                    if (hThread != null)
+                    {
+                        Interop.GetThreadTimes(hThread.Value, out windowThreadDate, out threadExitedTime, out threadKernelTime, out threadUserTime);
+                    }
                 }
 
-                ProcessFriendlyName s = new ProcessFriendlyName(name, date, visible);
-                ProcessInformation p = null;
-                if (!mProcesses.TryGetValue(dwProcess, out p))
+                ProcessFriendlyName windowFriendlyName = new ProcessFriendlyName(windowTitle, windowThreadDate, visible);
+                ProcessInformation processInfo = null;
+                if (!mProcesses.TryGetValue(processId, out processInfo))
                 {
-                    p = new ProcessInformation(dwProcess, string.Empty);
-                    mProcesses[dwProcess] = p;
+                    processInfo = new ProcessInformation(processId, string.Empty);
+                    mProcesses[processId] = processInfo;
                 }
-                p.Add(s);
+                processInfo.Add(windowFriendlyName);
 
                 return true;
             }
@@ -185,6 +186,20 @@ namespace ProcessTools
 
         private static readonly ProcessAccessFlags ProcessReadOnlyFlags = ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead;
 
+        private static AutoDispose<IntPtr> OpenProcess(uint processId, out bool isReadOnly)
+        {
+            var hProcess = Interop.OpenProcessHandle(ProcessReadWriteFlags, false, processId);
+            if (hProcess != null)
+            {
+                // If I succeed to open the process with the options needed to modify it, I know it is modifiable
+                isReadOnly = false;
+                return hProcess;
+            }
+            // I failed to open the process for modification so just open it to read the path info
+            isReadOnly = true;
+            return Interop.OpenProcessHandle(ProcessReadOnlyFlags, false, processId);
+        }
+
         /// <summary>
         /// Acquires the full path to the process
         /// </summary>
@@ -193,26 +208,23 @@ namespace ProcessTools
             processInfo.FullPath = null;
             processInfo.IsService = false;
 
-            // If I succeed to open the process with the options needed to modify it, I know it is modifiable
-            IntPtr hProcess = Interop.OpenProcess(ProcessReadWriteFlags, false, processInfo.ID);
-            if (IntPtr.Zero == hProcess)  // I failed to open the process for modification so just open it to read the path info
-                hProcess = Interop.OpenProcess(ProcessReadOnlyFlags, false, processInfo.ID);
-            else // I succeeded opening the process so set the flag
-                processInfo.Modifiable = true;
-
-            if (IntPtr.Zero != hProcess)
+            bool modifiable;
+            using (var hProcess = OpenProcess(processInfo.ID, out modifiable))
             {
-                IntPtr[] moduleHandles = Interop.EnumProcessModules(hProcess, 1);
-                // Enumerate the modules in the process--the first one is the application which we can get the path from
-                if (moduleHandles != null && moduleHandles.Length > 0)
-                {   // Uses size in bytes
-                    string moduleFilename;
-                    if (Interop.GetModuleFileNameEx(hProcess, moduleHandles[0], out moduleFilename))
-                    {
-                        processInfo.FullPath = moduleFilename;
+                processInfo.Modifiable = modifiable;
+                if (null != hProcess)
+                {
+                    IntPtr[] moduleHandles = Interop.EnumProcessModules(hProcess.Value, 1);
+                    // Enumerate the modules in the process--the first one is the application which we can get the path from
+                    if (moduleHandles != null && moduleHandles.Length > 0)
+                    {   // Uses size in bytes
+                        string moduleFilename;
+                        if (Interop.GetModuleFileNameEx(hProcess.Value, moduleHandles[0], out moduleFilename))
+                        {
+                            processInfo.FullPath = moduleFilename;
+                        }
                     }
                 }
-                Interop.CloseHandle(hProcess);
             }
         }
 
@@ -222,46 +234,39 @@ namespace ProcessTools
         private static ProcessInformation GetProcessInfo(uint processID, string idleProcessName, string systemName)
         {
             // Get a handle to the process and set some values for the process
-            string nm = (processID == 0) ? idleProcessName : ((processID == 4) ? systemName : null);
-            string fp = null;
-            bool fModifiable = false;
+            string processName = (processID == 0) ? idleProcessName : ((processID == 4) ? systemName : null);
+            string fullProcessPath = null;
 
-            // Attempt to open the process with all the permissions we would need to modify it
-            // and as a backup open te process with enough information to get what we need.
-            IntPtr hProcess = Interop.OpenProcess(ProcessReadWriteFlags, false, processID);
-            if (IntPtr.Zero == hProcess)  // Failed to open the process so it isn't modifiable, backup goal
-                hProcess = Interop.OpenProcess(ProcessReadOnlyFlags, false, processID);
-            else                // Succeeded to open it so the process is modifiable
-                fModifiable = true;
-
-            // Get the process name.
-            if (IntPtr.Zero != hProcess)
+            bool modifiable;
+            using (var hProcess = OpenProcess(processID, out modifiable))
             {
-                IntPtr[] moduleHandles = Interop.EnumProcessModules(hProcess, 1);
+                // Get the process name.
+                if (null != hProcess)
+                {
+                    IntPtr[] moduleHandles = Interop.EnumProcessModules(hProcess.Value, 1);
 
-                // The first module is (typically) the application itself, so we can get the information we need from there
-                if (moduleHandles != null && moduleHandles.Length > 0)
-                { 
-                    string szProcessName;
-                    if (Interop.GetModuleBaseName(hProcess, moduleHandles[0], out szProcessName))
+                    // The first module is (typically) the application itself, so we can get the information we need from there
+                    if (moduleHandles != null && moduleHandles.Length > 0)
                     {
-                        nm = szProcessName;
-                    }
-                    string moduleFilename;
-                    if (Interop.GetModuleFileNameEx(hProcess, moduleHandles[0], out moduleFilename))
-                    {
-                        fp = moduleFilename;
+                        string szProcessName;
+                        if (Interop.GetModuleBaseName(hProcess.Value, moduleHandles[0], out szProcessName))
+                        {
+                            processName = szProcessName;
+                        }
+                        string moduleFilename;
+                        if (Interop.GetModuleFileNameEx(hProcess.Value, moduleHandles[0], out moduleFilename))
+                        {
+                            fullProcessPath = moduleFilename;
+                        }
                     }
                 }
-
-                Interop.CloseHandle(hProcess);
             }
 
-            ProcessInformation res = new ProcessInformation(processID, nm);
-            res.Modifiable = fModifiable;
-            res.FullPath = fp;
+            ProcessInformation result = new ProcessInformation(processID, processName);
+            result.Modifiable = modifiable;
+            result.FullPath = fullProcessPath;
 
-            return res;
+            return result;
         }
     }
 }

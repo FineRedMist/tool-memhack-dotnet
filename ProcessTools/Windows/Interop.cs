@@ -301,12 +301,23 @@ namespace ProcessTools.Windows
     {
         public static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(-1);
 
-        [DllImport("kernel32.dll")]
-        public static extern IntPtr OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, uint processId);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern IntPtr OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, uint processId);
+
+        public static AutoDispose<IntPtr> OpenProcessHandle(ProcessAccessFlags processAccess, bool bInheritHandle, uint processId)
+        {
+            var handle = OpenProcess(processAccess, bInheritHandle, processId);
+            if (handle == IntPtr.Zero || handle == INVALID_HANDLE_VALUE)
+            {
+                return null;
+            }
+            return new AutoDispose<IntPtr>(handle, (target) => CloseHandle(target));
+        }
+
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool CloseHandle(IntPtr hObject);
+        private static extern bool CloseHandle(IntPtr hObject);
 
         [DllImport("kernel32.dll")]
         private static extern uint GetCurrentThreadId();
@@ -345,7 +356,17 @@ namespace ProcessTools.Windows
         }
 
         [DllImport("kernel32.dll")]
-        public static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+        private static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+
+        public static AutoDispose<IntPtr> OpenThreadHandle(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId)
+        {
+            IntPtr handle = OpenThread(dwDesiredAccess, bInheritHandle, dwThreadId);
+            if(handle == IntPtr.Zero || handle == INVALID_HANDLE_VALUE)
+            {
+                return null;
+            }
+            return new AutoDispose<IntPtr>(handle, (target) => CloseHandle(target));
+        }
 
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
