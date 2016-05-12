@@ -391,9 +391,31 @@ namespace ProcessTools.Windows
 
         [DllImport("Psapi.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool EnumProcesses([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U4)] [In][Out] UInt32[] processIds,
+        private static extern bool EnumProcesses([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U4)] [In][Out] UInt32[] processIds,
                UInt32 arraySizeBytes,
-               [MarshalAs(UnmanagedType.U4)] out UInt32 bytesCopied);
+               [MarshalAs(UnmanagedType.U4)] out UInt32 pBytesReturned);
+
+        public static UInt32[] EnumProcesses()
+        {
+            uint[] pdwList = new uint[1024];  // Supporting a maximum of 1024 processes at once
+            uint dwBytesReturned = 0;
+            for (int retries = 3; retries > 0; --retries)
+            {
+                if (EnumProcesses(pdwList, (uint)(pdwList.Length * sizeof(uint)), out dwBytesReturned))
+                {
+                    int processesFound = (int)(dwBytesReturned / sizeof(uint));
+                    if (processesFound < pdwList.Length)
+                    {
+                        uint[] result = new uint[processesFound];
+                        Array.Copy(pdwList, result, processesFound);
+                        return result;
+                    }
+
+                    pdwList = new uint[pdwList.Length * 2];
+                }
+            }
+            return null;
+        }
 
         [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]

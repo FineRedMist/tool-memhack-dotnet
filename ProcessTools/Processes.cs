@@ -68,20 +68,16 @@ namespace ProcessTools
         {
             SortedList<uint, ProcessInformation> result = new SortedList<uint, ProcessInformation>();
 
-            uint[] pdwList = new uint[1024];  // Supporting a maximum of 1024 processes at once
-            uint dwNeeded = 0;
-
-            if (!Interop.EnumProcesses(pdwList, (uint)(pdwList.Length * sizeof(uint)), out dwNeeded))
+            uint[] processList = Interop.EnumProcesses();
+            if (processList == null)
             {
-                // dwNeeded = GetLastError();  // Mostly for debugging if I ever see it happen myself
                 return result;
             }
-            uint dwCount = dwNeeded / sizeof(uint);
 
             // Get the information for the list of processes
-            for (uint i = 0; i < dwCount; ++i)
+            foreach(uint processId in processList)
             {
-                result[pdwList[i]] = GetProcessInfo(pdwList[i], idleProcessName, systemName);
+                result[processId] = GetProcessInfo(processId, idleProcessName, systemName);
             }
 
             return result;
