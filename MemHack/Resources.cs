@@ -38,7 +38,7 @@ namespace MemHack
 				s = rs.GetString(name);
 			else
 				s = rm.GetString(name);
-			if(s == null || s == "")
+			if(string.IsNullOrEmpty(s))
 				throw new System.NotImplementedException(name);
 			return s;
 		}
@@ -429,7 +429,7 @@ namespace MemHack
 			// external localizers to ensure that all the strings are defined correctly.
 			MethodInfo [] mis = typeof(Resources).GetMethods(BindingFlags.Public | BindingFlags.Static);
 			object [] paramList = new object [0];
-			string res = "";
+			string res = string.Empty;
 			foreach(MethodInfo mi in mis)
 			{
 				if(mi.ReturnType != typeof(string) ||

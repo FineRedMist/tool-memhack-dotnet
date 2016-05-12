@@ -120,7 +120,7 @@ namespace MemHack
 			if(m_count == 0)
 			{
 				lstAddresses.Items.Clear();
-				lblSearchSize.Text = "";
+				lblSearchSize.Text = string.Empty;
 				goto Done;
 			}
 
@@ -130,7 +130,7 @@ namespace MemHack
 			if(m_count == 0)
 			{
 				lstAddresses.Items.Clear();
-				lblSearchSize.Text = "";
+				lblSearchSize.Text = string.Empty;
 				goto Done;
 			}
 
@@ -176,7 +176,7 @@ namespace MemHack
 			if(fRetrieved)
 				m_last = avs;
 			CheckButtons();
-			lblFound.Text = "Addresses Found: " + m_count.ToString() + ((m_count > 2000) ? " (hidden)" : "");
+			lblFound.Text = "Addresses Found: " + m_count.ToString() + ((m_count > 2000) ? " (hidden)" : string.Empty);
 			lock(m_lockobj)
 			{
 				m_fRunning = false;

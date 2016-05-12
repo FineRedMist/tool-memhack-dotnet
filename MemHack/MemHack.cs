@@ -142,7 +142,7 @@ namespace MemHack
 				}
 
 				lvi = new ListViewItem();
-				lvi.Text = "";
+				lvi.Text = string.Empty;
 				lvi.SubItems.Add(s.ID.ToString().PadLeft(5, ' '));
 				lvi.SubItems.Add(s.Name);
 				lvi.SubItems.Add(s.DefaultFriendlyName);
@@ -156,9 +156,9 @@ namespace MemHack
 			// Update dependent fields if their is no longer an item selected
 			if(procList.SelectedIndices.Count == 0)
 			{
-				procLocation.Text = "";
-				lblVisible.Text = "";
-				lblDate.Text = "";
+				procLocation.Text = string.Empty;
+				lblVisible.Text = string.Empty;
+				lblDate.Text = string.Empty;
 				nameList.Items.Clear();
 				procSelect.Enabled = false;
 			}
@@ -181,7 +181,7 @@ namespace MemHack
 
 		protected string rpt(char c, int count)
 		{
-			string s = "";
+			string s = string.Empty;
 			for(int i = 0; i < count; ++i)
 				s += c;
 			return s;
@@ -514,17 +514,17 @@ namespace MemHack
 			{
 				// If there was a change in the id of the running app, then clear it and add
 				nameList.Items.Clear();
-				lblVisible.Text = "";
-				lblDate.Text = "";
+				lblVisible.Text = string.Empty;
+				lblDate.Text = string.Empty;
 			}
 			m_lastid = id;
 
 			ProcessInformation proc = m_plist[id];
 			var sortedNames = new SortedList<string, ProcessFriendlyName>();
 			// I'm setting up some sorted names to make this quite a bit more clean
-			for(int i = 0; i < proc.Count; ++i)
+			for(int i = 0; i < proc.FriendlyNames.Count; ++i)
 			{
-				ProcessFriendlyName f = proc[i];
+				ProcessFriendlyName f = proc.FriendlyNames[i];
 				sortedNames[f.Name] = f;
 			}
 			procLocation.Text = proc.FullPath;
@@ -550,9 +550,9 @@ namespace MemHack
 				sl[sortedNames[s]] = 1;
 
 			// For all remaining items in pNames add them to nameList.Items inserting as appropriate.
-			for(int i = 0; i < proc.Count; ++i)
+			for(int i = 0; i < proc.FriendlyNames.Count; ++i)
 			{
-				ProcessFriendlyName f = proc[i];
+				ProcessFriendlyName f = proc.FriendlyNames[i];
                 int value;
 				if(sl.TryGetValue(f, out value))
 					continue;
@@ -619,23 +619,23 @@ namespace MemHack
 				uint id = IDFromPos(procList.SelectedIndices[0]);
 				if(m_plist[id] != null)
 				{
-					ProcessFriendlyName f = m_plist[id][nameList.SelectedIndices[0]];
-					lblVisible.Text = (f.Visible) ? "Visible" : "";
+					ProcessFriendlyName f = m_plist[id].FriendlyNames[nameList.SelectedIndices[0]];
+					lblVisible.Text = (f.Visible) ? "Visible" : string.Empty;
 					if(f.Date != DateTime.FromFileTimeUtc(0))
 						lblDate.Text = f.Date.ToString();
 					else
-						lblDate.Text = "";
+						lblDate.Text = string.Empty;
 				}
 				else
 				{
-					lblDate.Text = "";
-					lblVisible.Text = "";
+					lblDate.Text = string.Empty;
+					lblVisible.Text = string.Empty;
 				}
 			}
 			else
 			{
-				lblDate.Text = "";
-				lblVisible.Text = "";
+				lblDate.Text = string.Empty;
+				lblVisible.Text = string.Empty;
 			}
 		}
 

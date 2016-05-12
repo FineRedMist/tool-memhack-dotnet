@@ -8,7 +8,7 @@ namespace ProcessTools
     /// 
     /// Note: Not all fields may have values if there are insufficient permissions to query them.
     /// </summary>
-    public class ProcessInformation : IReadOnlyList<ProcessFriendlyName>
+    public class ProcessInformation
     {
         /// <summary>
         /// The name of the process.
@@ -46,11 +46,18 @@ namespace ProcessTools
         {
             get
             {
-                return FriendlyNames.Count == 0 ? string.Empty : FriendlyNames[0].Name;
+                return mFriendlyNames.Count == 0 ? string.Empty : mFriendlyNames[0].Name;
             }
         }
 
-        List<ProcessFriendlyName> FriendlyNames;
+        /// <summary>
+        /// Retrieve the set of <seealso cref="ProcessFriendlyName"/> entries for this process.
+        /// </summary>
+        public IReadOnlyList<ProcessFriendlyName> FriendlyNames
+        {
+            get { return mFriendlyNames; }
+        }
+        List<ProcessFriendlyName> mFriendlyNames;
 
         /// <summary>
         /// Creates the process information for a given <paramref name="processID"/> and <paramref name="processName"/>.
@@ -64,7 +71,7 @@ namespace ProcessTools
             IsService = false;
             Name = processName;
             FullPath = null;
-            FriendlyNames = new List<ProcessFriendlyName>();
+            mFriendlyNames = new List<ProcessFriendlyName>();
         }
 
         /// <summary>
@@ -74,52 +81,14 @@ namespace ProcessTools
         {
             if (name == null)
                 return;
-            int foundIndex = FriendlyNames.BinarySearch(name, name);
+            int foundIndex = mFriendlyNames.BinarySearch(name, name);
             if (foundIndex < 0)
             {
-                FriendlyNames.Insert(~foundIndex, name);
+                mFriendlyNames.Insert(~foundIndex, name);
             }
             else
             {
-                FriendlyNames.Insert(foundIndex, name);
-            }
-        }
-
-        /// <summary>
-        /// Retrieves an enumerator for all <seealso cref="ProcessFriendlyName"/> entries for this process.
-        /// </summary>
-        public IEnumerator<ProcessFriendlyName> GetEnumerator()
-        {
-            return FriendlyNames.GetEnumerator();
-        }
-
-        /// <summary>
-        /// Retrieves an enumerator for all <seealso cref="ProcessFriendlyName"/> entries for this process.
-        /// </summary>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return FriendlyNames.GetEnumerator();
-        }
-
-        /// <summary>
-        /// The number of <seealso cref="ProcessFriendlyName"/> entries for this process.
-        /// </summary>
-        public int Count
-        {
-            get
-            {
-                return FriendlyNames.Count;
-            }
-        }
-
-        /// <summary>
-        /// Indexer to retrieve the <seealso cref="ProcessFriendlyName"/> at <paramref name="index"/>.
-        /// </summary>
-        public ProcessFriendlyName this[int index]
-        {
-            get
-            {
-                return FriendlyNames[index];
+                mFriendlyNames.Insert(foundIndex, name);
             }
         }
     }
