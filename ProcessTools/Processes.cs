@@ -1,7 +1,6 @@
 ﻿using ProcessTools.Windows;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace ProcessTools
 {
@@ -30,35 +29,22 @@ namespace ProcessTools
         {
             SortedList<uint, ProcessInformation> result = new SortedList<uint, ProcessInformation>();
 
-            IntPtr hSnap = Interop.INVALID_HANDLE_VALUE;
-            hSnap = Interop.CreateToolhelp32Snapshot(SnapshotFlags.Process, 0);
-            if (hSnap == IntPtr.Zero || hSnap == Interop.INVALID_HANDLE_VALUE)  // Couldn't snap, use a different method
+            foreach (var processEntry in Interop.SnapProcesses())
             {
-                return result;
-            }
-
-            PROCESSENTRY32 procEntry = new PROCESSENTRY32();
-            procEntry.dwSize = (uint) Marshal.SizeOf(procEntry);
-            if (Interop.Process32First(hSnap, ref procEntry))  // Go through each of the processes
-            {
-                do
+                // Set up the structures
+                ProcessInformation p = new ProcessInformation(processEntry.th32ProcessID, processEntry.szExeFile);
+                if (p.ID == 0) // The idle process has the zero id, so save myself some work by special casing it
                 {
-                    // Set up the structures
-                    ProcessInformation p = new ProcessInformation(procEntry.th32ProcessID, procEntry.szExeFile);
-                    if (p.ID == 0) // The idle process has the zero id, so save myself some work by special casing it
-                    {
-                        p.Add(new ProcessFriendlyName(idleProcessName));
-                    }
-                    else if (p.ID == 4)
-                    {
-                        p.Add(new ProcessFriendlyName(systemName));
-                    }
-                    GetProcessFullPath(p);
-                    result[p.ID] = p;
-                } while (Interop.Process32Next(hSnap, ref procEntry)); // Next process
+                    p.Add(new ProcessFriendlyName(idleProcessName));
+                }
+                else if (p.ID == 4)
+                {
+                    p.Add(new ProcessFriendlyName(systemName));
+                }
+                GetProcessFullPath(p);
+                result[p.ID] = p;
             }
 
-            Interop.CloseHandle(hSnap);
             return result;
         }
 
@@ -103,13 +89,15 @@ namespace ProcessTools
                     return true;
                 }
 
-                WINDOWINFO wi = new WINDOWINFO(true);
-
                 // Get window information
-                if (!Interop.GetWindowInfo(hwnd, ref wi))
+                var windowInfo = Interop.GetWindowInfo(hwnd);
+
+                if (!windowInfo.HasValue)
                 {
                     return true;
                 }
+
+                var wi = windowInfo.Value;
 
                 // There are some classes of windows that I don't want to display so skip them
                 if (wi.dwExStyle.HasFlag(WindowExtendedStyle.ToolWindow) 

@@ -312,15 +312,37 @@ namespace ProcessTools.Windows
         public static extern uint GetCurrentThreadId();
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr CreateToolhelp32Snapshot(SnapshotFlags dwFlags, uint th32ProcessID);
+        private static extern IntPtr CreateToolhelp32Snapshot(SnapshotFlags dwFlags, uint th32ProcessID);
 
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool Process32First(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
+        private static extern bool Process32First(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
 
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool Process32Next(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
+        private static extern bool Process32Next(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
+
+        public static IEnumerable<PROCESSENTRY32> SnapProcesses()
+        {
+            IntPtr hSnap = INVALID_HANDLE_VALUE;
+            hSnap = CreateToolhelp32Snapshot(SnapshotFlags.Process, 0);
+            if (hSnap == IntPtr.Zero || hSnap == INVALID_HANDLE_VALUE)  // Couldn't snap, use a different method
+            {
+                yield break;
+            }
+
+            var autoDisposer = new AutoDispose<IntPtr>(hSnap, (handle) => CloseHandle(handle));
+
+            PROCESSENTRY32 procEntry = new PROCESSENTRY32();
+            procEntry.dwSize = (uint)Marshal.SizeOf(procEntry);
+            if (Process32First(autoDisposer.Value, ref procEntry))  // Go through each of the processes
+            {
+                do
+                {
+                    yield return procEntry;
+                } while (Process32Next(autoDisposer.Value, ref procEntry)); // Next process
+            }
+        }
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
@@ -362,7 +384,17 @@ namespace ProcessTools.Windows
 
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
+        private static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
+
+        public static Nullable<WINDOWINFO> GetWindowInfo(IntPtr hwnd)
+        {
+            WINDOWINFO wi = new WINDOWINFO(true);
+            if (GetWindowInfo(hwnd, ref wi))
+            {
+                return wi;
+            }
+            return null;
+        }
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
@@ -395,7 +427,7 @@ namespace ProcessTools.Windows
         {
             List<ENUM_SERVICE_STATUS_PROCESS> results = new List<ENUM_SERVICE_STATUS_PROCESS>();
 
-            IntPtr handle = Interop.OpenSCManager(machineName, databaseName, dwAccess);
+            IntPtr handle = OpenSCManager(machineName, databaseName, dwAccess);
             if (handle == IntPtr.Zero)
             {
                 return null;
@@ -409,12 +441,12 @@ namespace ProcessTools.Windows
                 uint iServicesReturned = 0;
                 uint iResumeHandle = 0;
 
-                if (!Interop.EnumServicesStatusEx(handle, infoLevel, dwServiceType, dwServiceState, IntPtr.Zero, 0, out iBytesNeeded, out iServicesReturned, ref iResumeHandle, null))
+                if (!EnumServicesStatusEx(handle, infoLevel, dwServiceType, dwServiceState, IntPtr.Zero, 0, out iBytesNeeded, out iServicesReturned, ref iResumeHandle, null))
                 {
                     // allocate our memory to receive the data for all the services (including the names)
                     buf = Marshal.AllocHGlobal((int)iBytesNeeded);
 
-                    if (!Interop.EnumServicesStatusEx(handle, infoLevel, dwServiceType, dwServiceState, buf, iBytesNeeded, out iBytesNeeded, out iServicesReturned, ref iResumeHandle, null))
+                    if (!EnumServicesStatusEx(handle, infoLevel, dwServiceType, dwServiceState, buf, iBytesNeeded, out iBytesNeeded, out iServicesReturned, ref iResumeHandle, null))
                     {
                         throw new Win32Exception(Marshal.GetLastWin32Error());
                     }
@@ -457,7 +489,7 @@ namespace ProcessTools.Windows
             {
                 if (handle != IntPtr.Zero)
                 {
-                    Interop.CloseServiceHandle(handle);
+                    CloseServiceHandle(handle);
                 }
 
                 if (buf != IntPtr.Zero)
@@ -506,7 +538,7 @@ namespace ProcessTools.Windows
             IntPtr[] hMod = new IntPtr[countOfModulesToGet];
             uint cbNeeded = 0;
             uint cbProvided = (uint)(countOfModulesToGet * IntPtr.Size);
-            if (Interop.EnumProcessModules(hProcess, hMod, cbProvided, out cbNeeded))
+            if (EnumProcessModules(hProcess, hMod, cbProvided, out cbNeeded))
             {
                 if (cbNeeded < cbProvided)
                 {
@@ -528,7 +560,7 @@ namespace ProcessTools.Windows
         {
             baseName = null;
             StringBuilder szName = new StringBuilder(1024);
-            if (0 != Interop.GetModuleBaseName(hProcess, hModule, szName, (uint)szName.Capacity))
+            if (0 != GetModuleBaseName(hProcess, hModule, szName, (uint)szName.Capacity))
             {
                 baseName = szName.ToString();
                 return true;
@@ -543,7 +575,7 @@ namespace ProcessTools.Windows
         {
             moduleFileName = null;
             StringBuilder szName = new StringBuilder(1024);
-            if (0 != Interop.GetModuleFileNameEx(hProcess, hModule, szName, (uint)szName.Capacity))
+            if (0 != GetModuleFileNameEx(hProcess, hModule, szName, (uint)szName.Capacity))
             {
                 moduleFileName = szName.ToString();
                 return true;

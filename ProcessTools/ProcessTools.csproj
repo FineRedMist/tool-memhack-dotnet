@@ -40,6 +40,7 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoDispose.cs" />
     <Compile Include="IProgressIndicator.cs" />
     <Compile Include="Processes.cs" />
     <Compile Include="ProcessFriendlyName.cs" />
