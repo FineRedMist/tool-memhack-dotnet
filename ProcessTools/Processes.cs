@@ -90,18 +90,18 @@ namespace ProcessTools
                 }
 
                 // Get window information
-                var windowInfo = Interop.GetWindowInfo(hwnd);
+                var maybeWindowInfo = Interop.GetWindowInfo(hwnd);
 
-                if (!windowInfo.HasValue)
+                if (!maybeWindowInfo.HasValue)
                 {
                     return true;
                 }
 
-                var wi = windowInfo.Value;
+                var windowInfo = maybeWindowInfo.Value;
 
                 // There are some classes of windows that I don't want to display so skip them
-                if (wi.dwExStyle.HasFlag(WindowExtendedStyle.ToolWindow) 
-                    || 0 != (wi.dwStyle & (WindowStyle.Popup | WindowStyle.Child | WindowStyle.Disabled)))
+                if (windowInfo.dwExStyle.HasFlag(WindowExtendedStyle.ToolWindow) 
+                    || 0 != (windowInfo.dwStyle & (WindowStyle.Popup | WindowStyle.Child | WindowStyle.Disabled)))
                 {
                     return true;
                 }
@@ -115,16 +115,16 @@ namespace ProcessTools
 
                 // Flag whether the window is visible.  There are some that I still want to display unfortunately
                 // which means I'll also have a bunch of others that I don't want to display in the list
-                visible = (wi.dwStyle & (WindowStyle.Minimize | WindowStyle.Visible)) != 0;
+                visible = (windowInfo.dwStyle & (WindowStyle.Minimize | WindowStyle.Visible)) != 0;
 
                 DateTime threadExitedTime, threadKernelTime, threadUserTime;
                 // I use the thread information to determine when the window is created.  Typically the first window
                 // created is really the interesting one so I sort them based on date created
-                using (var hThread = Interop.OpenThreadHandle(ThreadAccess.QUERY_INFORMATION, false, threadId))
+                using (var threadHandle = Interop.OpenThreadHandle(ThreadAccess.QUERY_INFORMATION, false, threadId))
                 {
-                    if (hThread != null)
+                    if (threadHandle != null)
                     {
-                        Interop.GetThreadTimes(hThread.Value, out windowThreadDate, out threadExitedTime, out threadKernelTime, out threadUserTime);
+                        Interop.GetThreadTimes(threadHandle.Value, out windowThreadDate, out threadExitedTime, out threadKernelTime, out threadUserTime);
                     }
                 }
 
@@ -188,12 +188,12 @@ namespace ProcessTools
 
         private static AutoDispose<IntPtr> OpenProcess(uint processId, out bool isReadOnly)
         {
-            var hProcess = Interop.OpenProcessHandle(ProcessReadWriteFlags, false, processId);
-            if (hProcess != null)
+            var processHandle = Interop.OpenProcessHandle(ProcessReadWriteFlags, false, processId);
+            if (processHandle != null)
             {
                 // If I succeed to open the process with the options needed to modify it, I know it is modifiable
                 isReadOnly = false;
-                return hProcess;
+                return processHandle;
             }
             // I failed to open the process for modification so just open it to read the path info
             isReadOnly = true;
@@ -209,17 +209,17 @@ namespace ProcessTools
             processInfo.IsService = false;
 
             bool modifiable;
-            using (var hProcess = OpenProcess(processInfo.ID, out modifiable))
+            using (var processHandle = OpenProcess(processInfo.ID, out modifiable))
             {
                 processInfo.Modifiable = modifiable;
-                if (null != hProcess)
+                if (null != processHandle)
                 {
-                    IntPtr[] moduleHandles = Interop.EnumProcessModules(hProcess.Value, 1);
+                    IntPtr[] moduleHandles = Interop.EnumProcessModules(processHandle.Value, 1);
                     // Enumerate the modules in the process--the first one is the application which we can get the path from
                     if (moduleHandles != null && moduleHandles.Length > 0)
                     {   // Uses size in bytes
                         string moduleFilename;
-                        if (Interop.GetModuleFileNameEx(hProcess.Value, moduleHandles[0], out moduleFilename))
+                        if (Interop.GetModuleFileNameEx(processHandle.Value, moduleHandles[0], out moduleFilename))
                         {
                             processInfo.FullPath = moduleFilename;
                         }
@@ -238,23 +238,23 @@ namespace ProcessTools
             string fullProcessPath = null;
 
             bool modifiable;
-            using (var hProcess = OpenProcess(processID, out modifiable))
+            using (var processHandle = OpenProcess(processID, out modifiable))
             {
                 // Get the process name.
-                if (null != hProcess)
+                if (null != processHandle)
                 {
-                    IntPtr[] moduleHandles = Interop.EnumProcessModules(hProcess.Value, 1);
+                    IntPtr[] moduleHandles = Interop.EnumProcessModules(processHandle.Value, 1);
 
                     // The first module is (typically) the application itself, so we can get the information we need from there
                     if (moduleHandles != null && moduleHandles.Length > 0)
                     {
-                        string szProcessName;
-                        if (Interop.GetModuleBaseName(hProcess.Value, moduleHandles[0], out szProcessName))
+                        string moduleProcessName;
+                        if (Interop.GetModuleBaseName(processHandle.Value, moduleHandles[0], out moduleProcessName))
                         {
-                            processName = szProcessName;
+                            processName = moduleProcessName;
                         }
                         string moduleFilename;
-                        if (Interop.GetModuleFileNameEx(hProcess.Value, moduleHandles[0], out moduleFilename))
+                        if (Interop.GetModuleFileNameEx(processHandle.Value, moduleHandles[0], out moduleFilename))
                         {
                             fullProcessPath = moduleFilename;
                         }
