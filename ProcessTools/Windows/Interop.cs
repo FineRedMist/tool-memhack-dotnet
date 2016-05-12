@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace ProcessTools.Windows
 {
@@ -375,11 +374,11 @@ namespace ProcessTools.Windows
         public static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDesktopWindowsDelegate lpfn, IntPtr lParam);
 
         [DllImport("advapi32.dll", EntryPoint = "OpenSCManagerW", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern IntPtr OpenSCManager(string machineName, string databaseName, AccessFlags dwAccess);
+        private static extern IntPtr OpenSCManager(string machineName, string databaseName, AccessFlags dwAccess);
 
         [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool EnumServicesStatusEx(IntPtr hSCManager,
+        private static extern bool EnumServicesStatusEx(IntPtr hSCManager,
             ServiceEnumType infoLevel, ServiceType dwServiceType,
             ServiceStateRequest dwServiceState, IntPtr lpServices, UInt32 cbBufSize,
             out uint pcbBytesNeeded, out uint lpServicesReturned,
@@ -387,7 +386,88 @@ namespace ProcessTools.Windows
 
         [DllImport("advapi32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool CloseServiceHandle(IntPtr hSCObject);
+        private static extern bool CloseServiceHandle(IntPtr hSCObject);
+
+        public static IEnumerable<ENUM_SERVICE_STATUS_PROCESS> GetServices(
+            string machineName, string databaseName, AccessFlags dwAccess,   // From OpenSCManager
+            ServiceEnumType infoLevel, ServiceType dwServiceType, ServiceStateRequest dwServiceState // From EnumServicesStatusEx
+            )
+        {
+            List<ENUM_SERVICE_STATUS_PROCESS> results = new List<ENUM_SERVICE_STATUS_PROCESS>();
+
+            IntPtr handle = Interop.OpenSCManager(machineName, databaseName, dwAccess);
+            if (handle == IntPtr.Zero)
+            {
+                return null;
+            }
+
+            IntPtr buf = IntPtr.Zero;
+
+            try
+            {
+                uint iBytesNeeded = 0;
+                uint iServicesReturned = 0;
+                uint iResumeHandle = 0;
+
+                if (!Interop.EnumServicesStatusEx(handle, infoLevel, dwServiceType, dwServiceState, IntPtr.Zero, 0, out iBytesNeeded, out iServicesReturned, ref iResumeHandle, null))
+                {
+                    // allocate our memory to receive the data for all the services (including the names)
+                    buf = Marshal.AllocHGlobal((int)iBytesNeeded);
+
+                    if (!Interop.EnumServicesStatusEx(handle, infoLevel, dwServiceType, dwServiceState, buf, iBytesNeeded, out iBytesNeeded, out iServicesReturned, ref iResumeHandle, null))
+                    {
+                        throw new Win32Exception(Marshal.GetLastWin32Error());
+                    }
+
+                    ENUM_SERVICE_STATUS_PROCESS serviceStatus;
+
+                    // check if 64 bit system which has different pack sizes
+                    if (IntPtr.Size == 8)
+                    {
+                        long pointer = buf.ToInt64();
+                        for (int i = 0; i < (int)iServicesReturned; i++)
+                        {
+                            serviceStatus = (ENUM_SERVICE_STATUS_PROCESS)Marshal.PtrToStructure(new IntPtr(pointer), typeof(ENUM_SERVICE_STATUS_PROCESS));
+                            results.Add(serviceStatus);
+
+                            // incremement by sizeof(ENUM_SERVICE_STATUS_PROCESS) allow Packing of 8
+                            pointer += ENUM_SERVICE_STATUS_PROCESS.SizePack8;
+                        }
+
+                    }
+                    else
+                    {
+                        int pointer = buf.ToInt32();
+                        for (int i = 0; i < (int)iServicesReturned; i++)
+                        {
+                            serviceStatus = (ENUM_SERVICE_STATUS_PROCESS)Marshal.PtrToStructure(new IntPtr(pointer), typeof(ENUM_SERVICE_STATUS_PROCESS));
+                            results.Add(serviceStatus);
+
+                            // incremement by sizeof(ENUM_SERVICE_STATUS_PROCESS) allow Packing of 4
+                            pointer += ENUM_SERVICE_STATUS_PROCESS.SizePack4;
+                        }
+                    }
+                }
+            }
+            catch (Exception /*e*/)
+            {
+                ;
+            }
+            finally
+            {
+                if (handle != IntPtr.Zero)
+                {
+                    Interop.CloseServiceHandle(handle);
+                }
+
+                if (buf != IntPtr.Zero)
+                {
+                    Marshal.FreeHGlobal(buf);
+                }
+            }
+
+            return results;
+        }
 
         [DllImport("Psapi.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -397,21 +477,21 @@ namespace ProcessTools.Windows
 
         public static UInt32[] EnumProcesses()
         {
-            uint[] pdwList = new uint[1024];  // Supporting a maximum of 1024 processes at once
+            uint[] processList = new uint[1024];  // Supporting a maximum of 1024 processes at once
             uint dwBytesReturned = 0;
             for (int retries = 3; retries > 0; --retries)
             {
-                if (EnumProcesses(pdwList, (uint)(pdwList.Length * sizeof(uint)), out dwBytesReturned))
+                if (EnumProcesses(processList, (uint)(processList.Length * sizeof(uint)), out dwBytesReturned))
                 {
                     int processesFound = (int)(dwBytesReturned / sizeof(uint));
-                    if (processesFound < pdwList.Length)
+                    if (processesFound < processList.Length)
                     {
                         uint[] result = new uint[processesFound];
-                        Array.Copy(pdwList, result, processesFound);
+                        Array.Copy(processList, result, processesFound);
                         return result;
                     }
 
-                    pdwList = new uint[pdwList.Length * 2];
+                    processList = new uint[processList.Length * 2];
                 }
             }
             return null;

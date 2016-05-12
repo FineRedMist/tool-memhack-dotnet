@@ -1,9 +1,7 @@
 ﻿using ProcessTools.Windows;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace ProcessTools
 {
@@ -179,73 +177,15 @@ namespace ProcessTools
 
         private static void QueryServices(SortedList<uint, ProcessInformation> processes)
         {
-            IntPtr handle = Interop.OpenSCManager(null, null, AccessFlags.GenericRead);
-            if (handle == IntPtr.Zero)
+            var services = Interop.GetServices(null, null, AccessFlags.GenericRead, ServiceEnumType.Info, ServiceType.Driver | ServiceType.Win32, ServiceStateRequest.Active);
+            if (services == null)
             {
                 return;
             }
 
-            IntPtr buf = IntPtr.Zero;
-
-            try
+            foreach (var service in services)
             {
-                uint iBytesNeeded = 0;
-                uint iServicesReturned = 0;
-                uint iResumeHandle = 0;
-
-                if (!Interop.EnumServicesStatusEx(handle, ServiceEnumType.Info, ServiceType.Win32 | ServiceType.Driver, ServiceStateRequest.All, IntPtr.Zero, 0, out iBytesNeeded, out iServicesReturned, ref iResumeHandle, null))
-                {
-                    // allocate our memory to receive the data for all the services (including the names)
-                    buf = Marshal.AllocHGlobal((int)iBytesNeeded);
-
-                    if (!Interop.EnumServicesStatusEx(handle, ServiceEnumType.Info, ServiceType.Win32 | ServiceType.Driver, ServiceStateRequest.All, buf, iBytesNeeded, out iBytesNeeded, out iServicesReturned, ref iResumeHandle, null))
-                        throw new Win32Exception(Marshal.GetLastWin32Error());
-
-                    ENUM_SERVICE_STATUS_PROCESS serviceStatus;
-
-                    // check if 64 bit system which has different pack sizes
-                    if (IntPtr.Size == 8)
-                    {
-                        long pointer = buf.ToInt64();
-                        for (int i = 0; i < (int)iServicesReturned; i++)
-                        {
-                            serviceStatus = (ENUM_SERVICE_STATUS_PROCESS)Marshal.PtrToStructure(new IntPtr(pointer), typeof(ENUM_SERVICE_STATUS_PROCESS));
-                            UpdateProcessInformation(processes, serviceStatus);
-
-                            // incremement by sizeof(ENUM_SERVICE_STATUS_PROCESS) allow Packing of 8
-                            pointer += ENUM_SERVICE_STATUS_PROCESS.SizePack8;
-                        }
-
-                    }
-                    else
-                    {
-                        int pointer = buf.ToInt32();
-                        for (int i = 0; i < (int)iServicesReturned; i++)
-                        {
-                            serviceStatus = (ENUM_SERVICE_STATUS_PROCESS)Marshal.PtrToStructure(new IntPtr(pointer), typeof(ENUM_SERVICE_STATUS_PROCESS));
-                            UpdateProcessInformation(processes, serviceStatus);
-
-                            // incremement by sizeof(ENUM_SERVICE_STATUS_PROCESS) allow Packing of 4
-                            pointer += ENUM_SERVICE_STATUS_PROCESS.SizePack4;
-                        }
-                    }
-                }
-            }
-            catch (Exception /*e*/)
-            {
-                ;
-            }
-            finally
-            {
-                if (handle != IntPtr.Zero)
-                {
-                    Interop.CloseServiceHandle(handle);
-                }
-
-                if (buf != IntPtr.Zero)
-                {
-                    Marshal.FreeHGlobal(buf);
-                }
+                UpdateProcessInformation(processes, service);
             }
         }
 
