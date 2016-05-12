@@ -180,12 +180,6 @@ namespace PSView2
 				break;
 		}
 
-		for (int i = 0; i < res->Count; ++i)
-		{
-			ProcessInformation^ pr = res[res->Keys[i]];
-			pr->Sort();
-		}
-
 	Cleanup:
 		if (hSnap != INVALID_HANDLE_VALUE && hSnap != 0)
 			CloseHandle(hSnap);

@@ -136,8 +136,8 @@ namespace MemHack
 				if(sl.TryGetValue(s.ID, out lvi))
 				{
 					// this sort of construct is to help reduce the number of updates that occur to reduce flicker
-					if(lvi.SubItems[3].Text != s.DefaultFriendlyName())  
-						lvi.SubItems[3].Text = s.DefaultFriendlyName();
+					if(lvi.SubItems[3].Text != s.DefaultFriendlyName)  
+						lvi.SubItems[3].Text = s.DefaultFriendlyName;
 					continue;
 				}
 
@@ -145,7 +145,7 @@ namespace MemHack
 				lvi.Text = "";
 				lvi.SubItems.Add(s.ID.ToString().PadLeft(5, ' '));
 				lvi.SubItems.Add(s.Name);
-				lvi.SubItems.Add(s.DefaultFriendlyName());
+				lvi.SubItems.Add(s.DefaultFriendlyName);
 				procList.Items.Add(lvi);
 			}
 
@@ -524,7 +524,7 @@ namespace MemHack
 			// I'm setting up some sorted names to make this quite a bit more clean
 			for(int i = 0; i < proc.Count; ++i)
 			{
-				ProcessFriendlyName f = proc.FriendlyName(i);
+				ProcessFriendlyName f = proc[i];
 				sortedNames[f.Name] = f;
 			}
 			procLocation.Text = ((ProcessInformation) m_plist[id]).FullPath;
@@ -552,7 +552,7 @@ namespace MemHack
 			// For all remaining items in pNames add them to nameList.Items inserting as appropriate.
 			for(int i = 0; i < proc.Count; ++i)
 			{
-				ProcessFriendlyName f = proc.FriendlyName(i);
+				ProcessFriendlyName f = proc[i];
                 int value;
 				if(!sl.TryGetValue(f, out value))
 					continue;
@@ -619,7 +619,7 @@ namespace MemHack
 				uint id = IDFromPos(procList.SelectedIndices[0]);
 				if(m_plist[id] != null)
 				{
-					ProcessFriendlyName f = ((ProcessInformation) m_plist[id]).FriendlyName(nameList.SelectedIndices[0]);
+					ProcessFriendlyName f = m_plist[id][nameList.SelectedIndices[0]];
 					lblVisible.Text = (f.Visible) ? "Visible" : "";
 					if(f.Date != DateTime.FromFileTimeUtc(0))
 						lblDate.Text = f.Date.ToString();

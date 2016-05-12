@@ -4,31 +4,34 @@ using System.Collections;
 using System.ComponentModel;
 using System.Windows.Forms;
 using PSView2;
+using ProcessTools;
+using System.Resources;
+using System.Threading;
 
 namespace MemHack
 {
 	/// <summary>
 	/// Summary description for MemDisplay.
 	/// </summary>
-	public class MemDisplay : System.Windows.Forms.Form
+	public class MemDisplay : Form
 	{
-		private System.Windows.Forms.Button btnFindFirst;
-		private System.Windows.Forms.Button btnFindNext;
-		private System.Windows.Forms.Button btnSet;
+		private Button btnFindFirst;
+		private Button btnFindNext;
+		private Button btnSet;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
-		private System.Windows.Forms.Label lblFound;
+		private Container components = null;
+		private Label lblFound;
 		private System.Threading.TimerCallback m_cb = new System.Threading.TimerCallback(UpdateList);
 		private System.Threading.Timer m_timer = null;
-		private System.Windows.Forms.ListView lstAddresses;
-		private System.Windows.Forms.Label label2;
-		private System.Windows.Forms.TextBox txtMessages;
+		private ListView lstAddresses;
+		private Label label2;
+		private TextBox txtMessages;
 		
 		Type m_searchType = null;
 		ProcessModifier m_pm = null;
-		private System.Windows.Forms.Label lblSearchSize;
+		private Label lblSearchSize;
 		CAddressValue[] m_last = new CAddressValue[0];
 		long m_count = 0;
 
@@ -233,38 +236,38 @@ namespace MemHack
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(MemDisplay));
-			this.btnFindFirst = new System.Windows.Forms.Button();
-			this.btnFindNext = new System.Windows.Forms.Button();
-			this.lblFound = new System.Windows.Forms.Label();
-			this.btnSet = new System.Windows.Forms.Button();
-			this.lstAddresses = new System.Windows.Forms.ListView();
-			this.label2 = new System.Windows.Forms.Label();
-			this.txtMessages = new System.Windows.Forms.TextBox();
-			this.lblSearchSize = new System.Windows.Forms.Label();
+			ResourceManager resources = new ResourceManager(typeof(MemDisplay));
+			this.btnFindFirst = new Button();
+			this.btnFindNext = new Button();
+			this.lblFound = new Label();
+			this.btnSet = new Button();
+			this.lstAddresses = new ListView();
+			this.label2 = new Label();
+			this.txtMessages = new TextBox();
+			this.lblSearchSize = new Label();
 			this.SuspendLayout();
 			// 
 			// btnFindFirst
 			// 
 			this.btnFindFirst.AccessibleDescription = resources.GetString("btnFindFirst.AccessibleDescription");
 			this.btnFindFirst.AccessibleName = resources.GetString("btnFindFirst.AccessibleName");
-			this.btnFindFirst.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnFindFirst.Anchor")));
-			this.btnFindFirst.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnFindFirst.BackgroundImage")));
-			this.btnFindFirst.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("btnFindFirst.Dock")));
+			this.btnFindFirst.Anchor = ((AnchorStyles)(resources.GetObject("btnFindFirst.Anchor")));
+			this.btnFindFirst.BackgroundImage = ((Image)(resources.GetObject("btnFindFirst.BackgroundImage")));
+			this.btnFindFirst.Dock = ((DockStyle)(resources.GetObject("btnFindFirst.Dock")));
 			this.btnFindFirst.Enabled = ((bool)(resources.GetObject("btnFindFirst.Enabled")));
-			this.btnFindFirst.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("btnFindFirst.FlatStyle")));
-			this.btnFindFirst.Font = ((System.Drawing.Font)(resources.GetObject("btnFindFirst.Font")));
-			this.btnFindFirst.Image = ((System.Drawing.Image)(resources.GetObject("btnFindFirst.Image")));
-			this.btnFindFirst.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnFindFirst.ImageAlign")));
+			this.btnFindFirst.FlatStyle = ((FlatStyle)(resources.GetObject("btnFindFirst.FlatStyle")));
+			this.btnFindFirst.Font = ((Font)(resources.GetObject("btnFindFirst.Font")));
+			this.btnFindFirst.Image = ((Image)(resources.GetObject("btnFindFirst.Image")));
+			this.btnFindFirst.ImageAlign = ((ContentAlignment)(resources.GetObject("btnFindFirst.ImageAlign")));
 			this.btnFindFirst.ImageIndex = ((int)(resources.GetObject("btnFindFirst.ImageIndex")));
-			this.btnFindFirst.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("btnFindFirst.ImeMode")));
-			this.btnFindFirst.Location = ((System.Drawing.Point)(resources.GetObject("btnFindFirst.Location")));
+			this.btnFindFirst.ImeMode = ((ImeMode)(resources.GetObject("btnFindFirst.ImeMode")));
+			this.btnFindFirst.Location = ((Point)(resources.GetObject("btnFindFirst.Location")));
 			this.btnFindFirst.Name = "btnFindFirst";
-			this.btnFindFirst.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("btnFindFirst.RightToLeft")));
-			this.btnFindFirst.Size = ((System.Drawing.Size)(resources.GetObject("btnFindFirst.Size")));
+			this.btnFindFirst.RightToLeft = ((RightToLeft)(resources.GetObject("btnFindFirst.RightToLeft")));
+			this.btnFindFirst.Size = ((Size)(resources.GetObject("btnFindFirst.Size")));
 			this.btnFindFirst.TabIndex = ((int)(resources.GetObject("btnFindFirst.TabIndex")));
 			this.btnFindFirst.Text = resources.GetString("btnFindFirst.Text");
-			this.btnFindFirst.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnFindFirst.TextAlign")));
+			this.btnFindFirst.TextAlign = ((ContentAlignment)(resources.GetObject("btnFindFirst.TextAlign")));
 			this.btnFindFirst.Visible = ((bool)(resources.GetObject("btnFindFirst.Visible")));
 			this.btnFindFirst.Click += new System.EventHandler(this.btnFindFirst_Click);
 			// 
@@ -272,23 +275,23 @@ namespace MemHack
 			// 
 			this.btnFindNext.AccessibleDescription = resources.GetString("btnFindNext.AccessibleDescription");
 			this.btnFindNext.AccessibleName = resources.GetString("btnFindNext.AccessibleName");
-			this.btnFindNext.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnFindNext.Anchor")));
-			this.btnFindNext.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnFindNext.BackgroundImage")));
-			this.btnFindNext.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("btnFindNext.Dock")));
+			this.btnFindNext.Anchor = ((AnchorStyles)(resources.GetObject("btnFindNext.Anchor")));
+			this.btnFindNext.BackgroundImage = ((Image)(resources.GetObject("btnFindNext.BackgroundImage")));
+			this.btnFindNext.Dock = ((DockStyle)(resources.GetObject("btnFindNext.Dock")));
 			this.btnFindNext.Enabled = ((bool)(resources.GetObject("btnFindNext.Enabled")));
-			this.btnFindNext.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("btnFindNext.FlatStyle")));
-			this.btnFindNext.Font = ((System.Drawing.Font)(resources.GetObject("btnFindNext.Font")));
-			this.btnFindNext.Image = ((System.Drawing.Image)(resources.GetObject("btnFindNext.Image")));
-			this.btnFindNext.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnFindNext.ImageAlign")));
+			this.btnFindNext.FlatStyle = ((FlatStyle)(resources.GetObject("btnFindNext.FlatStyle")));
+			this.btnFindNext.Font = ((Font)(resources.GetObject("btnFindNext.Font")));
+			this.btnFindNext.Image = ((Image)(resources.GetObject("btnFindNext.Image")));
+			this.btnFindNext.ImageAlign = ((ContentAlignment)(resources.GetObject("btnFindNext.ImageAlign")));
 			this.btnFindNext.ImageIndex = ((int)(resources.GetObject("btnFindNext.ImageIndex")));
-			this.btnFindNext.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("btnFindNext.ImeMode")));
-			this.btnFindNext.Location = ((System.Drawing.Point)(resources.GetObject("btnFindNext.Location")));
+			this.btnFindNext.ImeMode = ((ImeMode)(resources.GetObject("btnFindNext.ImeMode")));
+			this.btnFindNext.Location = ((Point)(resources.GetObject("btnFindNext.Location")));
 			this.btnFindNext.Name = "btnFindNext";
-			this.btnFindNext.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("btnFindNext.RightToLeft")));
-			this.btnFindNext.Size = ((System.Drawing.Size)(resources.GetObject("btnFindNext.Size")));
+			this.btnFindNext.RightToLeft = ((RightToLeft)(resources.GetObject("btnFindNext.RightToLeft")));
+			this.btnFindNext.Size = ((Size)(resources.GetObject("btnFindNext.Size")));
 			this.btnFindNext.TabIndex = ((int)(resources.GetObject("btnFindNext.TabIndex")));
 			this.btnFindNext.Text = resources.GetString("btnFindNext.Text");
-			this.btnFindNext.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnFindNext.TextAlign")));
+			this.btnFindNext.TextAlign = ((ContentAlignment)(resources.GetObject("btnFindNext.TextAlign")));
 			this.btnFindNext.Visible = ((bool)(resources.GetObject("btnFindNext.Visible")));
 			this.btnFindNext.Click += new System.EventHandler(this.btnFindNext_Click);
 			// 
@@ -296,45 +299,45 @@ namespace MemHack
 			// 
 			this.lblFound.AccessibleDescription = resources.GetString("lblFound.AccessibleDescription");
 			this.lblFound.AccessibleName = resources.GetString("lblFound.AccessibleName");
-			this.lblFound.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("lblFound.Anchor")));
+			this.lblFound.Anchor = ((AnchorStyles)(resources.GetObject("lblFound.Anchor")));
 			this.lblFound.AutoSize = ((bool)(resources.GetObject("lblFound.AutoSize")));
-			this.lblFound.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("lblFound.Dock")));
+			this.lblFound.Dock = ((DockStyle)(resources.GetObject("lblFound.Dock")));
 			this.lblFound.Enabled = ((bool)(resources.GetObject("lblFound.Enabled")));
-			this.lblFound.Font = ((System.Drawing.Font)(resources.GetObject("lblFound.Font")));
-			this.lblFound.Image = ((System.Drawing.Image)(resources.GetObject("lblFound.Image")));
-			this.lblFound.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("lblFound.ImageAlign")));
+			this.lblFound.Font = ((Font)(resources.GetObject("lblFound.Font")));
+			this.lblFound.Image = ((Image)(resources.GetObject("lblFound.Image")));
+			this.lblFound.ImageAlign = ((ContentAlignment)(resources.GetObject("lblFound.ImageAlign")));
 			this.lblFound.ImageIndex = ((int)(resources.GetObject("lblFound.ImageIndex")));
-			this.lblFound.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("lblFound.ImeMode")));
-			this.lblFound.Location = ((System.Drawing.Point)(resources.GetObject("lblFound.Location")));
+			this.lblFound.ImeMode = ((ImeMode)(resources.GetObject("lblFound.ImeMode")));
+			this.lblFound.Location = ((Point)(resources.GetObject("lblFound.Location")));
 			this.lblFound.Name = "lblFound";
-			this.lblFound.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("lblFound.RightToLeft")));
-			this.lblFound.Size = ((System.Drawing.Size)(resources.GetObject("lblFound.Size")));
+			this.lblFound.RightToLeft = ((RightToLeft)(resources.GetObject("lblFound.RightToLeft")));
+			this.lblFound.Size = ((Size)(resources.GetObject("lblFound.Size")));
 			this.lblFound.TabIndex = ((int)(resources.GetObject("lblFound.TabIndex")));
 			this.lblFound.Text = resources.GetString("lblFound.Text");
-			this.lblFound.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("lblFound.TextAlign")));
+			this.lblFound.TextAlign = ((ContentAlignment)(resources.GetObject("lblFound.TextAlign")));
 			this.lblFound.Visible = ((bool)(resources.GetObject("lblFound.Visible")));
 			// 
 			// btnSet
 			// 
 			this.btnSet.AccessibleDescription = resources.GetString("btnSet.AccessibleDescription");
 			this.btnSet.AccessibleName = resources.GetString("btnSet.AccessibleName");
-			this.btnSet.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("btnSet.Anchor")));
-			this.btnSet.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnSet.BackgroundImage")));
-			this.btnSet.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("btnSet.Dock")));
+			this.btnSet.Anchor = ((AnchorStyles)(resources.GetObject("btnSet.Anchor")));
+			this.btnSet.BackgroundImage = ((Image)(resources.GetObject("btnSet.BackgroundImage")));
+			this.btnSet.Dock = ((DockStyle)(resources.GetObject("btnSet.Dock")));
 			this.btnSet.Enabled = ((bool)(resources.GetObject("btnSet.Enabled")));
-			this.btnSet.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("btnSet.FlatStyle")));
-			this.btnSet.Font = ((System.Drawing.Font)(resources.GetObject("btnSet.Font")));
-			this.btnSet.Image = ((System.Drawing.Image)(resources.GetObject("btnSet.Image")));
-			this.btnSet.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnSet.ImageAlign")));
+			this.btnSet.FlatStyle = ((FlatStyle)(resources.GetObject("btnSet.FlatStyle")));
+			this.btnSet.Font = ((Font)(resources.GetObject("btnSet.Font")));
+			this.btnSet.Image = ((Image)(resources.GetObject("btnSet.Image")));
+			this.btnSet.ImageAlign = ((ContentAlignment)(resources.GetObject("btnSet.ImageAlign")));
 			this.btnSet.ImageIndex = ((int)(resources.GetObject("btnSet.ImageIndex")));
-			this.btnSet.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("btnSet.ImeMode")));
-			this.btnSet.Location = ((System.Drawing.Point)(resources.GetObject("btnSet.Location")));
+			this.btnSet.ImeMode = ((ImeMode)(resources.GetObject("btnSet.ImeMode")));
+			this.btnSet.Location = ((Point)(resources.GetObject("btnSet.Location")));
 			this.btnSet.Name = "btnSet";
-			this.btnSet.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("btnSet.RightToLeft")));
-			this.btnSet.Size = ((System.Drawing.Size)(resources.GetObject("btnSet.Size")));
+			this.btnSet.RightToLeft = ((RightToLeft)(resources.GetObject("btnSet.RightToLeft")));
+			this.btnSet.Size = ((Size)(resources.GetObject("btnSet.Size")));
 			this.btnSet.TabIndex = ((int)(resources.GetObject("btnSet.TabIndex")));
 			this.btnSet.Text = resources.GetString("btnSet.Text");
-			this.btnSet.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("btnSet.TextAlign")));
+			this.btnSet.TextAlign = ((ContentAlignment)(resources.GetObject("btnSet.TextAlign")));
 			this.btnSet.Visible = ((bool)(resources.GetObject("btnSet.Visible")));
 			this.btnSet.Click += new System.EventHandler(this.btnSet_Click);
 			// 
@@ -342,23 +345,23 @@ namespace MemHack
 			// 
 			this.lstAddresses.AccessibleDescription = resources.GetString("lstAddresses.AccessibleDescription");
 			this.lstAddresses.AccessibleName = resources.GetString("lstAddresses.AccessibleName");
-			this.lstAddresses.Alignment = ((System.Windows.Forms.ListViewAlignment)(resources.GetObject("lstAddresses.Alignment")));
-			this.lstAddresses.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("lstAddresses.Anchor")));
-			this.lstAddresses.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("lstAddresses.BackgroundImage")));
-			this.lstAddresses.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("lstAddresses.Dock")));
+			this.lstAddresses.Alignment = ((ListViewAlignment)(resources.GetObject("lstAddresses.Alignment")));
+			this.lstAddresses.Anchor = ((AnchorStyles)(resources.GetObject("lstAddresses.Anchor")));
+			this.lstAddresses.BackgroundImage = ((Image)(resources.GetObject("lstAddresses.BackgroundImage")));
+			this.lstAddresses.Dock = ((DockStyle)(resources.GetObject("lstAddresses.Dock")));
 			this.lstAddresses.Enabled = ((bool)(resources.GetObject("lstAddresses.Enabled")));
-			this.lstAddresses.Font = ((System.Drawing.Font)(resources.GetObject("lstAddresses.Font")));
+			this.lstAddresses.Font = ((Font)(resources.GetObject("lstAddresses.Font")));
 			this.lstAddresses.FullRowSelect = true;
-			this.lstAddresses.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("lstAddresses.ImeMode")));
+			this.lstAddresses.ImeMode = ((ImeMode)(resources.GetObject("lstAddresses.ImeMode")));
 			this.lstAddresses.LabelWrap = ((bool)(resources.GetObject("lstAddresses.LabelWrap")));
-			this.lstAddresses.Location = ((System.Drawing.Point)(resources.GetObject("lstAddresses.Location")));
+			this.lstAddresses.Location = ((Point)(resources.GetObject("lstAddresses.Location")));
 			this.lstAddresses.MultiSelect = false;
 			this.lstAddresses.Name = "lstAddresses";
-			this.lstAddresses.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("lstAddresses.RightToLeft")));
-			this.lstAddresses.Size = ((System.Drawing.Size)(resources.GetObject("lstAddresses.Size")));
+			this.lstAddresses.RightToLeft = ((RightToLeft)(resources.GetObject("lstAddresses.RightToLeft")));
+			this.lstAddresses.Size = ((Size)(resources.GetObject("lstAddresses.Size")));
 			this.lstAddresses.TabIndex = ((int)(resources.GetObject("lstAddresses.TabIndex")));
 			this.lstAddresses.Text = resources.GetString("lstAddresses.Text");
-			this.lstAddresses.View = System.Windows.Forms.View.Details;
+			this.lstAddresses.View = View.Details;
 			this.lstAddresses.Visible = ((bool)(resources.GetObject("lstAddresses.Visible")));
 			this.lstAddresses.SelectedIndexChanged += new System.EventHandler(this.lstAddresses_SelectedIndexChanged);
 			// 
@@ -366,48 +369,48 @@ namespace MemHack
 			// 
 			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
 			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
-			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
+			this.label2.Anchor = ((AnchorStyles)(resources.GetObject("label2.Anchor")));
 			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
-			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
+			this.label2.Dock = ((DockStyle)(resources.GetObject("label2.Dock")));
 			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
-			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
-			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
-			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
+			this.label2.Font = ((Font)(resources.GetObject("label2.Font")));
+			this.label2.Image = ((Image)(resources.GetObject("label2.Image")));
+			this.label2.ImageAlign = ((ContentAlignment)(resources.GetObject("label2.ImageAlign")));
 			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
-			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
-			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
+			this.label2.ImeMode = ((ImeMode)(resources.GetObject("label2.ImeMode")));
+			this.label2.Location = ((Point)(resources.GetObject("label2.Location")));
 			this.label2.Name = "label2";
-			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
-			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
+			this.label2.RightToLeft = ((RightToLeft)(resources.GetObject("label2.RightToLeft")));
+			this.label2.Size = ((Size)(resources.GetObject("label2.Size")));
 			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
 			this.label2.Text = resources.GetString("label2.Text");
-			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
+			this.label2.TextAlign = ((ContentAlignment)(resources.GetObject("label2.TextAlign")));
 			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
 			// 
 			// txtMessages
 			// 
 			this.txtMessages.AccessibleDescription = resources.GetString("txtMessages.AccessibleDescription");
 			this.txtMessages.AccessibleName = resources.GetString("txtMessages.AccessibleName");
-			this.txtMessages.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("txtMessages.Anchor")));
+			this.txtMessages.Anchor = ((AnchorStyles)(resources.GetObject("txtMessages.Anchor")));
 			this.txtMessages.AutoSize = ((bool)(resources.GetObject("txtMessages.AutoSize")));
-			this.txtMessages.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("txtMessages.BackgroundImage")));
-			this.txtMessages.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("txtMessages.Dock")));
+			this.txtMessages.BackgroundImage = ((Image)(resources.GetObject("txtMessages.BackgroundImage")));
+			this.txtMessages.Dock = ((DockStyle)(resources.GetObject("txtMessages.Dock")));
 			this.txtMessages.Enabled = ((bool)(resources.GetObject("txtMessages.Enabled")));
-			this.txtMessages.Font = ((System.Drawing.Font)(resources.GetObject("txtMessages.Font")));
-			this.txtMessages.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("txtMessages.ImeMode")));
-			this.txtMessages.Location = ((System.Drawing.Point)(resources.GetObject("txtMessages.Location")));
+			this.txtMessages.Font = ((Font)(resources.GetObject("txtMessages.Font")));
+			this.txtMessages.ImeMode = ((ImeMode)(resources.GetObject("txtMessages.ImeMode")));
+			this.txtMessages.Location = ((Point)(resources.GetObject("txtMessages.Location")));
 			this.txtMessages.MaxLength = ((int)(resources.GetObject("txtMessages.MaxLength")));
 			this.txtMessages.Multiline = ((bool)(resources.GetObject("txtMessages.Multiline")));
 			this.txtMessages.Name = "txtMessages";
 			this.txtMessages.PasswordChar = ((char)(resources.GetObject("txtMessages.PasswordChar")));
 			this.txtMessages.ReadOnly = true;
-			this.txtMessages.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("txtMessages.RightToLeft")));
-			this.txtMessages.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("txtMessages.ScrollBars")));
-			this.txtMessages.Size = ((System.Drawing.Size)(resources.GetObject("txtMessages.Size")));
+			this.txtMessages.RightToLeft = ((RightToLeft)(resources.GetObject("txtMessages.RightToLeft")));
+			this.txtMessages.ScrollBars = ((ScrollBars)(resources.GetObject("txtMessages.ScrollBars")));
+			this.txtMessages.Size = ((Size)(resources.GetObject("txtMessages.Size")));
 			this.txtMessages.TabIndex = ((int)(resources.GetObject("txtMessages.TabIndex")));
 			this.txtMessages.TabStop = false;
 			this.txtMessages.Text = resources.GetString("txtMessages.Text");
-			this.txtMessages.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("txtMessages.TextAlign")));
+			this.txtMessages.TextAlign = ((HorizontalAlignment)(resources.GetObject("txtMessages.TextAlign")));
 			this.txtMessages.Visible = ((bool)(resources.GetObject("txtMessages.Visible")));
 			this.txtMessages.WordWrap = ((bool)(resources.GetObject("txtMessages.WordWrap")));
 			// 
@@ -415,34 +418,34 @@ namespace MemHack
 			// 
 			this.lblSearchSize.AccessibleDescription = resources.GetString("lblSearchSize.AccessibleDescription");
 			this.lblSearchSize.AccessibleName = resources.GetString("lblSearchSize.AccessibleName");
-			this.lblSearchSize.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("lblSearchSize.Anchor")));
+			this.lblSearchSize.Anchor = ((AnchorStyles)(resources.GetObject("lblSearchSize.Anchor")));
 			this.lblSearchSize.AutoSize = ((bool)(resources.GetObject("lblSearchSize.AutoSize")));
-			this.lblSearchSize.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("lblSearchSize.Dock")));
+			this.lblSearchSize.Dock = ((DockStyle)(resources.GetObject("lblSearchSize.Dock")));
 			this.lblSearchSize.Enabled = ((bool)(resources.GetObject("lblSearchSize.Enabled")));
-			this.lblSearchSize.Font = ((System.Drawing.Font)(resources.GetObject("lblSearchSize.Font")));
-			this.lblSearchSize.Image = ((System.Drawing.Image)(resources.GetObject("lblSearchSize.Image")));
-			this.lblSearchSize.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("lblSearchSize.ImageAlign")));
+			this.lblSearchSize.Font = ((Font)(resources.GetObject("lblSearchSize.Font")));
+			this.lblSearchSize.Image = ((Image)(resources.GetObject("lblSearchSize.Image")));
+			this.lblSearchSize.ImageAlign = ((ContentAlignment)(resources.GetObject("lblSearchSize.ImageAlign")));
 			this.lblSearchSize.ImageIndex = ((int)(resources.GetObject("lblSearchSize.ImageIndex")));
-			this.lblSearchSize.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("lblSearchSize.ImeMode")));
-			this.lblSearchSize.Location = ((System.Drawing.Point)(resources.GetObject("lblSearchSize.Location")));
+			this.lblSearchSize.ImeMode = ((ImeMode)(resources.GetObject("lblSearchSize.ImeMode")));
+			this.lblSearchSize.Location = ((Point)(resources.GetObject("lblSearchSize.Location")));
 			this.lblSearchSize.Name = "lblSearchSize";
-			this.lblSearchSize.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("lblSearchSize.RightToLeft")));
-			this.lblSearchSize.Size = ((System.Drawing.Size)(resources.GetObject("lblSearchSize.Size")));
+			this.lblSearchSize.RightToLeft = ((RightToLeft)(resources.GetObject("lblSearchSize.RightToLeft")));
+			this.lblSearchSize.Size = ((Size)(resources.GetObject("lblSearchSize.Size")));
 			this.lblSearchSize.TabIndex = ((int)(resources.GetObject("lblSearchSize.TabIndex")));
 			this.lblSearchSize.Text = resources.GetString("lblSearchSize.Text");
-			this.lblSearchSize.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("lblSearchSize.TextAlign")));
+			this.lblSearchSize.TextAlign = ((ContentAlignment)(resources.GetObject("lblSearchSize.TextAlign")));
 			this.lblSearchSize.Visible = ((bool)(resources.GetObject("lblSearchSize.Visible")));
 			// 
 			// MemDisplay
 			// 
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
 			this.AccessibleName = resources.GetString("$this.AccessibleName");
-			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
+			this.AutoScaleBaseSize = ((Size)(resources.GetObject("$this.AutoScaleBaseSize")));
 			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
-			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
-			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
-			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.AutoScrollMargin = ((Size)(resources.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((Size)(resources.GetObject("$this.AutoScrollMinSize")));
+			this.BackgroundImage = ((Image)(resources.GetObject("$this.BackgroundImage")));
+			this.ClientSize = ((Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.lblSearchSize);
 			this.Controls.Add(this.txtMessages);
 			this.Controls.Add(this.label2);
@@ -452,16 +455,16 @@ namespace MemHack
 			this.Controls.Add(this.btnFindNext);
 			this.Controls.Add(this.btnFindFirst);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
-			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
-			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
-			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
-			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
+			this.Font = ((Font)(resources.GetObject("$this.Font")));
+			this.Icon = ((Icon)(resources.GetObject("$this.Icon")));
+			this.ImeMode = ((ImeMode)(resources.GetObject("$this.ImeMode")));
+			this.Location = ((Point)(resources.GetObject("$this.Location")));
+			this.MaximumSize = ((Size)(resources.GetObject("$this.MaximumSize")));
+			this.MinimumSize = ((Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "MemDisplay";
-			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
-			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
+			this.RightToLeft = ((RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.SizeGripStyle = SizeGripStyle.Show;
+			this.StartPosition = ((FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
 			this.Closed += new System.EventHandler(this.MemDisplay_Closed);
 			this.ResumeLayout(false);
@@ -536,7 +539,7 @@ namespace MemHack
 					txtMessages.Text = String.Format(Resources.FindFirstFailedFormatString, f.Message);
 				}
 
-				System.Threading.Thread.Sleep(500);
+				Thread.Sleep(500);
 				pb.Hide();
 				pb.Close();
 				pb = null;
@@ -576,7 +579,7 @@ namespace MemHack
 					{
 						txtMessages.Text = String.Format(Resources.FindNextFailedFormatString, f.Message);
 					}
-					System.Threading.Thread.Sleep(500);
+					Thread.Sleep(500);
 					pb.Hide();
 					pb.Close();
 					pb = null;

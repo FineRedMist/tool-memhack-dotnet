@@ -145,7 +145,6 @@
     <ClInclude Include="BitField.h" />
     <ClInclude Include="LoWordList.h" />
     <ClInclude Include="AddressBlock.h" />
-    <ClInclude Include="ProcessInformation.h" />
     <ClInclude Include="ProcessModifier.h" />
     <ClInclude Include="ProcessViewer.h" />
     <ClInclude Include="resource.h" />
@@ -156,7 +155,6 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="LoWordList.cpp" />
     <ClCompile Include="AddressBlock.cpp" />
-    <ClCompile Include="ProcessInformation.cpp" />
     <ClCompile Include="ProcessModifier.cpp" />
     <ClCompile Include="ProcessViewer.cpp" />
     <ClCompile Include="Stdafx.cpp">

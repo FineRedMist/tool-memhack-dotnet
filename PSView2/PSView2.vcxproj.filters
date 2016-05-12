@@ -42,9 +42,6 @@
     <ClInclude Include="Stdafx.h">
       <Filter>Header Files\Internal</Filter>
     </ClInclude>
-    <ClInclude Include="ProcessInformation.h">
-      <Filter>Header Files\Public</Filter>
-    </ClInclude>
     <ClInclude Include="ProcessViewer.h">
       <Filter>Header Files\Public</Filter>
     </ClInclude>
@@ -67,9 +64,6 @@
     </ClCompile>
     <ClCompile Include="Stdafx.cpp">
       <Filter>Source Files\Internal</Filter>
-    </ClCompile>
-    <ClCompile Include="ProcessInformation.cpp">
-      <Filter>Source Files\Public</Filter>
     </ClCompile>
     <ClCompile Include="ProcessViewer.cpp">
       <Filter>Source Files\Public</Filter>

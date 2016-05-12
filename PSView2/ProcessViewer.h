@@ -13,8 +13,7 @@ information about each process.
 using namespace System;
 using namespace System::Collections::Generic;
 using namespace System::Windows::Forms;
-
-#include "ProcessInformation.h"
+using namespace ProcessTools;
 
 namespace PSView2
 {
