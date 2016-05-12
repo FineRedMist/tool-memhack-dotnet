@@ -143,7 +143,7 @@ namespace ProcessTools
         private static void QueryWindows(SortedList<uint, ProcessInformation> processes)
         {
             EnumProcessWindows enumerate = new EnumProcessWindows(processes);
-            Interop.EnumDesktopWindows(Interop.GetThreadDesktop(Interop.GetCurrentThreadId()), enumerate.EnumDesktopWindowsDelegate, IntPtr.Zero);
+            Interop.EnumDesktopWindows(enumerate.EnumDesktopWindowsDelegate);
         }
 
         private static void UpdateProcessInformation(SortedList<uint, ProcessInformation> processes, ENUM_SERVICE_STATUS_PROCESS serviceStatus)

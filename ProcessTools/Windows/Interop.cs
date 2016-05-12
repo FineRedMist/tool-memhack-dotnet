@@ -309,7 +309,7 @@ namespace ProcessTools.Windows
         public static extern bool CloseHandle(IntPtr hObject);
 
         [DllImport("kernel32.dll")]
-        public static extern uint GetCurrentThreadId();
+        private static extern uint GetCurrentThreadId();
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr CreateToolhelp32Snapshot(SnapshotFlags dwFlags, uint th32ProcessID);
@@ -400,10 +400,15 @@ namespace ProcessTools.Windows
         public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr GetThreadDesktop(uint dwThreadId);
+        private static extern IntPtr GetThreadDesktop(uint dwThreadId);
 
         [DllImport("user32.dll")]
-        public static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDesktopWindowsDelegate lpfn, IntPtr lParam);
+        private static extern bool EnumDesktopWindows(IntPtr hDesktop, EnumDesktopWindowsDelegate lpfn, IntPtr lParam);
+
+        public static bool EnumDesktopWindows(EnumDesktopWindowsDelegate callback)
+        {
+            return EnumDesktopWindows(GetThreadDesktop(GetCurrentThreadId()), callback, IntPtr.Zero);
+        }
 
         [DllImport("advapi32.dll", EntryPoint = "OpenSCManagerW", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern IntPtr OpenSCManager(string machineName, string databaseName, AccessFlags dwAccess);
