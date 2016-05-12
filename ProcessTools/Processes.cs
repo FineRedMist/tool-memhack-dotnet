@@ -283,10 +283,10 @@ namespace ProcessTools
                 // Enumerate the modules in the process--the first one is the application which we can get the path from
                 if (Interop.EnumProcessModules(hProcess, moduleHandles, (uint)IntPtr.Size, out cbNeeded))
                 {   // Uses size in bytes
-                    StringBuilder baseName = new StringBuilder(1024);
-                    if (0 != Interop.GetModuleFileNameEx(hProcess, moduleHandles[0], baseName, (uint)baseName.Capacity))
+                    string moduleFilename;
+                    if (Interop.GetModuleFileNameEx(hProcess, moduleHandles[0], out moduleFilename))
                     {
-                        processInfo.FullPath = baseName.ToString();
+                        processInfo.FullPath = moduleFilename;
                     }
                 }
                 Interop.CloseHandle(hProcess);
@@ -319,17 +319,16 @@ namespace ProcessTools
 
                 // The first module is (typically) the application itself, so we can get the information we need from there
                 if (Interop.EnumProcessModules(hProcess, hMod, (uint)IntPtr.Size, out cbNeeded))
-                {   // Uses size in bytes
-                    StringBuilder szProcessName = new StringBuilder(1024);
-                    StringBuilder szModulePath = new StringBuilder(1024);
-                    if (0 != Interop.GetModuleBaseName(hProcess, hMod[0], szProcessName, (uint)szProcessName.Capacity))
+                { 
+                    string szProcessName;
+                    if (Interop.GetModuleBaseName(hProcess, hMod[0], out szProcessName))
                     {
-                        nm = szProcessName.ToString();
+                        nm = szProcessName;
                     }
-                    // Uses size in bytes
-                    if (0 != Interop.GetModuleFileNameEx(hProcess, hMod[0], szModulePath, (uint)szModulePath.Capacity))
+                    string moduleFilename;
+                    if (Interop.GetModuleFileNameEx(hProcess, hMod[0], out moduleFilename))
                     {
-                        fp = szModulePath.ToString();
+                        fp = moduleFilename;
                     }
                 }
 

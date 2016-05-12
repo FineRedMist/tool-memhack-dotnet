@@ -400,9 +400,33 @@ namespace ProcessTools.Windows
         public static extern bool EnumProcessModules(IntPtr hProcess, [In][Out] IntPtr[] lphModule, uint cb, out uint lpcbNeeded);
 
         [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        public static extern uint GetModuleBaseName(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, uint nSize);
+        private static extern uint GetModuleBaseName(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, uint nSize);
+
+        public static bool GetModuleBaseName(IntPtr hProcess, IntPtr hModule, out string baseName)
+        {
+            baseName = null;
+            StringBuilder szName = new StringBuilder(1024);
+            if (0 != Interop.GetModuleBaseName(hProcess, hModule, szName, (uint)szName.Capacity))
+            {
+                baseName = szName.ToString();
+                return true;
+            }
+            return false;
+        }
 
         [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
-        public static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, uint nSize);
+        private static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, uint nSize);
+
+        public static bool GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, out string moduleFileName)
+        {
+            moduleFileName = null;
+            StringBuilder szName = new StringBuilder(1024);
+            if (0 != Interop.GetModuleFileNameEx(hProcess, hModule, szName, (uint)szName.Capacity))
+            {
+                moduleFileName = szName.ToString();
+                return true;
+            }
+            return false;
+        }
     }
 }
