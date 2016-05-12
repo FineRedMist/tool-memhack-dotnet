@@ -316,23 +316,53 @@ namespace ProcessTools.Windows
         public static extern IntPtr CreateToolhelp32Snapshot(SnapshotFlags dwFlags, uint th32ProcessID);
 
         [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool Process32First(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
 
         [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool Process32Next(IntPtr hSnapshot, ref PROCESSENTRY32 lppe);
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool GetThreadTimes(IntPtr hThread, out long lpCreationTime,
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool GetThreadTimes(IntPtr hThread, out long lpCreationTime,
            out long lpExitTime, out long lpKernelTime, out long lpUserTime);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+        public static bool GetThreadTimes(IntPtr hThread, out DateTime creationTime, out DateTime exitTime, out DateTime kernelTime, out DateTime userTime)
+        {
+            long lpCreationTime, lpExitTime, lpKernelTime, lpUserTime;
+            creationTime = exitTime = kernelTime = userTime = DateTime.MinValue;
+            if (!GetThreadTimes(hThread, out lpCreationTime, out lpExitTime, out lpKernelTime, out lpUserTime))
+            {
+                return false;
+            }
 
-        [return: MarshalAs(UnmanagedType.Bool)]
+            creationTime = DateTime.FromFileTimeUtc(lpCreationTime);
+            exitTime = DateTime.FromFileTimeUtc(lpExitTime);
+            kernelTime = DateTime.FromFileTimeUtc(lpKernelTime);
+            userTime = DateTime.FromFileTimeUtc(lpUserTime);
+
+            return true;
+        }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+
+        public static string GetWindowText(IntPtr hWnd)
+        {
+            StringBuilder szBuf = new StringBuilder(1024);
+            if (0 == GetWindowText(hWnd, szBuf, szBuf.Capacity))
+            {
+                return null;
+            }
+            return szBuf.ToString();
+        }
+
         [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetWindowInfo(IntPtr hwnd, ref WINDOWINFO pwi);
 
         [DllImport("user32.dll", SetLastError = true)]

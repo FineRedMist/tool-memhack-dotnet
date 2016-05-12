@@ -101,7 +101,7 @@ namespace ProcessTools
                 uint dwProcess = 0;
                 uint dwThread = Interop.GetWindowThreadProcessId(hwnd, out dwProcess);
                 bool visible;
-                DateTime date;
+                DateTime date = DateTime.MinValue;
                 string name;
 
                 if (dwThread == 0 || dwProcess == 0)    // We somehow mystically failed to get one of the thread or process ids
@@ -125,15 +125,8 @@ namespace ProcessTools
                 }
 
                 // Get the text of the window
-                StringBuilder szBuf = new StringBuilder(1024);
-                if (0 == Interop.GetWindowText(hwnd, szBuf, szBuf.Capacity))
-                {
-                    return true;
-                }
-                name = szBuf.ToString().Trim();
-
-                // If I didn't end up with a name, drop it
-                if (name.Length == 0)
+                name = Interop.GetWindowText(hwnd);
+                if (string.IsNullOrEmpty(name))
                 {
                     return true;
                 }
@@ -142,25 +135,23 @@ namespace ProcessTools
                 // which means I'll also have a bunch of others that I don't want to display in the list
                 visible = (wi.dwStyle & (WindowStyle.Minimize | WindowStyle.Visible)) != 0;
 
-                long ftCreated, ftExited, ftKernel, ftUser;
+                DateTime ftExited, ftKernel, ftUser;
                 // I use the thread information to determine when the window is created.  Typically the first window
                 // created is really the interesting one so I sort them based on date created
                 IntPtr hThread = Interop.OpenThread(ThreadAccess.QUERY_INFORMATION, false, dwThread);
-                if (hThread != IntPtr.Zero && Interop.GetThreadTimes(hThread, out ftCreated, out ftExited, out ftKernel, out ftUser))
-                {
-                    date = DateTime.FromFileTimeUtc(ftCreated);
-                }
-                else
-                {
-                    date = DateTime.FromFileTimeUtc(0);
-                }
                 if (hThread != IntPtr.Zero)
                 {
+                    Interop.GetThreadTimes(hThread, out date, out ftExited, out ftKernel, out ftUser);
                     Interop.CloseHandle(hThread);
                 }
 
                 ProcessFriendlyName s = new ProcessFriendlyName(name, date, visible);
-                ProcessInformation p = mProcesses[dwProcess];
+                ProcessInformation p = null;
+                if (!mProcesses.TryGetValue(dwProcess, out p))
+                {
+                    p = new ProcessInformation(dwProcess, string.Empty);
+                    mProcesses[dwProcess] = p;
+                }
                 p.Add(s);
 
                 return true;
