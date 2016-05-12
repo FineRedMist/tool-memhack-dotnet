@@ -112,8 +112,7 @@ namespace MemHack
 				m_fRunning = true;
 			}
 			procList.BeginUpdate();
-			ProcessViewer pviewer = new ProcessViewer();
-			m_plist = pviewer.GetProcessList(Resources.IdleProcessName, Resources.SystemName);
+			m_plist = Processes.GetProcessList(Resources.IdleProcessName, Resources.SystemName);
 
 			var sl = new SortedList<uint, ListViewItem>();
 			// Remove old items

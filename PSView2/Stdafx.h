@@ -13,7 +13,6 @@
 #include <aclapi.h>
 #include <vcclr.h>
 #include "BitField.h"
-#include "ProcessViewer.h"
 #include "AddressList.h"
 #include "ProcessModifier.h"
 

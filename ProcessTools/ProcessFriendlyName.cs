@@ -53,7 +53,7 @@ namespace ProcessTools
         public int CompareTo(ProcessFriendlyName other)
         {
             int compare = -Visible.CompareTo(other.Visible);
-            if(compare != 0)
+            if (compare != 0)
             {
                 return compare;
             }
