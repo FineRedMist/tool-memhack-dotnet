@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ProcessTools
 {
@@ -8,7 +9,7 @@ namespace ProcessTools
     /// The Date variable is used in the window case to determine the first window created by
     /// an application to help sort out the primary window from derivative windows.
     /// </summary>
-    public class ProcessFriendlyName : IComparable<ProcessFriendlyName>
+    public class ProcessFriendlyName : IComparable<ProcessFriendlyName>, IComparer<ProcessFriendlyName>
     {
         public string Name { get; private set; }
         public DateTime Date { get; private set; }
@@ -53,6 +54,11 @@ namespace ProcessTools
                 return compare;
             }
             return string.Compare(Name, other.Name);
+        }
+
+        public int Compare(ProcessFriendlyName x, ProcessFriendlyName y)
+        {
+            return x.CompareTo(y);
         }
     }
 }

@@ -43,8 +43,15 @@ namespace ProcessTools
         {
             if (name == null)
                 return;
-            FriendlyNames.Add(name);
-            FriendlyNames.Sort();
+            int foundIndex = FriendlyNames.BinarySearch(name, name);
+            if (foundIndex < 0)
+            {
+                FriendlyNames.Insert(~foundIndex, name);
+            }
+            else
+            {
+                FriendlyNames.Insert(foundIndex, name);
+            }
         }
 
         public IEnumerator<ProcessFriendlyName> GetEnumerator()
