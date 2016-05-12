@@ -278,10 +278,9 @@ namespace ProcessTools
 
             if (IntPtr.Zero != hProcess)
             {
-                IntPtr[] moduleHandles = new IntPtr[1];
-                uint cbNeeded = 0;
+                IntPtr[] moduleHandles = Interop.EnumProcessModules(hProcess, 1);
                 // Enumerate the modules in the process--the first one is the application which we can get the path from
-                if (Interop.EnumProcessModules(hProcess, moduleHandles, (uint)IntPtr.Size, out cbNeeded))
+                if (moduleHandles != null && moduleHandles.Length > 0)
                 {   // Uses size in bytes
                     string moduleFilename;
                     if (Interop.GetModuleFileNameEx(hProcess, moduleHandles[0], out moduleFilename))
@@ -314,19 +313,18 @@ namespace ProcessTools
             // Get the process name.
             if (IntPtr.Zero != hProcess)
             {
-                IntPtr[] hMod = new IntPtr[1];
-                uint cbNeeded;
+                IntPtr[] moduleHandles = Interop.EnumProcessModules(hProcess, 1);
 
                 // The first module is (typically) the application itself, so we can get the information we need from there
-                if (Interop.EnumProcessModules(hProcess, hMod, (uint)IntPtr.Size, out cbNeeded))
+                if (moduleHandles != null && moduleHandles.Length > 0)
                 { 
                     string szProcessName;
-                    if (Interop.GetModuleBaseName(hProcess, hMod[0], out szProcessName))
+                    if (Interop.GetModuleBaseName(hProcess, moduleHandles[0], out szProcessName))
                     {
                         nm = szProcessName;
                     }
                     string moduleFilename;
-                    if (Interop.GetModuleFileNameEx(hProcess, hMod[0], out moduleFilename))
+                    if (Interop.GetModuleFileNameEx(hProcess, moduleHandles[0], out moduleFilename))
                     {
                         fp = moduleFilename;
                     }

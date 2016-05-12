@@ -397,7 +397,27 @@ namespace ProcessTools.Windows
 
         [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool EnumProcessModules(IntPtr hProcess, [In][Out] IntPtr[] lphModule, uint cb, out uint lpcbNeeded);
+        private static extern bool EnumProcessModules(IntPtr hProcess, [In][Out] IntPtr[] lphModule, uint cb, out uint lpcbNeeded);
+
+        public static IntPtr[] EnumProcessModules(IntPtr hProcess, uint countOfModulesToGet)
+        {
+            IntPtr[] hMod = new IntPtr[countOfModulesToGet];
+            uint cbNeeded = 0;
+            uint cbProvided = (uint)(countOfModulesToGet * IntPtr.Size);
+            if (Interop.EnumProcessModules(hProcess, hMod, cbProvided, out cbNeeded))
+            {
+                if (cbNeeded < cbProvided)
+                {
+                    int toCopy = (int) (cbNeeded / IntPtr.Size);
+                    IntPtr[] newResult = new IntPtr[toCopy];
+                    Array.Copy(hMod, newResult, toCopy);
+                    return newResult;
+                }
+                return hMod;
+            }
+
+            return null;
+        }
 
         [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         private static extern uint GetModuleBaseName(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, uint nSize);
