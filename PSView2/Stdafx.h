@@ -13,9 +13,9 @@
 #include <aclapi.h>
 #include <vcclr.h>
 #include "BitField.h"
-#include "PSView2.h"
+#include "ProcessViewer.h"
 #include "AddressList.h"
 #include "IProgressIndicator.h"
-#include "psmod.h"
+#include "ProcessModifier.h"
 
 void DebugPrint(const CHAR * FormatString, ...);

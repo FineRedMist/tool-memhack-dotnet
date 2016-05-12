@@ -2,7 +2,7 @@
 	File: psmod.cpp
 	Written By: Brent Scriver
 
-	Abstract:  Implementation for CProcessModifier, the 
+	Abstract:  Implementation for ProcessModifier, the 
 		primary class for searching the memory of 
 		a process and changing the values.
 ******************************************************/
@@ -92,7 +92,7 @@ namespace PSView2
 		}
 	};
 
-	bool CProcessModifier::Open(UInt32 procID)
+	bool ProcessModifier::Open(UInt32 procID)
 	{
 		Close();
 		mProcessHandle = OpenProcess(PROCESS_VM_OPERATION | PROCESS_SET_INFORMATION | PROCESS_VM_WRITE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, procID);
@@ -108,7 +108,7 @@ namespace PSView2
 		}
 	}
 
-	void CProcessModifier::Close()
+	void ProcessModifier::Close()
 	{
 		if (mProcessHandle)
 		{
@@ -120,7 +120,7 @@ namespace PSView2
 		}
 	}
 
-	bool CProcessModifier::SetValueHelper(const SSearchParams& srch, UValueTest& tst)
+	bool ProcessModifier::SetValueHelper(const SSearchParams& srch, UValueTest& tst)
 	{
 		switch (srch.dwBytes)
 		{
@@ -140,7 +140,7 @@ namespace PSView2
 		return false;
 	}
 
-	bool CProcessModifier::Compare(const SSearchParams& srch, const UValueTest& tst)
+	bool ProcessModifier::Compare(const SSearchParams& srch, const UValueTest& tst)
 	{
 		switch (srch.dwBytes)
 		{
@@ -164,7 +164,7 @@ namespace PSView2
 		return false;
 	}
 
-	bool CProcessModifier::TestAndUpdate(const SSearchParams& srch, UValueTest& tst, BYTE c)
+	bool ProcessModifier::TestAndUpdate(const SSearchParams& srch, UValueTest& tst, BYTE c)
 	{
 		for (DWORD i = 0; i < srch.dwBytes - 1; ++i)
 			tst.szBuf[i] = tst.szBuf[i + 1];
@@ -172,11 +172,11 @@ namespace PSView2
 		return Compare(srch, tst);
 	}
 
-	DWORD CProcessModifier::GetByteCount()
+	DWORD ProcessModifier::GetByteCount()
 	{
 		return GetByteCount(mSearchType);
 	}
-	DWORD CProcessModifier::GetByteCount(Type^ t)
+	DWORD ProcessModifier::GetByteCount(Type^ t)
 	{
 		if (t == Byte::typeid || t == Char::typeid)
 		{
@@ -198,7 +198,7 @@ namespace PSView2
 		return 0;
 	}
 
-	bool CProcessModifier::GetSearchParams(Object^ obj, SSearchParams& search)
+	bool ProcessModifier::GetSearchParams(Object^ obj, SSearchParams& search)
 	{
 		search.dwBytes = GetByteCount(obj->GetType());
 		switch (search.dwBytes)
@@ -219,7 +219,7 @@ namespace PSView2
 		return false;
 	}
 
-	String^ CProcessModifier::MemoryBlockInfo(const MEMORY_BASIC_INFORMATION & mbi)
+	String^ ProcessModifier::MemoryBlockInfo(const MEMORY_BASIC_INFORMATION & mbi)
 	{
 		String^ s = nullptr;
 		UInt32 a;
@@ -353,12 +353,12 @@ namespace PSView2
 		s = s->Concat(s, ")");
 		return s;
 	}
-	UInt64 CProcessModifier::FindFirst(Object^ obj)
+	UInt64 ProcessModifier::FindFirst(Object^ obj)
 	{
 		return FindFirst(obj, nullptr);
 	}
 
-	DWORD CProcessModifier::AddRegions(WORD &wLastHigh, DWORD dwAddr, const MEMORY_BASIC_INFORMATION &mbi, List<CRegion^>^ regions)
+	DWORD ProcessModifier::AddRegions(WORD &wLastHigh, DWORD dwAddr, const MEMORY_BASIC_INFORMATION &mbi, List<CRegion^>^ regions)
 	{
 		DWORD dwHighCount = 0;
 		// So it turns out that regions can span multiple 64k blocks, yeah!
@@ -379,7 +379,7 @@ namespace PSView2
 		return dwHighCount;
 	}
 
-	UInt64 CProcessModifier::FindFirst(Object^ obj, IProgressIndicator^ pb)
+	UInt64 ProcessModifier::FindFirst(Object^ obj, IProgressIndicator^ pb)
 	{
 		mSearchType = obj->GetType();
 		UInt64 count = 0;
@@ -474,12 +474,12 @@ namespace PSView2
 		return count;
 	}
 
-	UInt64 CProcessModifier::FindNext(Object^ obj)
+	UInt64 ProcessModifier::FindNext(Object^ obj)
 	{
 		return FindNext(obj, nullptr);
 	}
 
-	bool CProcessModifier::SetValue(UInt32 addr, Object^ obj)
+	bool ProcessModifier::SetValue(UInt32 addr, Object^ obj)
 	{
 		if (mSearchType == nullptr)
 			return false;
@@ -513,7 +513,7 @@ namespace PSView2
 		return true;
 	}
 
-	UInt64 CProcessModifier::FindNext(Object^ obj, IProgressIndicator^ pb)
+	UInt64 ProcessModifier::FindNext(Object^ obj, IProgressIndicator^ pb)
 	{
 		if (mSearchType == nullptr)
 			return FindFirst(obj);
@@ -573,7 +573,7 @@ namespace PSView2
 		return 0;
 	}
 
-	array<CAddressValue^>^ CProcessModifier::AddressValues::get()
+	array<CAddressValue^>^ ProcessModifier::AddressValues::get()
 	{
 		if (mSearchType == nullptr)
 			return nullptr;
@@ -608,7 +608,7 @@ namespace PSView2
 		return al->ToArray();
 	}
 
-	UInt32 CProcessModifier::Count::get()
+	UInt32 ProcessModifier::Count::get()
 	{
 		if (!mFoundAddresses)
 			return 0;

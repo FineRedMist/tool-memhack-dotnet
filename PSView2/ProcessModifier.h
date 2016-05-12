@@ -2,7 +2,7 @@
 	File: psmod.h
 	Written By: Brent Scriver
 
-	Abstract:  Interface for CProcessModifier, the 
+	Abstract:  Interface for ProcessModifier, the 
 		primary class for searching the memory of 
 		a process and changing the values.
 ******************************************************/
@@ -43,7 +43,7 @@ namespace PSView2
 	};
 
 
-	public ref class CProcessModifier
+	public ref class ProcessModifier
 	{
 	private:
 		AddressList *mFoundAddresses;
@@ -59,7 +59,7 @@ namespace PSView2
 		};
 
 	public:
-		CProcessModifier()
+		ProcessModifier()
 		{
 			mProcessHandle = 0;
 			mLastProcessError = 0;
@@ -91,7 +91,7 @@ namespace PSView2
 			array<CAddressValue^>^ get();
 		}
 
-		~CProcessModifier()
+		~ProcessModifier()
 		{
 			Close();
 		}

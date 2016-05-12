@@ -27,7 +27,7 @@ namespace MemHack
 		private System.Windows.Forms.TextBox txtMessages;
 		
 		Type m_searchType = null;
-		CProcessModifier m_pm = null;
+		ProcessModifier m_pm = null;
 		private System.Windows.Forms.Label lblSearchSize;
 		CAddressValue[] m_last = new CAddressValue[0];
 		long m_count = 0;
@@ -63,10 +63,10 @@ namespace MemHack
 
 		}
 
-		public bool Configure(CProcessInfo pinfo)
+		public bool Configure(ProcessInformation pinfo)
 		{
 			Text = System.String.Format(Resources.MemoryHackerFormatString, pinfo.ID, pinfo.Name, pinfo.FullPath);
-			m_pm = new CProcessModifier();
+			m_pm = new ProcessModifier();
 			if(!m_pm.Open(pinfo.ID))
 				return false;
 			UpdateList();

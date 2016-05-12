@@ -22,17 +22,11 @@
     <Filter Include="Source Files\Internal">
       <UniqueIdentifier>{d8ea97f4-57ff-4497-b224-9a02980ce91c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Public">
+      <UniqueIdentifier>{5e54a88b-1218-4727-876f-e6fe5295ab62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PSView2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="psmod.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="AddressList.h">
       <Filter>Header Files\Internal</Filter>
     </ClInclude>
@@ -51,17 +45,23 @@
     <ClInclude Include="Stdafx.h">
       <Filter>Header Files\Internal</Filter>
     </ClInclude>
+    <ClInclude Include="ProcessFriendlyName.h">
+      <Filter>Header Files\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessInformation.h">
+      <Filter>Header Files\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessViewer.h">
+      <Filter>Header Files\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="ProcessModifier.h">
+      <Filter>Header Files\Public</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files\Internal</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PSView2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AssemblyInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="psmod.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AddressList.cpp">
       <Filter>Source Files\Internal</Filter>
     </ClCompile>
@@ -72,6 +72,21 @@
       <Filter>Source Files\Internal</Filter>
     </ClCompile>
     <ClCompile Include="Stdafx.cpp">
+      <Filter>Source Files\Internal</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessFriendlyName.cpp">
+      <Filter>Source Files\Public</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessInformation.cpp">
+      <Filter>Source Files\Public</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessViewer.cpp">
+      <Filter>Source Files\Public</Filter>
+    </ClCompile>
+    <ClCompile Include="ProcessModifier.cpp">
+      <Filter>Source Files\Public</Filter>
+    </ClCompile>
+    <ClCompile Include="AssemblyInfo.cpp">
       <Filter>Source Files\Internal</Filter>
     </ClCompile>
   </ItemGroup>

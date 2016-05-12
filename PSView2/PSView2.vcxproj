@@ -146,8 +146,10 @@
     <ClInclude Include="IProgressIndicator.h" />
     <ClInclude Include="LoWordList.h" />
     <ClInclude Include="AddressBlock.h" />
-    <ClInclude Include="psmod.h" />
-    <ClInclude Include="PSView2.h" />
+    <ClInclude Include="ProcessFriendlyName.h" />
+    <ClInclude Include="ProcessInformation.h" />
+    <ClInclude Include="ProcessModifier.h" />
+    <ClInclude Include="ProcessViewer.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Stdafx.h" />
   </ItemGroup>
@@ -156,8 +158,10 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="LoWordList.cpp" />
     <ClCompile Include="AddressBlock.cpp" />
-    <ClCompile Include="psmod.cpp" />
-    <ClCompile Include="PSView2.cpp" />
+    <ClCompile Include="ProcessFriendlyName.cpp" />
+    <ClCompile Include="ProcessInformation.cpp" />
+    <ClCompile Include="ProcessModifier.cpp" />
+    <ClCompile Include="ProcessViewer.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

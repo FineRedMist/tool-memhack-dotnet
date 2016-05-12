@@ -25,7 +25,7 @@ namespace MemHack
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.ListBox nameList;
 		private System.Windows.Forms.Label label2;
-		SortedList<uint, CProcessInfo> m_plist = new SortedList<uint, CProcessInfo>();
+		SortedList<uint, ProcessInformation> m_plist = new SortedList<uint, ProcessInformation>();
 		uint m_lastid = 0xFFFFFFFF;
 
 		private System.Threading.Timer m_timer = null;
@@ -112,7 +112,7 @@ namespace MemHack
 				m_fRunning = true;
 			}
 			procList.BeginUpdate();
-			PSView2.CProcessViewer pviewer = new CProcessViewer();
+			PSView2.ProcessViewer pviewer = new ProcessViewer();
 			m_plist = pviewer.GetProcessList(Resources.IdleProcessName, Resources.SystemName);
 
 			var sl = new SortedList<uint, ListViewItem>();
@@ -120,7 +120,7 @@ namespace MemHack
 			for(int i = 0; i < procList.Items.Count;)
 			{
 				uint id = IDFromPos(i);
-                CProcessInfo info;
+                ProcessInformation info;
 				if(!m_plist.TryGetValue(id, out info))
 				{
 					procList.Items.RemoveAt(i);
@@ -131,7 +131,7 @@ namespace MemHack
 			}
 			// Add new items
 			ListViewItem lvi;
-			foreach(CProcessInfo s in m_plist.Values)
+			foreach(ProcessInformation s in m_plist.Values)
 			{
 				if(sl.TryGetValue(s.ID, out lvi))
 				{
@@ -519,15 +519,15 @@ namespace MemHack
 			}
 			m_lastid = id;
 
-			CProcessInfo proc = (CProcessInfo) m_plist[id];
-			var sortedNames = new SortedList<string, CFriendlyName>();
+			ProcessInformation proc = (ProcessInformation) m_plist[id];
+			var sortedNames = new SortedList<string, ProcessFriendlyName>();
 			// I'm setting up some sorted names to make this quite a bit more clean
 			for(int i = 0; i < proc.Count; ++i)
 			{
-				CFriendlyName f = proc.FriendlyName(i);
+				ProcessFriendlyName f = proc.FriendlyName(i);
 				sortedNames[f.Name] = f;
 			}
-			procLocation.Text = ((CProcessInfo) m_plist[id]).FullPath;
+			procLocation.Text = ((ProcessInformation) m_plist[id]).FullPath;
 			procSelect.Enabled = proc.Modifiable;	// Whether the process is modifiable should determine whether the button is enabled
 
 			if(pos < 0 || pos >= m_plist.Count)
@@ -545,14 +545,14 @@ namespace MemHack
 				++i;
 			}
 			// Sort the current list if it has changed (and there are entries to sort)
-			var sl = new SortedList<CFriendlyName, int>();
+			var sl = new SortedList<ProcessFriendlyName, int>();
 			foreach(string s in nameList.Items)
 				sl[sortedNames[s]] = 1;
 
 			// For all remaining items in pNames add them to nameList.Items inserting as appropriate.
 			for(int i = 0; i < proc.Count; ++i)
 			{
-				CFriendlyName f = proc.FriendlyName(i);
+				ProcessFriendlyName f = proc.FriendlyName(i);
                 int value;
 				if(!sl.TryGetValue(f, out value))
 					continue;
@@ -587,7 +587,7 @@ namespace MemHack
 				goto Cleanup;
 			}
 
-			CProcessInfo s = ((CProcessInfo) m_plist[id]);
+			ProcessInformation s = ((ProcessInformation) m_plist[id]);
 
 			// Don't attempt to modify a process that can't be modified
 			if(!s.Modifiable)
@@ -619,7 +619,7 @@ namespace MemHack
 				uint id = IDFromPos(procList.SelectedIndices[0]);
 				if(m_plist[id] != null)
 				{
-					CFriendlyName f = ((CProcessInfo) m_plist[id]).FriendlyName(nameList.SelectedIndices[0]);
+					ProcessFriendlyName f = ((ProcessInformation) m_plist[id]).FriendlyName(nameList.SelectedIndices[0]);
 					lblVisible.Text = (f.Visible) ? "Visible" : "";
 					if(f.Date != DateTime.FromFileTimeUtc(0))
 						lblDate.Text = f.Date.ToString();
