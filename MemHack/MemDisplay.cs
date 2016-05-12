@@ -66,8 +66,8 @@ namespace MemHack
 		public bool Configure(ProcessInformation pinfo)
 		{
 			Text = System.String.Format(Resources.MemoryHackerFormatString, pinfo.ID, pinfo.Name, pinfo.FullPath);
-			m_pm = new ProcessModifier();
-			if(!m_pm.Open(pinfo.ID))
+			m_pm = ProcessModifier.Open(pinfo.ID);
+			if(m_pm == null)
 				return false;
 			UpdateList();
 			UpdateList();	// The second call is for debugging any problems in this function.

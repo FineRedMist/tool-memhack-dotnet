@@ -59,15 +59,7 @@ namespace PSView2
 		};
 
 	public:
-		ProcessModifier()
-		{
-			mProcessHandle = 0;
-			mLastProcessError = 0;
-			mSearchType = nullptr;
-			mFoundAddresses = 0;
-		}
-
-		bool Open(UInt32 procID);
+		static ProcessModifier^ Open(UInt32 procID);
 		void Close();
 
 		property UInt32 LastError
@@ -106,6 +98,7 @@ namespace PSView2
 		DWORD GetByteCount(Type^ type);
 
 	private:
+		ProcessModifier();
 		DWORD AddRegions(WORD &wLastHigh, DWORD dwAddr, const MEMORY_BASIC_INFORMATION & mbi, List<CRegion^>^ regions);
 	};
 }

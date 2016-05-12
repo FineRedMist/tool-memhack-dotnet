@@ -92,19 +92,31 @@ namespace PSView2
 		}
 	};
 
-	bool ProcessModifier::Open(UInt32 procID)
+	ProcessModifier::ProcessModifier()
 	{
-		Close();
-		mProcessHandle = OpenProcess(PROCESS_VM_OPERATION | PROCESS_SET_INFORMATION | PROCESS_VM_WRITE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, procID);
+		mProcessHandle = 0;
+		mLastProcessError = 0;
+		mSearchType = nullptr;
+		mFoundAddresses = 0;
+	}
 
-		if (mProcessHandle != 0)
+	ProcessModifier^ ProcessModifier::Open(UInt32 procID)
+	{
+		HANDLE processHandle = OpenProcess(PROCESS_VM_OPERATION | PROCESS_SET_INFORMATION | PROCESS_VM_WRITE | PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, procID);
+
+		if (processHandle != 0)
 		{
-			return true;
+			ProcessModifier^ result = gcnew ProcessModifier();
+			result->mProcessHandle = processHandle;
+			return result;
 		}
 		else
 		{
-			mLastProcessError = ::GetLastError();
-			return false;
+#pragma warning(push)
+#pragma warning(disable : 4189)
+			DWORD lastError = ::GetLastError();
+#pragma warning(pop)
+			return nullptr;
 		}
 	}
 
