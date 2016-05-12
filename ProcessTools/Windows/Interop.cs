@@ -361,7 +361,7 @@ namespace ProcessTools.Windows
         public static AutoDispose<IntPtr> OpenThreadHandle(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId)
         {
             IntPtr handle = OpenThread(dwDesiredAccess, bInheritHandle, dwThreadId);
-            if(handle == IntPtr.Zero || handle == INVALID_HANDLE_VALUE)
+            if (handle == IntPtr.Zero || handle == INVALID_HANDLE_VALUE)
             {
                 return null;
             }
@@ -568,7 +568,7 @@ namespace ProcessTools.Windows
             {
                 if (bytesNeeded < bytesProvided)
                 {
-                    int toCopy = (int) (bytesNeeded / IntPtr.Size);
+                    int toCopy = (int)(bytesNeeded / IntPtr.Size);
                     IntPtr[] newResult = new IntPtr[toCopy];
                     Array.Copy(moduleHandles, newResult, toCopy);
                     return newResult;
