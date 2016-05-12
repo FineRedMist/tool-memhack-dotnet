@@ -1,42 +1,42 @@
+using ProcessTools;
+using PSView2;
 using System;
-using System.Drawing;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Forms;
-using System.Data;
+using System.Diagnostics;
+using System.Drawing;
 using System.Resources;
-using System.Reflection;
-
-using PSView2;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace MemHack
 {
-	/// <summary>
-	/// Summary description for Form1.
-	/// </summary>
-	public class MemHackMain : System.Windows.Forms.Form
+    /// <summary>
+    /// Summary description for Form1.
+    /// </summary>
+    public class MemHackMain : Form
 	{
-		private System.Windows.Forms.TextBox procLocation;
+		private TextBox procLocation;
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		private System.ComponentModel.Container components = null;
-		private System.Windows.Forms.Button procSelect;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.ListBox nameList;
-		private System.Windows.Forms.Label label2;
+		private Container components = null;
+		private Button procSelect;
+		private Label label1;
+		private ListBox nameList;
+		private Label label2;
 		SortedList<uint, ProcessInformation> m_plist = new SortedList<uint, ProcessInformation>();
 		uint m_lastid = 0xFFFFFFFF;
 
 		private System.Threading.Timer m_timer = null;
-		private System.Windows.Forms.Label lblVisible;
-		private System.Windows.Forms.Label lblDate;
-		private System.Windows.Forms.ListView procList;
-		private System.Threading.TimerCallback m_cb = new System.Threading.TimerCallback(UpdateList);
-		private System.Windows.Forms.ColumnHeader clmID;
-		private System.Windows.Forms.ColumnHeader clmName;
-		private System.Windows.Forms.ColumnHeader clmTitle;
-		private System.Windows.Forms.ColumnHeader clmFake;
+		private Label lblVisible;
+		private Label lblDate;
+		private ListView procList;
+		private TimerCallback m_cb = new TimerCallback(UpdateList);
+		private ColumnHeader clmID;
+		private ColumnHeader clmName;
+		private ColumnHeader clmTitle;
+		private ColumnHeader clmFake;
 
 		private delegate void UpdateListDelegate();
 
@@ -88,7 +88,7 @@ namespace MemHack
 		new void Hide()
 		{
 			base.Hide();
-			m_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+			m_timer.Change(Timeout.Infinite, Timeout.Infinite);
 		}
 
 		// This is the static method called by the timer which gets the memhack main object
@@ -112,7 +112,7 @@ namespace MemHack
 				m_fRunning = true;
 			}
 			procList.BeginUpdate();
-			PSView2.ProcessViewer pviewer = new ProcessViewer();
+			ProcessViewer pviewer = new ProcessViewer();
 			m_plist = pviewer.GetProcessList(Resources.IdleProcessName, Resources.SystemName);
 
 			var sl = new SortedList<uint, ListViewItem>();
@@ -191,7 +191,7 @@ namespace MemHack
 		/// </summary>
 		protected override void Dispose( bool disposing )
 		{
-			m_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+			m_timer.Change(Timeout.Infinite, Timeout.Infinite);
 			if( disposing )
 			{
 				if(m_timer != null)
@@ -212,45 +212,45 @@ namespace MemHack
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Resources.ResourceManager resources = new System.Resources.ResourceManager(typeof(MemHackMain));
-			this.procLocation = new System.Windows.Forms.TextBox();
-			this.procSelect = new System.Windows.Forms.Button();
-			this.label1 = new System.Windows.Forms.Label();
-			this.nameList = new System.Windows.Forms.ListBox();
-			this.label2 = new System.Windows.Forms.Label();
-			this.lblVisible = new System.Windows.Forms.Label();
-			this.lblDate = new System.Windows.Forms.Label();
-			this.procList = new System.Windows.Forms.ListView();
-			this.clmFake = new System.Windows.Forms.ColumnHeader();
-			this.clmID = new System.Windows.Forms.ColumnHeader();
-			this.clmName = new System.Windows.Forms.ColumnHeader();
-			this.clmTitle = new System.Windows.Forms.ColumnHeader();
+			ResourceManager resources = new ResourceManager(typeof(MemHackMain));
+			this.procLocation = new TextBox();
+			this.procSelect = new Button();
+			this.label1 = new Label();
+			this.nameList = new ListBox();
+			this.label2 = new Label();
+			this.lblVisible = new Label();
+			this.lblDate = new Label();
+			this.procList = new ListView();
+			this.clmFake = new ColumnHeader();
+			this.clmID = new ColumnHeader();
+			this.clmName = new ColumnHeader();
+			this.clmTitle = new ColumnHeader();
 			this.SuspendLayout();
 			// 
 			// procLocation
 			// 
 			this.procLocation.AccessibleDescription = resources.GetString("procLocation.AccessibleDescription");
 			this.procLocation.AccessibleName = resources.GetString("procLocation.AccessibleName");
-			this.procLocation.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("procLocation.Anchor")));
+			this.procLocation.Anchor = ((AnchorStyles)(resources.GetObject("procLocation.Anchor")));
 			this.procLocation.AutoSize = ((bool)(resources.GetObject("procLocation.AutoSize")));
-			this.procLocation.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("procLocation.BackgroundImage")));
-			this.procLocation.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("procLocation.Dock")));
+			this.procLocation.BackgroundImage = ((Image)(resources.GetObject("procLocation.BackgroundImage")));
+			this.procLocation.Dock = ((DockStyle)(resources.GetObject("procLocation.Dock")));
 			this.procLocation.Enabled = ((bool)(resources.GetObject("procLocation.Enabled")));
-			this.procLocation.Font = ((System.Drawing.Font)(resources.GetObject("procLocation.Font")));
-			this.procLocation.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("procLocation.ImeMode")));
-			this.procLocation.Location = ((System.Drawing.Point)(resources.GetObject("procLocation.Location")));
+			this.procLocation.Font = ((Font)(resources.GetObject("procLocation.Font")));
+			this.procLocation.ImeMode = ((ImeMode)(resources.GetObject("procLocation.ImeMode")));
+			this.procLocation.Location = ((Point)(resources.GetObject("procLocation.Location")));
 			this.procLocation.MaxLength = ((int)(resources.GetObject("procLocation.MaxLength")));
 			this.procLocation.Multiline = ((bool)(resources.GetObject("procLocation.Multiline")));
 			this.procLocation.Name = "procLocation";
 			this.procLocation.PasswordChar = ((char)(resources.GetObject("procLocation.PasswordChar")));
 			this.procLocation.ReadOnly = true;
-			this.procLocation.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("procLocation.RightToLeft")));
-			this.procLocation.ScrollBars = ((System.Windows.Forms.ScrollBars)(resources.GetObject("procLocation.ScrollBars")));
-			this.procLocation.Size = ((System.Drawing.Size)(resources.GetObject("procLocation.Size")));
+			this.procLocation.RightToLeft = ((RightToLeft)(resources.GetObject("procLocation.RightToLeft")));
+			this.procLocation.ScrollBars = ((ScrollBars)(resources.GetObject("procLocation.ScrollBars")));
+			this.procLocation.Size = ((Size)(resources.GetObject("procLocation.Size")));
 			this.procLocation.TabIndex = ((int)(resources.GetObject("procLocation.TabIndex")));
 			this.procLocation.TabStop = false;
 			this.procLocation.Text = resources.GetString("procLocation.Text");
-			this.procLocation.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("procLocation.TextAlign")));
+			this.procLocation.TextAlign = ((HorizontalAlignment)(resources.GetObject("procLocation.TextAlign")));
 			this.procLocation.Visible = ((bool)(resources.GetObject("procLocation.Visible")));
 			this.procLocation.WordWrap = ((bool)(resources.GetObject("procLocation.WordWrap")));
 			// 
@@ -258,191 +258,191 @@ namespace MemHack
 			// 
 			this.procSelect.AccessibleDescription = resources.GetString("procSelect.AccessibleDescription");
 			this.procSelect.AccessibleName = resources.GetString("procSelect.AccessibleName");
-			this.procSelect.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("procSelect.Anchor")));
-			this.procSelect.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("procSelect.BackgroundImage")));
-			this.procSelect.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("procSelect.Dock")));
+			this.procSelect.Anchor = ((AnchorStyles)(resources.GetObject("procSelect.Anchor")));
+			this.procSelect.BackgroundImage = ((Image)(resources.GetObject("procSelect.BackgroundImage")));
+			this.procSelect.Dock = ((DockStyle)(resources.GetObject("procSelect.Dock")));
 			this.procSelect.Enabled = ((bool)(resources.GetObject("procSelect.Enabled")));
-			this.procSelect.FlatStyle = ((System.Windows.Forms.FlatStyle)(resources.GetObject("procSelect.FlatStyle")));
-			this.procSelect.Font = ((System.Drawing.Font)(resources.GetObject("procSelect.Font")));
-			this.procSelect.Image = ((System.Drawing.Image)(resources.GetObject("procSelect.Image")));
-			this.procSelect.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("procSelect.ImageAlign")));
+			this.procSelect.FlatStyle = ((FlatStyle)(resources.GetObject("procSelect.FlatStyle")));
+			this.procSelect.Font = ((Font)(resources.GetObject("procSelect.Font")));
+			this.procSelect.Image = ((Image)(resources.GetObject("procSelect.Image")));
+			this.procSelect.ImageAlign = ((ContentAlignment)(resources.GetObject("procSelect.ImageAlign")));
 			this.procSelect.ImageIndex = ((int)(resources.GetObject("procSelect.ImageIndex")));
-			this.procSelect.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("procSelect.ImeMode")));
-			this.procSelect.Location = ((System.Drawing.Point)(resources.GetObject("procSelect.Location")));
+			this.procSelect.ImeMode = ((ImeMode)(resources.GetObject("procSelect.ImeMode")));
+			this.procSelect.Location = ((Point)(resources.GetObject("procSelect.Location")));
 			this.procSelect.Name = "procSelect";
-			this.procSelect.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("procSelect.RightToLeft")));
-			this.procSelect.Size = ((System.Drawing.Size)(resources.GetObject("procSelect.Size")));
+			this.procSelect.RightToLeft = ((RightToLeft)(resources.GetObject("procSelect.RightToLeft")));
+			this.procSelect.Size = ((Size)(resources.GetObject("procSelect.Size")));
 			this.procSelect.TabIndex = ((int)(resources.GetObject("procSelect.TabIndex")));
 			this.procSelect.Text = resources.GetString("procSelect.Text");
-			this.procSelect.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("procSelect.TextAlign")));
+			this.procSelect.TextAlign = ((ContentAlignment)(resources.GetObject("procSelect.TextAlign")));
 			this.procSelect.Visible = ((bool)(resources.GetObject("procSelect.Visible")));
-			this.procSelect.Click += new System.EventHandler(this.procSelect_Click);
+			this.procSelect.Click += new EventHandler(this.procSelect_Click);
 			// 
 			// label1
 			// 
 			this.label1.AccessibleDescription = resources.GetString("label1.AccessibleDescription");
 			this.label1.AccessibleName = resources.GetString("label1.AccessibleName");
-			this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label1.Anchor")));
+			this.label1.Anchor = ((AnchorStyles)(resources.GetObject("label1.Anchor")));
 			this.label1.AutoSize = ((bool)(resources.GetObject("label1.AutoSize")));
-			this.label1.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label1.Dock")));
+			this.label1.Dock = ((DockStyle)(resources.GetObject("label1.Dock")));
 			this.label1.Enabled = ((bool)(resources.GetObject("label1.Enabled")));
-			this.label1.Font = ((System.Drawing.Font)(resources.GetObject("label1.Font")));
-			this.label1.Image = ((System.Drawing.Image)(resources.GetObject("label1.Image")));
-			this.label1.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.ImageAlign")));
+			this.label1.Font = ((Font)(resources.GetObject("label1.Font")));
+			this.label1.Image = ((Image)(resources.GetObject("label1.Image")));
+			this.label1.ImageAlign = ((ContentAlignment)(resources.GetObject("label1.ImageAlign")));
 			this.label1.ImageIndex = ((int)(resources.GetObject("label1.ImageIndex")));
-			this.label1.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label1.ImeMode")));
-			this.label1.Location = ((System.Drawing.Point)(resources.GetObject("label1.Location")));
+			this.label1.ImeMode = ((ImeMode)(resources.GetObject("label1.ImeMode")));
+			this.label1.Location = ((Point)(resources.GetObject("label1.Location")));
 			this.label1.Name = "label1";
-			this.label1.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label1.RightToLeft")));
-			this.label1.Size = ((System.Drawing.Size)(resources.GetObject("label1.Size")));
+			this.label1.RightToLeft = ((RightToLeft)(resources.GetObject("label1.RightToLeft")));
+			this.label1.Size = ((Size)(resources.GetObject("label1.Size")));
 			this.label1.TabIndex = ((int)(resources.GetObject("label1.TabIndex")));
 			this.label1.Text = resources.GetString("label1.Text");
-			this.label1.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label1.TextAlign")));
+			this.label1.TextAlign = ((ContentAlignment)(resources.GetObject("label1.TextAlign")));
 			this.label1.Visible = ((bool)(resources.GetObject("label1.Visible")));
 			// 
 			// nameList
 			// 
 			this.nameList.AccessibleDescription = resources.GetString("nameList.AccessibleDescription");
 			this.nameList.AccessibleName = resources.GetString("nameList.AccessibleName");
-			this.nameList.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("nameList.Anchor")));
-			this.nameList.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("nameList.BackgroundImage")));
+			this.nameList.Anchor = ((AnchorStyles)(resources.GetObject("nameList.Anchor")));
+			this.nameList.BackgroundImage = ((Image)(resources.GetObject("nameList.BackgroundImage")));
 			this.nameList.ColumnWidth = ((int)(resources.GetObject("nameList.ColumnWidth")));
-			this.nameList.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("nameList.Dock")));
+			this.nameList.Dock = ((DockStyle)(resources.GetObject("nameList.Dock")));
 			this.nameList.Enabled = ((bool)(resources.GetObject("nameList.Enabled")));
-			this.nameList.Font = ((System.Drawing.Font)(resources.GetObject("nameList.Font")));
+			this.nameList.Font = ((Font)(resources.GetObject("nameList.Font")));
 			this.nameList.HorizontalExtent = ((int)(resources.GetObject("nameList.HorizontalExtent")));
 			this.nameList.HorizontalScrollbar = ((bool)(resources.GetObject("nameList.HorizontalScrollbar")));
-			this.nameList.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("nameList.ImeMode")));
+			this.nameList.ImeMode = ((ImeMode)(resources.GetObject("nameList.ImeMode")));
 			this.nameList.IntegralHeight = ((bool)(resources.GetObject("nameList.IntegralHeight")));
 			this.nameList.ItemHeight = ((int)(resources.GetObject("nameList.ItemHeight")));
-			this.nameList.Location = ((System.Drawing.Point)(resources.GetObject("nameList.Location")));
+			this.nameList.Location = ((Point)(resources.GetObject("nameList.Location")));
 			this.nameList.Name = "nameList";
-			this.nameList.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("nameList.RightToLeft")));
+			this.nameList.RightToLeft = ((RightToLeft)(resources.GetObject("nameList.RightToLeft")));
 			this.nameList.ScrollAlwaysVisible = ((bool)(resources.GetObject("nameList.ScrollAlwaysVisible")));
-			this.nameList.Size = ((System.Drawing.Size)(resources.GetObject("nameList.Size")));
+			this.nameList.Size = ((Size)(resources.GetObject("nameList.Size")));
 			this.nameList.TabIndex = ((int)(resources.GetObject("nameList.TabIndex")));
 			this.nameList.Visible = ((bool)(resources.GetObject("nameList.Visible")));
-			this.nameList.SelectedIndexChanged += new System.EventHandler(this.nameList_SelectedIndexChanged);
+			this.nameList.SelectedIndexChanged += new EventHandler(this.nameList_SelectedIndexChanged);
 			// 
 			// label2
 			// 
 			this.label2.AccessibleDescription = resources.GetString("label2.AccessibleDescription");
 			this.label2.AccessibleName = resources.GetString("label2.AccessibleName");
-			this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("label2.Anchor")));
+			this.label2.Anchor = ((AnchorStyles)(resources.GetObject("label2.Anchor")));
 			this.label2.AutoSize = ((bool)(resources.GetObject("label2.AutoSize")));
-			this.label2.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("label2.Dock")));
+			this.label2.Dock = ((DockStyle)(resources.GetObject("label2.Dock")));
 			this.label2.Enabled = ((bool)(resources.GetObject("label2.Enabled")));
-			this.label2.Font = ((System.Drawing.Font)(resources.GetObject("label2.Font")));
-			this.label2.Image = ((System.Drawing.Image)(resources.GetObject("label2.Image")));
-			this.label2.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.ImageAlign")));
+			this.label2.Font = ((Font)(resources.GetObject("label2.Font")));
+			this.label2.Image = ((Image)(resources.GetObject("label2.Image")));
+			this.label2.ImageAlign = ((ContentAlignment)(resources.GetObject("label2.ImageAlign")));
 			this.label2.ImageIndex = ((int)(resources.GetObject("label2.ImageIndex")));
-			this.label2.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("label2.ImeMode")));
-			this.label2.Location = ((System.Drawing.Point)(resources.GetObject("label2.Location")));
+			this.label2.ImeMode = ((ImeMode)(resources.GetObject("label2.ImeMode")));
+			this.label2.Location = ((Point)(resources.GetObject("label2.Location")));
 			this.label2.Name = "label2";
-			this.label2.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("label2.RightToLeft")));
-			this.label2.Size = ((System.Drawing.Size)(resources.GetObject("label2.Size")));
+			this.label2.RightToLeft = ((RightToLeft)(resources.GetObject("label2.RightToLeft")));
+			this.label2.Size = ((Size)(resources.GetObject("label2.Size")));
 			this.label2.TabIndex = ((int)(resources.GetObject("label2.TabIndex")));
 			this.label2.Text = resources.GetString("label2.Text");
-			this.label2.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("label2.TextAlign")));
+			this.label2.TextAlign = ((ContentAlignment)(resources.GetObject("label2.TextAlign")));
 			this.label2.Visible = ((bool)(resources.GetObject("label2.Visible")));
 			// 
 			// lblVisible
 			// 
 			this.lblVisible.AccessibleDescription = resources.GetString("lblVisible.AccessibleDescription");
 			this.lblVisible.AccessibleName = resources.GetString("lblVisible.AccessibleName");
-			this.lblVisible.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("lblVisible.Anchor")));
+			this.lblVisible.Anchor = ((AnchorStyles)(resources.GetObject("lblVisible.Anchor")));
 			this.lblVisible.AutoSize = ((bool)(resources.GetObject("lblVisible.AutoSize")));
-			this.lblVisible.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("lblVisible.Dock")));
+			this.lblVisible.Dock = ((DockStyle)(resources.GetObject("lblVisible.Dock")));
 			this.lblVisible.Enabled = ((bool)(resources.GetObject("lblVisible.Enabled")));
-			this.lblVisible.Font = ((System.Drawing.Font)(resources.GetObject("lblVisible.Font")));
-			this.lblVisible.Image = ((System.Drawing.Image)(resources.GetObject("lblVisible.Image")));
-			this.lblVisible.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("lblVisible.ImageAlign")));
+			this.lblVisible.Font = ((Font)(resources.GetObject("lblVisible.Font")));
+			this.lblVisible.Image = ((Image)(resources.GetObject("lblVisible.Image")));
+			this.lblVisible.ImageAlign = ((ContentAlignment)(resources.GetObject("lblVisible.ImageAlign")));
 			this.lblVisible.ImageIndex = ((int)(resources.GetObject("lblVisible.ImageIndex")));
-			this.lblVisible.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("lblVisible.ImeMode")));
-			this.lblVisible.Location = ((System.Drawing.Point)(resources.GetObject("lblVisible.Location")));
+			this.lblVisible.ImeMode = ((ImeMode)(resources.GetObject("lblVisible.ImeMode")));
+			this.lblVisible.Location = ((Point)(resources.GetObject("lblVisible.Location")));
 			this.lblVisible.Name = "lblVisible";
-			this.lblVisible.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("lblVisible.RightToLeft")));
-			this.lblVisible.Size = ((System.Drawing.Size)(resources.GetObject("lblVisible.Size")));
+			this.lblVisible.RightToLeft = ((RightToLeft)(resources.GetObject("lblVisible.RightToLeft")));
+			this.lblVisible.Size = ((Size)(resources.GetObject("lblVisible.Size")));
 			this.lblVisible.TabIndex = ((int)(resources.GetObject("lblVisible.TabIndex")));
 			this.lblVisible.Text = resources.GetString("lblVisible.Text");
-			this.lblVisible.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("lblVisible.TextAlign")));
+			this.lblVisible.TextAlign = ((ContentAlignment)(resources.GetObject("lblVisible.TextAlign")));
 			this.lblVisible.Visible = ((bool)(resources.GetObject("lblVisible.Visible")));
 			// 
 			// lblDate
 			// 
 			this.lblDate.AccessibleDescription = resources.GetString("lblDate.AccessibleDescription");
 			this.lblDate.AccessibleName = resources.GetString("lblDate.AccessibleName");
-			this.lblDate.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("lblDate.Anchor")));
+			this.lblDate.Anchor = ((AnchorStyles)(resources.GetObject("lblDate.Anchor")));
 			this.lblDate.AutoSize = ((bool)(resources.GetObject("lblDate.AutoSize")));
-			this.lblDate.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("lblDate.Dock")));
+			this.lblDate.Dock = ((DockStyle)(resources.GetObject("lblDate.Dock")));
 			this.lblDate.Enabled = ((bool)(resources.GetObject("lblDate.Enabled")));
-			this.lblDate.Font = ((System.Drawing.Font)(resources.GetObject("lblDate.Font")));
-			this.lblDate.Image = ((System.Drawing.Image)(resources.GetObject("lblDate.Image")));
-			this.lblDate.ImageAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("lblDate.ImageAlign")));
+			this.lblDate.Font = ((Font)(resources.GetObject("lblDate.Font")));
+			this.lblDate.Image = ((Image)(resources.GetObject("lblDate.Image")));
+			this.lblDate.ImageAlign = ((ContentAlignment)(resources.GetObject("lblDate.ImageAlign")));
 			this.lblDate.ImageIndex = ((int)(resources.GetObject("lblDate.ImageIndex")));
-			this.lblDate.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("lblDate.ImeMode")));
-			this.lblDate.Location = ((System.Drawing.Point)(resources.GetObject("lblDate.Location")));
+			this.lblDate.ImeMode = ((ImeMode)(resources.GetObject("lblDate.ImeMode")));
+			this.lblDate.Location = ((Point)(resources.GetObject("lblDate.Location")));
 			this.lblDate.Name = "lblDate";
-			this.lblDate.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("lblDate.RightToLeft")));
-			this.lblDate.Size = ((System.Drawing.Size)(resources.GetObject("lblDate.Size")));
+			this.lblDate.RightToLeft = ((RightToLeft)(resources.GetObject("lblDate.RightToLeft")));
+			this.lblDate.Size = ((Size)(resources.GetObject("lblDate.Size")));
 			this.lblDate.TabIndex = ((int)(resources.GetObject("lblDate.TabIndex")));
 			this.lblDate.Text = resources.GetString("lblDate.Text");
-			this.lblDate.TextAlign = ((System.Drawing.ContentAlignment)(resources.GetObject("lblDate.TextAlign")));
+			this.lblDate.TextAlign = ((ContentAlignment)(resources.GetObject("lblDate.TextAlign")));
 			this.lblDate.Visible = ((bool)(resources.GetObject("lblDate.Visible")));
 			// 
 			// procList
 			// 
 			this.procList.AccessibleDescription = resources.GetString("procList.AccessibleDescription");
 			this.procList.AccessibleName = resources.GetString("procList.AccessibleName");
-			this.procList.Alignment = ((System.Windows.Forms.ListViewAlignment)(resources.GetObject("procList.Alignment")));
-			this.procList.Anchor = ((System.Windows.Forms.AnchorStyles)(resources.GetObject("procList.Anchor")));
-			this.procList.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("procList.BackgroundImage")));
-			this.procList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+			this.procList.Alignment = ((ListViewAlignment)(resources.GetObject("procList.Alignment")));
+			this.procList.Anchor = ((AnchorStyles)(resources.GetObject("procList.Anchor")));
+			this.procList.BackgroundImage = ((Image)(resources.GetObject("procList.BackgroundImage")));
+			this.procList.Columns.AddRange(new ColumnHeader[] {
 																					   this.clmFake,
 																					   this.clmID,
 																					   this.clmName,
 																					   this.clmTitle});
-			this.procList.Dock = ((System.Windows.Forms.DockStyle)(resources.GetObject("procList.Dock")));
+			this.procList.Dock = ((DockStyle)(resources.GetObject("procList.Dock")));
 			this.procList.Enabled = ((bool)(resources.GetObject("procList.Enabled")));
-			this.procList.Font = ((System.Drawing.Font)(resources.GetObject("procList.Font")));
+			this.procList.Font = ((Font)(resources.GetObject("procList.Font")));
 			this.procList.FullRowSelect = true;
 			this.procList.HideSelection = false;
-			this.procList.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("procList.ImeMode")));
+			this.procList.ImeMode = ((ImeMode)(resources.GetObject("procList.ImeMode")));
 			this.procList.LabelWrap = ((bool)(resources.GetObject("procList.LabelWrap")));
-			this.procList.Location = ((System.Drawing.Point)(resources.GetObject("procList.Location")));
+			this.procList.Location = ((Point)(resources.GetObject("procList.Location")));
 			this.procList.MultiSelect = false;
 			this.procList.Name = "procList";
-			this.procList.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("procList.RightToLeft")));
-			this.procList.Size = ((System.Drawing.Size)(resources.GetObject("procList.Size")));
+			this.procList.RightToLeft = ((RightToLeft)(resources.GetObject("procList.RightToLeft")));
+			this.procList.Size = ((Size)(resources.GetObject("procList.Size")));
 			this.procList.TabIndex = ((int)(resources.GetObject("procList.TabIndex")));
 			this.procList.Text = resources.GetString("procList.Text");
-			this.procList.View = System.Windows.Forms.View.Details;
+			this.procList.View = View.Details;
 			this.procList.Visible = ((bool)(resources.GetObject("procList.Visible")));
-			this.procList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.procList_ColumnClick);
-			this.procList.SelectedIndexChanged += new System.EventHandler(this.procList_SelectedIndexChanged);
+			this.procList.ColumnClick += new ColumnClickEventHandler(this.procList_ColumnClick);
+			this.procList.SelectedIndexChanged += new EventHandler(this.procList_SelectedIndexChanged);
 			// 
 			// clmFake
 			// 
 			this.clmFake.Text = resources.GetString("clmFake.Text");
-			this.clmFake.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("clmFake.TextAlign")));
+			this.clmFake.TextAlign = ((HorizontalAlignment)(resources.GetObject("clmFake.TextAlign")));
 			this.clmFake.Width = ((int)(resources.GetObject("clmFake.Width")));
 			// 
 			// clmID
 			// 
 			this.clmID.Text = resources.GetString("clmID.Text");
-			this.clmID.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("clmID.TextAlign")));
+			this.clmID.TextAlign = ((HorizontalAlignment)(resources.GetObject("clmID.TextAlign")));
 			this.clmID.Width = ((int)(resources.GetObject("clmID.Width")));
 			// 
 			// clmName
 			// 
 			this.clmName.Text = resources.GetString("clmName.Text");
-			this.clmName.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("clmName.TextAlign")));
+			this.clmName.TextAlign = ((HorizontalAlignment)(resources.GetObject("clmName.TextAlign")));
 			this.clmName.Width = ((int)(resources.GetObject("clmName.Width")));
 			// 
 			// clmTitle
 			// 
 			this.clmTitle.Text = resources.GetString("clmTitle.Text");
-			this.clmTitle.TextAlign = ((System.Windows.Forms.HorizontalAlignment)(resources.GetObject("clmTitle.TextAlign")));
+			this.clmTitle.TextAlign = ((HorizontalAlignment)(resources.GetObject("clmTitle.TextAlign")));
 			this.clmTitle.Width = ((int)(resources.GetObject("clmTitle.Width")));
 			// 
 			// MemHackMain
@@ -450,12 +450,12 @@ namespace MemHack
 			this.AccessibleDescription = resources.GetString("$this.AccessibleDescription");
 			this.AccessibleName = resources.GetString("$this.AccessibleName");
 			this.AutoScaleMode = AutoScaleMode.None;
-			this.AutoScaleBaseSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScaleBaseSize")));
+			this.AutoScaleBaseSize = ((Size)(resources.GetObject("$this.AutoScaleBaseSize")));
 			this.AutoScroll = ((bool)(resources.GetObject("$this.AutoScroll")));
-			this.AutoScrollMargin = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMargin")));
-			this.AutoScrollMinSize = ((System.Drawing.Size)(resources.GetObject("$this.AutoScrollMinSize")));
-			this.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("$this.BackgroundImage")));
-			this.ClientSize = ((System.Drawing.Size)(resources.GetObject("$this.ClientSize")));
+			this.AutoScrollMargin = ((Size)(resources.GetObject("$this.AutoScrollMargin")));
+			this.AutoScrollMinSize = ((Size)(resources.GetObject("$this.AutoScrollMinSize")));
+			this.BackgroundImage = ((Image)(resources.GetObject("$this.BackgroundImage")));
+			this.ClientSize = ((Size)(resources.GetObject("$this.ClientSize")));
 			this.Controls.Add(this.procList);
 			this.Controls.Add(this.lblDate);
 			this.Controls.Add(this.lblVisible);
@@ -465,17 +465,17 @@ namespace MemHack
 			this.Controls.Add(this.procSelect);
 			this.Controls.Add(this.procLocation);
 			this.Enabled = ((bool)(resources.GetObject("$this.Enabled")));
-			this.Font = ((System.Drawing.Font)(resources.GetObject("$this.Font")));
+			this.Font = ((Font)(resources.GetObject("$this.Font")));
 			this.HelpButton = false;
-			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-			this.ImeMode = ((System.Windows.Forms.ImeMode)(resources.GetObject("$this.ImeMode")));
-			this.Location = ((System.Drawing.Point)(resources.GetObject("$this.Location")));
-			this.MaximumSize = ((System.Drawing.Size)(resources.GetObject("$this.MaximumSize")));
-			this.MinimumSize = ((System.Drawing.Size)(resources.GetObject("$this.MinimumSize")));
+			this.Icon = ((Icon)(resources.GetObject("$this.Icon")));
+			this.ImeMode = ((ImeMode)(resources.GetObject("$this.ImeMode")));
+			this.Location = ((Point)(resources.GetObject("$this.Location")));
+			this.MaximumSize = ((Size)(resources.GetObject("$this.MaximumSize")));
+			this.MinimumSize = ((Size)(resources.GetObject("$this.MinimumSize")));
 			this.Name = "MemHackMain";
-			this.RightToLeft = ((System.Windows.Forms.RightToLeft)(resources.GetObject("$this.RightToLeft")));
-			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Show;
-			this.StartPosition = ((System.Windows.Forms.FormStartPosition)(resources.GetObject("$this.StartPosition")));
+			this.RightToLeft = ((RightToLeft)(resources.GetObject("$this.RightToLeft")));
+			this.SizeGripStyle = SizeGripStyle.Show;
+			this.StartPosition = ((FormStartPosition)(resources.GetObject("$this.StartPosition")));
 			this.Text = resources.GetString("$this.Text");
 			this.ResumeLayout(false);
 
@@ -498,7 +498,7 @@ namespace MemHack
 			Application.Run(new MemHackMain());
 		}
 
-		private void procList_SelectedIndexChanged(object sender, System.EventArgs e)
+		private void procList_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if(procList.SelectedIndices.Count == 0)
 			{
@@ -566,7 +566,7 @@ namespace MemHack
 			procSelect_Click(null, null);
 		}
 
-		private void procSelect_Click(object sender, System.EventArgs e)
+		private void procSelect_Click(object sender, EventArgs e)
 		{
 			// We hide the old window and bring up the memory display window instead assuming the user
 			// didn't select something absurd.
@@ -581,7 +581,7 @@ namespace MemHack
 
 			// Absurd 2:  Really shouldn't be modifying myself
 			uint id = IDFromPos(procList.SelectedIndices[0]);
-			if(id == System.Diagnostics.Process.GetCurrentProcess().Id)
+			if(id == Process.GetCurrentProcess().Id)
 			{
 				MessageBox.Show(Resources.ErrorProcessThisOne);
 				goto Cleanup;
@@ -605,11 +605,11 @@ namespace MemHack
 			display.ShowDialog();
 			Cleanup:
 			UpdateList();
-			m_timer.Change(System.Threading.Timeout.Infinite, System.Threading.Timeout.Infinite);
+			m_timer.Change(Timeout.Infinite, Timeout.Infinite);
 			this.Show();
 		}
 
-		private void nameList_SelectedIndexChanged(object sender, System.EventArgs e)
+		private void nameList_SelectedIndexChanged(object sender, EventArgs e)
 		{
 			if(procList.SelectedIndices.Count > 0)
 			{

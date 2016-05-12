@@ -522,7 +522,7 @@ namespace MemHack
 					txtMessages.Text = Resources.ErrorFailedToConvert;
 					goto Done;
 				}
-				ProgressBar pb = new ProgressBar();
+				ProgressBarWindow pb = new ProgressBarWindow();
 				pb.Owner = this;
 				pb.Show();
 				txtMessages.Text = String.Format(Resources.SearchingForFormatString, ff.textValue.Text);
@@ -564,7 +564,7 @@ namespace MemHack
 						goto Done;
 					}
 					txtMessages.Text = String.Format(Resources.SearchingForFormatString, sn.Value);
-					ProgressBar pb = new ProgressBar();
+					ProgressBarWindow pb = new ProgressBarWindow();
 					pb.Owner = this;
 					pb.Show();
 					try

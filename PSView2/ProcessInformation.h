@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ProcessFriendlyName.h"
+using namespace ProcessTools;
 
 namespace PSView2
 {
