@@ -519,7 +519,7 @@ namespace MemHack
 			}
 			m_lastid = id;
 
-			ProcessInformation proc = (ProcessInformation) m_plist[id];
+			ProcessInformation proc = m_plist[id];
 			var sortedNames = new SortedList<string, ProcessFriendlyName>();
 			// I'm setting up some sorted names to make this quite a bit more clean
 			for(int i = 0; i < proc.Count; ++i)
@@ -527,7 +527,7 @@ namespace MemHack
 				ProcessFriendlyName f = proc[i];
 				sortedNames[f.Name] = f;
 			}
-			procLocation.Text = ((ProcessInformation) m_plist[id]).FullPath;
+			procLocation.Text = proc.FullPath;
 			procSelect.Enabled = proc.Modifiable;	// Whether the process is modifiable should determine whether the button is enabled
 
 			if(pos < 0 || pos >= m_plist.Count)
@@ -554,7 +554,7 @@ namespace MemHack
 			{
 				ProcessFriendlyName f = proc[i];
                 int value;
-				if(!sl.TryGetValue(f, out value))
+				if(sl.TryGetValue(f, out value))
 					continue;
 				sl[f] = 2;
 				nameList.Items.Insert(sl.IndexOfKey(f), f.Name);
@@ -587,7 +587,7 @@ namespace MemHack
 				goto Cleanup;
 			}
 
-			ProcessInformation s = ((ProcessInformation) m_plist[id]);
+			ProcessInformation s = m_plist[id];
 
 			// Don't attempt to modify a process that can't be modified
 			if(!s.Modifiable)
