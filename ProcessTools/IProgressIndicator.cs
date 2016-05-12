@@ -13,7 +13,13 @@ namespace ProcessTools
     /// </summary>
     public interface IProgressIndicator
     {
+        /// <summary>
+        /// Sets the maximum for a progress indicator to <paramref name="Maximum"/>.
+        /// </summary>
         void SetMaximum(UInt64 Maximum);
+        /// <summary>
+        /// Sets the current value for a progress indicator to <paramref name="Progress"/>.
+        /// </summary>
         void SetCurrent(UInt64 Progress);
     }
 }

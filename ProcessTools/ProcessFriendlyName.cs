@@ -11,8 +11,17 @@ namespace ProcessTools
     /// </summary>
     public class ProcessFriendlyName : IComparable<ProcessFriendlyName>, IComparer<ProcessFriendlyName>
     {
+        /// <summary>
+        /// The name of the window or service in this process.
+        /// </summary>
         public string Name { get; private set; }
+        /// <summary>
+        /// The date the window was created (not relevant for services).
+        /// </summary>
         public DateTime Date { get; private set; }
+        /// <summary>
+        /// Whether the window is visible (not relevant for services).
+        /// </summary>
         public bool Visible { get; private set; }
 
         /// <summary>
@@ -56,6 +65,12 @@ namespace ProcessTools
             return string.Compare(Name, other.Name);
         }
 
+        /// <summary>
+        /// The ProcessFriendlyName can be sorted and these are the criteria:
+        ///   Visibility first
+        ///   Date of window creation 
+        ///   Then the string name
+        /// </summary>
         public int Compare(ProcessFriendlyName x, ProcessFriendlyName y)
         {
             return x.CompareTo(y);
