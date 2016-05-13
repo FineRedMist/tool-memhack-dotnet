@@ -45,8 +45,11 @@
     <Compile Include="Processes.cs" />
     <Compile Include="ProcessFriendlyName.cs" />
     <Compile Include="ProcessInformation.cs" />
+    <Compile Include="ProcessModifier2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Windows\Interop.cs" />
+    <Compile Include="Windows\Interop_Extensions.cs" />
+    <Compile Include="Windows\Interop_Memory.cs" />
     <Compile Include="Windows\Interop_Modules.cs" />
     <Compile Include="Windows\Interop_Process.cs" />
     <Compile Include="Windows\Interop_Services.cs" />

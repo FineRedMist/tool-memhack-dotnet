@@ -25,6 +25,26 @@ namespace ProcessTools
             return processes;
         }
 
+        /// <summary>
+        /// Attempts to open the process as read/write, falling back to read-only.
+        /// </summary>
+        /// <param name="processId">ID of the process to open.</param>
+        /// <param name="isReadOnly">Whether the process was open read-only.</param>
+        /// <returns>A handle to the process or null if opening the process failed.</returns>
+        internal static AutoDispose<IntPtr> OpenProcess(uint processId, out bool isReadOnly)
+        {
+            var processHandle = Interop.OpenProcessHandle(ProcessReadWriteFlags, false, processId);
+            if (processHandle != null)
+            {
+                // If I succeed to open the process with the options needed to modify it, I know it is modifiable
+                isReadOnly = false;
+                return processHandle;
+            }
+            // I failed to open the process for modification so just open it to read the path info
+            isReadOnly = true;
+            return Interop.OpenProcessHandle(ProcessReadOnlyFlags, false, processId);
+        }
+
         private static SortedList<uint, ProcessInformation> QueryToolHelp(string idleProcessName, string systemName)
         {
             SortedList<uint, ProcessInformation> result = new SortedList<uint, ProcessInformation>();
@@ -185,20 +205,6 @@ namespace ProcessTools
             | ProcessAccessFlags.VirtualMemoryRead;
 
         private static readonly ProcessAccessFlags ProcessReadOnlyFlags = ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead;
-
-        private static AutoDispose<IntPtr> OpenProcess(uint processId, out bool isReadOnly)
-        {
-            var processHandle = Interop.OpenProcessHandle(ProcessReadWriteFlags, false, processId);
-            if (processHandle != null)
-            {
-                // If I succeed to open the process with the options needed to modify it, I know it is modifiable
-                isReadOnly = false;
-                return processHandle;
-            }
-            // I failed to open the process for modification so just open it to read the path info
-            isReadOnly = true;
-            return Interop.OpenProcessHandle(ProcessReadOnlyFlags, false, processId);
-        }
 
         /// <summary>
         /// Acquires the full path to the process
