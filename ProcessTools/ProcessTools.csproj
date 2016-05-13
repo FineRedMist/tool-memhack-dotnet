@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>bin\Debug\ProcessTools.XML</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>bin\Release\ProcessTools.XML</DocumentationFile>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,7 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoDispose.cs" />
+    <Compile Include="FoundAddressList.cs" />
     <Compile Include="IProgressIndicator.cs" />
+    <Compile Include="ModifyProcess.cs" />
     <Compile Include="Processes.cs" />
     <Compile Include="ProcessFriendlyName.cs" />
     <Compile Include="ProcessInformation.cs" />
