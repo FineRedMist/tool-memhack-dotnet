@@ -7,7 +7,7 @@ namespace ProcessTools
     /// <summary>
     /// Provides the necessary functionality for modifying a process.
     /// </summary>
-    public class ProcessModifier2
+    public class ProcessQueryMemory
     {
         AutoDispose<IntPtr> mProcessHandle;
         /// <summary>
@@ -19,7 +19,7 @@ namespace ProcessTools
         /// </summary>
         public bool IsReadOnly { get; private set; }
 
-        private ProcessModifier2(ProcessInformation processInfo, AutoDispose<IntPtr> processHandle, bool isReadOnly)
+        private ProcessQueryMemory(ProcessInformation processInfo, AutoDispose<IntPtr> processHandle, bool isReadOnly)
         {
             ProcessInfo = processInfo;
             mProcessHandle = processHandle;
@@ -29,7 +29,7 @@ namespace ProcessTools
         /// <summary>
         /// Creates a new process modifier based on the provided <paramref name="processInfo"/>.
         /// </summary>
-        public static ProcessModifier2 Create(ProcessInformation processInfo)
+        public static ProcessQueryMemory Create(ProcessInformation processInfo)
         {
             bool isReadOnly;
             var processHandle = Processes.OpenProcess(processInfo.ID, out isReadOnly);
@@ -37,7 +37,7 @@ namespace ProcessTools
             {
                 return null;
             }
-            return new ProcessModifier2(processInfo, processHandle, isReadOnly);
+            return new ProcessQueryMemory(processInfo, processHandle, isReadOnly);
         }
 
         /// <summary>
