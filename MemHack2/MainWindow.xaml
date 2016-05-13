@@ -4,9 +4,61 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MemHack2"
+        xmlns:theme="clr-namespace:mkLibrary.ThemeSelector"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="MemHack2" 
+        MinHeight="500" MinWidth="525"
+        Height="500" Width="525">
+
+    <DockPanel x:Name="rootGrid"
+          Background="{DynamicResource WindowBackgroundBrush}"
+          theme:MkThemeSelector.CurrentThemeDictionary="{Binding ElementName=cmbThemes, Path=SelectedItem.Tag}">
+
+        <DockPanel DockPanel.Dock="Bottom">
+
+            <ComboBox x:Name="cmbThemes"
+                      DockPanel.Dock="Left"
+                      Margin="4" 
+                      Width="150"
+                      SelectionChanged="cmbThemes_SelectionChanged">
+                
+                <ComboBoxItem Content="None" />
+                <ComboBoxItem Content="Bureau Black" Tag="WPFFutures/BureauBlack.xaml"/>
+                <ComboBoxItem Content="Bureau Blue" Tag="WPFFutures/BureauBlue.xaml"/>
+                <ComboBoxItem Content="Expression Dark" Tag="WPFFutures/ExpressionDark.xaml"/>
+                <ComboBoxItem Content="Expression Light" Tag="WPFFutures/ExpressionLight.xaml"/>
+                <ComboBoxItem Content="Shiny Blue" Tag="WPFFutures/ShinyBlue.xaml"/>
+                <ComboBoxItem Content="Shiny Red" Tag="WPFFutures/ShinyRed.xaml"/>
+                <ComboBoxItem Content="Whistler Blue" Tag="WPFFutures/WhistlerBlue.xaml"/>
+                
+            </ComboBox>
+
+            <Button Name="Select"
+                    DockPanel.Dock="Right"
+                    Click="Select_Click"
+                    ToolTip="Begin hacking the selected application.">
+                Select
+            </Button>
+            
+            <Label/>
+        </DockPanel>
+
+        <DockPanel DockPanel.Dock="Bottom">
+            <Label DockPanel.Dock="Left">Executable Path:</Label>
+            <TextBox Name="ExecutablePath" IsReadOnly="True" />
+        </DockPanel>
+
+        <DockPanel DockPanel.Dock="Bottom">
+            <Label DockPanel.Dock="Top">Services or Active Window Titles:</Label>
+            <ListBox Name="FriendlyNames"
+                     MinHeight="100"
+                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+        </DockPanel>
+
+        <Label DockPanel.Dock="Top">Running Processes:</Label>
+        <ListView Name="RunningProcesses">
+            
+        </ListView>
+    </DockPanel>
 </Window>
