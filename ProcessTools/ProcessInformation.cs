@@ -17,7 +17,7 @@ namespace ProcessTools
         /// <summary>
         /// The ID of the process.
         /// </summary>
-        public uint ID { get; private set; }
+        public int ID { get; private set; }
         /// <summary>
         /// Whether the process is modifiable--if not it will not be selectable to modify.
         /// </summary>
@@ -62,7 +62,7 @@ namespace ProcessTools
         /// <summary>
         /// Creates the process information for a given <paramref name="processID"/> and <paramref name="processName"/>.
         /// </summary>
-        public ProcessInformation(uint processID, string processName)
+        public ProcessInformation(int processID, string processName)
         {
             ID = processID;
             Modifiable = false;

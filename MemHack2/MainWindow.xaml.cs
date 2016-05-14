@@ -81,7 +81,7 @@ namespace MemHack2
             }
         }
 
-        private void UpdateProcessListUI(SortedList<uint, ProcessInformation> processes)
+        private void UpdateProcessListUI(SortedList<int, ProcessInformation> processes)
         {
             var selectedProcess = RunningProcesses.SelectedItem as ProcessInformation;
             bool findNewProcessToSelect = false;
