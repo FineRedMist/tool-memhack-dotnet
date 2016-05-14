@@ -205,7 +205,16 @@ namespace MemHack2
 
         private void Select_Click(object sender, RoutedEventArgs e)
         {
+            HackSelectedProcess();
+        }
 
+        private void HackSelectedProcess()
+        {
+            var procInfo = RunningProcesses.SelectedItem as ProcessInformation;
+            if (procInfo == null)
+            {
+                return;
+            }
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
@@ -217,6 +226,11 @@ namespace MemHack2
         {
             var procInfo = RunningProcesses.SelectedItem as ProcessInformation;
             Select.IsEnabled = procInfo != null ? procInfo.Modifiable : false;
+        }
+
+        private void RunningProcesses_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            HackSelectedProcess();
         }
     }
 

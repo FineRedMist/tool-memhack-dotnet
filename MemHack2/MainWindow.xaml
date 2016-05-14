@@ -91,6 +91,7 @@
         <ListView Name="RunningProcesses"
                   MinHeight="100"
                   SelectionChanged="RunningProcesses_SelectionChanged"
+                  MouseDoubleClick="RunningProcesses_MouseDoubleClick"
                   ItemsSource="{Binding Path=ActiveProcesses}">
             <ListView.View>
                 <GridView>

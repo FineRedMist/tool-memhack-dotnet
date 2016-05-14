@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ProcessTools
 {
@@ -38,6 +37,11 @@ namespace ProcessTools
         /// The full path to the executable of this process (may not be available).
         /// </summary>
 		public string FullPath { get; set; }
+
+        /// <summary>
+        /// The command line for the process.
+        /// </summary>
+        public string CommandLine { get; set; }
 
         /// <summary>
         /// The default friendly name of this process, typically determined by the first visible window.
@@ -80,7 +84,17 @@ namespace ProcessTools
         public void Add(ProcessFriendlyName name)
         {
             if (name == null)
+            {
                 return;
+            }
+            foreach (var friendly in mFriendlyNames)
+            {
+                if(friendly.Name == name.Name)
+                {
+                    return;
+                }
+            }
+
             int foundIndex = mFriendlyNames.BinarySearch(name, name);
             if (foundIndex < 0)
             {

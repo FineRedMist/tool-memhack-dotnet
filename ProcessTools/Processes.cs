@@ -214,14 +214,21 @@ namespace ProcessTools
                 processInfo.Modifiable = modifiable;
                 if (null != processHandle)
                 {
-                    IntPtr[] moduleHandles = Interop.EnumProcessModules(processHandle.Value, 1);
-                    // Enumerate the modules in the process--the first one is the application which we can get the path from
-                    if (moduleHandles != null && moduleHandles.Length > 0)
-                    {   // Uses size in bytes
-                        string moduleFilename;
-                        if (Interop.GetModuleFileNameEx(processHandle.Value, moduleHandles[0], out moduleFilename))
-                        {
-                            processInfo.FullPath = moduleFilename;
+                    string moduleFilename;
+                    if (Interop.QueryFullProcessImageName(processHandle.Value, out moduleFilename))
+                    {
+                        processInfo.FullPath = moduleFilename;
+                    }
+                    else
+                    {
+                        IntPtr[] moduleHandles = Interop.EnumProcessModules(processHandle.Value, 1);
+                        // Enumerate the modules in the process--the first one is the application which we can get the path from
+                        if (moduleHandles != null && moduleHandles.Length > 0)
+                        {   // Uses size in bytes
+                            if (Interop.GetModuleFileNameEx(processHandle.Value, moduleHandles[0], out moduleFilename))
+                            {
+                                processInfo.FullPath = moduleFilename;
+                            }
                         }
                     }
                 }
@@ -243,6 +250,12 @@ namespace ProcessTools
                 // Get the process name.
                 if (null != processHandle)
                 {
+                    string moduleFilename;
+                    if (Interop.QueryFullProcessImageName(processHandle.Value, out moduleFilename))
+                    {
+                        fullProcessPath = moduleFilename;
+                    }
+
                     IntPtr[] moduleHandles = Interop.EnumProcessModules(processHandle.Value, 1);
 
                     // The first module is (typically) the application itself, so we can get the information we need from there
@@ -253,8 +266,8 @@ namespace ProcessTools
                         {
                             processName = moduleProcessName;
                         }
-                        string moduleFilename;
-                        if (Interop.GetModuleFileNameEx(processHandle.Value, moduleHandles[0], out moduleFilename))
+                        if (string.IsNullOrEmpty(fullProcessPath)
+                            && Interop.GetModuleFileNameEx(processHandle.Value, moduleHandles[0], out moduleFilename))
                         {
                             fullProcessPath = moduleFilename;
                         }

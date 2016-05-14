@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace ProcessTools.Windows
 {
+    [Flags]
+    enum QueryFullProcessImageNameFlags : uint
+    {
+        None = 0x00000000,
+        ProcessNameNative = 0x00000001,
+    }
+
     [Flags]
     internal enum ProcessAccessFlags : uint
     {
@@ -20,20 +28,6 @@ namespace ProcessTools.Windows
         QueryInformation = 0x00000400,
         QueryLimitedInformation = 0x00001000,
         Synchronize = 0x00100000
-    }
-
-    [Flags]
-    internal enum SnapshotFlags : uint
-    {
-        HeapList = 0x00000001,
-        Process = 0x00000002,
-        Thread = 0x00000004,
-        Module = 0x00000008,
-        Module32 = 0x00000010,
-        All = (HeapList | Process | Thread | Module),
-        Inherit = 0x80000000,
-        NoHeaps = 0x40000000
-
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -107,6 +101,23 @@ namespace ProcessTools.Windows
             }
             return null;
         }
+
+        public static bool QueryFullProcessImageName(IntPtr hProcess, out string moduleFileName)
+        {
+            uint nameBufferLength = 4096;
+            StringBuilder nameBuffer = new StringBuilder((int)nameBufferLength);
+            if (!QueryFullProcessImageName(hProcess, QueryFullProcessImageNameFlags.None, nameBuffer, ref nameBufferLength))
+            {
+                moduleFileName = null;
+                return false;
+            }
+            moduleFileName = nameBuffer.ToString();
+            return true;
+        }
+
+        [DllImport("kernel32.dll", CallingConvention = CallingConvention.StdCall, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool QueryFullProcessImageName(IntPtr hProcess, QueryFullProcessImageNameFlags flags, [Out] StringBuilder fullPath, ref uint fullPathCharLength);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, int processId);
