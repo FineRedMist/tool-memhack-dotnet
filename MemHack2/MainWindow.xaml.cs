@@ -14,6 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using mkLibrary.ThemeSelector;
 using Microsoft.Win32;
+using ProcessTools;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace MemHack2
 {
@@ -22,6 +25,10 @@ namespace MemHack2
     /// </summary>
     public partial class MainWindow : Window
     {
+        private SortState mProcessSortState = new SortState();
+
+        public ObservableCollection<ProcessInformation> ActiveProcesses = new ObservableCollection<ProcessInformation>();
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -85,9 +92,20 @@ namespace MemHack2
             }
         }
 
+        private void RunningProcessesColumnHeader_Click(object sender, RoutedEventArgs e)
+        {
+            mProcessSortState.OnColumnHeader_Click(RunningProcesses, sender, e);
+        }
+
         private void Select_Click(object sender, RoutedEventArgs e)
         {
 
         }
+
+        private void RunningProcesses_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
+
 }

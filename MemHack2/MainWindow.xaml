@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MemHack2"
         xmlns:theme="clr-namespace:mkLibrary.ThemeSelector"
         mc:Ignorable="d"
-        Title="MemHack2" 
+        Title="Memory Hacker 2" 
         MinHeight="500" MinWidth="525"
         Height="500" Width="525">
 
@@ -20,6 +20,10 @@
                       DockPanel.Dock="Left"
                       Margin="4" 
                       Width="150"
+                      HorizontalAlignment="Center"
+                      VerticalAlignment="Center"
+                      HorizontalContentAlignment="Center"
+                      VerticalContentAlignment="Center"
                       SelectionChanged="cmbThemes_SelectionChanged">
                 
                 <ComboBoxItem Content="None" />
@@ -36,6 +40,10 @@
             <Button Name="Select"
                     DockPanel.Dock="Right"
                     Click="Select_Click"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
                     ToolTip="Begin hacking the selected application.">
                 Select
             </Button>
@@ -57,8 +65,28 @@
         </DockPanel>
 
         <Label DockPanel.Dock="Top">Running Processes:</Label>
-        <ListView Name="RunningProcesses">
-            
+        <ListView Name="RunningProcesses"
+                  DataContext="{Binding Path=ActiveProcesses}"
+                  SelectionChanged="RunningProcesses_SelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn DisplayMemberBinding="{Binding ID}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="ID" Click="RunningProcessesColumnHeader_Click">ID</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding Name}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Name" Click="RunningProcessesColumnHeader_Click">Name</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                    <GridViewColumn DisplayMemberBinding="{Binding DefaultFriendlyName}">
+                        <GridViewColumn.Header>
+                            <GridViewColumnHeader Tag="Title" Click="RunningProcessesColumnHeader_Click">Title</GridViewColumnHeader>
+                        </GridViewColumn.Header>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
         </ListView>
     </DockPanel>
 </Window>

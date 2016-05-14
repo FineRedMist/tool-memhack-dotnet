@@ -75,6 +75,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SortAdorner.cs" />
     <Page Include="..\ThirdParty\WPFFutures\BureauBlack.xaml">
       <Link>WPFFutures\BureauBlack.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
