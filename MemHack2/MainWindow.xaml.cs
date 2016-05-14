@@ -64,6 +64,7 @@ namespace MemHack2
                 }
                 mIsUpdateRunning = true;
             }
+            Dispatcher.Invoke(() => Refresh.IsEnabled = false);
 
             try
             {
@@ -72,7 +73,8 @@ namespace MemHack2
             }
             finally
             {
-                lock(mUpdateLock)
+                Dispatcher.Invoke(() => Refresh.IsEnabled = true);
+                lock (mUpdateLock)
                 {
                     mIsUpdateRunning = false;
                 }
@@ -209,6 +211,12 @@ namespace MemHack2
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
             ThreadPool.QueueUserWorkItem(UpdateProcessList);
+        }
+
+        private void RunningProcesses_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var procInfo = RunningProcesses.SelectedItem as ProcessInformation;
+            Select.IsEnabled = procInfo != null ? procInfo.Modifiable : false;
         }
     }
 
