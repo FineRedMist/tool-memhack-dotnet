@@ -7,6 +7,7 @@
         xmlns:theme="clr-namespace:mkLibrary.ThemeSelector"
         mc:Ignorable="d"
         Title="Memory Hacker 2" 
+        Closing="Window_Closing"
         MinHeight="500" MinWidth="525"
         Height="500" Width="525">
 
@@ -47,27 +48,48 @@
                     ToolTip="Begin hacking the selected application.">
                 Select
             </Button>
-            
+
+            <Button Name="Refresh"
+                    DockPanel.Dock="Right"
+                    Click="Refresh_Click"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    ToolTip="Refresh the process list.">
+                Refresh
+            </Button>
+
             <Label/>
         </DockPanel>
 
         <DockPanel DockPanel.Dock="Bottom">
             <Label DockPanel.Dock="Left">Executable Path:</Label>
-            <TextBox Name="ExecutablePath" IsReadOnly="True" />
+            <TextBox Name="ExecutablePath" IsReadOnly="True" Text="{Binding ElementName=RunningProcesses, Path=SelectedItem.FullPath}" />
         </DockPanel>
 
         <DockPanel DockPanel.Dock="Bottom">
             <Label DockPanel.Dock="Top">Services or Active Window Titles:</Label>
             <ListBox Name="FriendlyNames"
-                     MinHeight="100"
+                     Height="100"
+                     ItemsSource="{Binding ElementName=RunningProcesses, Path=SelectedItem.FriendlyNames}"
+                     ScrollViewer.CanContentScroll="True"
                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Path=Name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </DockPanel>
 
         <Label DockPanel.Dock="Top">Running Processes:</Label>
         <ListView Name="RunningProcesses"
-                  DataContext="{Binding Path=ActiveProcesses}"
-                  SelectionChanged="RunningProcesses_SelectionChanged">
+                  MinHeight="100"
+                  ItemsSource="{Binding Path=ActiveProcesses}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding ID}">
