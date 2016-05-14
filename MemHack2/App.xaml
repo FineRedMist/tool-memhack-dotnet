@@ -4,7 +4,6 @@
              xmlns:local="clr-namespace:MemHack2"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <ResourceDictionary Source="WPFFutures/BureauBlue.xaml"/>
         <!--<ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="WPFFutures/BureauBlue.xaml"/>
