@@ -184,19 +184,19 @@ namespace ProcessTools
             | ProcessAccessFlags.QueryInformation
             | ProcessAccessFlags.VirtualMemoryRead;
 
-        private static readonly ProcessAccessFlags ProcessReadOnlyFlags = ProcessAccessFlags.QueryInformation | ProcessAccessFlags.VirtualMemoryRead;
+        private static readonly ProcessAccessFlags ProcessReadOnlyFlags = ProcessAccessFlags.QueryLimitedInformation/* | ProcessAccessFlags.VirtualMemoryRead*/;
 
-        private static AutoDispose<IntPtr> OpenProcess(uint processId, out bool isReadOnly)
+        private static AutoDispose<IntPtr> OpenProcess(uint processId, out bool modifiable)
         {
             var processHandle = Interop.OpenProcessHandle(ProcessReadWriteFlags, false, processId);
             if (processHandle != null)
             {
                 // If I succeed to open the process with the options needed to modify it, I know it is modifiable
-                isReadOnly = false;
+                modifiable = true;
                 return processHandle;
             }
             // I failed to open the process for modification so just open it to read the path info
-            isReadOnly = true;
+            modifiable = false;
             return Interop.OpenProcessHandle(ProcessReadOnlyFlags, false, processId);
         }
 
