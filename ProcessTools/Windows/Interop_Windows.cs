@@ -176,7 +176,7 @@ namespace ProcessTools.Windows
         }
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
         public static bool EnumDesktopWindows(EnumDesktopWindowsDelegate callback)
         {

@@ -34,7 +34,7 @@ namespace ProcessTools.Windows
         public int serviceSpecificExitCode;
         public int checkPoint;
         public int waitHint;
-        public uint processId;
+        public int processId;
         public int serviceFlags;
     }
 

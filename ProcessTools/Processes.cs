@@ -25,38 +25,14 @@ namespace ProcessTools
             return processes;
         }
 
-<<<<<<< HEAD
-        /// <summary>
-        /// Attempts to open the process as read/write, falling back to read-only.
-        /// </summary>
-        /// <param name="processId">ID of the process to open.</param>
-        /// <param name="isReadOnly">Whether the process was open read-only.</param>
-        /// <returns>A handle to the process or null if opening the process failed.</returns>
-        internal static AutoDispose<IntPtr> OpenProcess(uint processId, out bool isReadOnly)
-        {
-            var processHandle = Interop.OpenProcessHandle(ProcessReadWriteFlags, false, processId);
-            if (processHandle != null)
-            {
-                // If I succeed to open the process with the options needed to modify it, I know it is modifiable
-                isReadOnly = false;
-                return processHandle;
-            }
-            // I failed to open the process for modification so just open it to read the path info
-            isReadOnly = true;
-            return Interop.OpenProcessHandle(ProcessReadOnlyFlags, false, processId);
-        }
-
-        private static SortedList<uint, ProcessInformation> QueryToolHelp(string idleProcessName, string systemName)
-=======
         private static SortedList<int, ProcessInformation> QueryToolHelp(string idleProcessName, string systemName)
->>>>>>> refs/remotes/origin/master
         {
             SortedList<int, ProcessInformation> result = new SortedList<int, ProcessInformation>();
 
             foreach (var processEntry in Interop.SnapProcesses())
             {
                 // Set up the structures
-                ProcessInformation processInfo = new ProcessInformation((int) processEntry.th32ProcessID, processEntry.szExeFile);
+                ProcessInformation processInfo = new ProcessInformation(processEntry.th32ProcessID, processEntry.szExeFile);
                 if (processInfo.ID == 0) // The idle process has the zero id, so save myself some work by special casing it
                 {
                     processInfo.Add(new ProcessFriendlyName(idleProcessName));
@@ -76,16 +52,16 @@ namespace ProcessTools
         {
             SortedList<int, ProcessInformation> result = new SortedList<int, ProcessInformation>();
 
-            uint[] processList = Interop.EnumProcesses();
+            int[] processList = Interop.EnumProcesses();
             if (processList == null)
             {
                 return result;
             }
 
             // Get the information for the list of processes
-            foreach (uint processId in processList)
+            foreach (int processId in processList)
             {
-                result[(int)processId] = GetProcessInfo((int)processId, idleProcessName, systemName);
+                result[processId] = GetProcessInfo(processId, idleProcessName, systemName);
             }
 
             return result;
@@ -102,7 +78,7 @@ namespace ProcessTools
 
             public bool EnumDesktopWindowsDelegate(IntPtr hwnd, IntPtr lParam)
             {
-                uint processId = 0;
+                int processId = 0;
                 uint threadId = Interop.GetWindowThreadProcessId(hwnd, out processId);
                 bool visible;
                 DateTime windowThreadDate = DateTime.MinValue;
@@ -154,10 +130,10 @@ namespace ProcessTools
 
                 ProcessFriendlyName windowFriendlyName = new ProcessFriendlyName(windowTitle, windowThreadDate, visible);
                 ProcessInformation processInfo = null;
-                if (!mProcesses.TryGetValue((int)processId, out processInfo))
+                if (!mProcesses.TryGetValue(processId, out processInfo))
                 {
-                    processInfo = new ProcessInformation((int)processId, string.Empty);
-                    mProcesses[(int)processId] = processInfo;
+                    processInfo = new ProcessInformation(processId, string.Empty);
+                    mProcesses[processId] = processInfo;
                 }
                 processInfo.Add(windowFriendlyName);
 
@@ -173,16 +149,16 @@ namespace ProcessTools
 
         private static void UpdateProcessInformation(SortedList<int, ProcessInformation> processes, ENUM_SERVICE_STATUS_PROCESS serviceStatus)
         {
-            uint processId = serviceStatus.ServiceStatus.processId;
+            int processId = serviceStatus.ServiceStatus.processId;
             if (processId == 0)
             {
                 return;
             }
             ProcessInformation processInfo = null;
-            if (!processes.TryGetValue((int)processId, out processInfo))
+            if (!processes.TryGetValue(processId, out processInfo))
             {
-                processInfo = new ProcessInformation((int)processId, string.Empty);
-                processes[(int)processId] = processInfo;
+                processInfo = new ProcessInformation(processId, string.Empty);
+                processes[processId] = processInfo;
             }
             processInfo.Add(new ProcessFriendlyName(serviceStatus.pDisplayName));
             processInfo.IsService = true;
@@ -210,11 +186,9 @@ namespace ProcessTools
 
         private static readonly ProcessAccessFlags ProcessReadOnlyFlags = ProcessAccessFlags.QueryLimitedInformation/* | ProcessAccessFlags.VirtualMemoryRead*/;
 
-<<<<<<< HEAD
-=======
-        private static AutoDispose<IntPtr> OpenProcess(int processId, out bool modifiable)
+        internal static AutoDispose<IntPtr> OpenProcess(int processId, out bool modifiable)
         {
-            var processHandle = Interop.OpenProcessHandle(ProcessReadWriteFlags, false, (uint) processId);
+            var processHandle = Interop.OpenProcessHandle(ProcessReadWriteFlags, false, processId);
             if (processHandle != null)
             {
                 // If I succeed to open the process with the options needed to modify it, I know it is modifiable
@@ -223,10 +197,9 @@ namespace ProcessTools
             }
             // I failed to open the process for modification so just open it to read the path info
             modifiable = false;
-            return Interop.OpenProcessHandle(ProcessReadOnlyFlags, false, (uint) processId);
+            return Interop.OpenProcessHandle(ProcessReadOnlyFlags, false, processId);
         }
 
->>>>>>> refs/remotes/origin/master
         /// <summary>
         /// Acquires the full path to the process
         /// </summary>

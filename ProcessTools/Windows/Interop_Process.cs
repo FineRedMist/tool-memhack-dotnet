@@ -41,7 +41,7 @@ namespace ProcessTools.Windows
     {
         public uint dwSize;
         public uint cntUsage;
-        public uint th32ProcessID;
+        public int th32ProcessID;
         public IntPtr th32DefaultHeapID;
         public uint th32ModuleID;
         public uint cntThreads;
@@ -54,7 +54,7 @@ namespace ProcessTools.Windows
 
     internal partial class Interop
     {
-        public static AutoDispose<IntPtr> OpenProcessHandle(ProcessAccessFlags processAccess, bool bInheritHandle, uint processId)
+        public static AutoDispose<IntPtr> OpenProcessHandle(ProcessAccessFlags processAccess, bool bInheritHandle, int processId)
         {
             var handle = OpenProcess(processAccess, bInheritHandle, processId);
             if (handle == IntPtr.Zero || handle == INVALID_HANDLE_VALUE)
@@ -86,9 +86,9 @@ namespace ProcessTools.Windows
             }
         }
 
-        public static UInt32[] EnumProcesses()
+        public static int[] EnumProcesses()
         {
-            uint[] processList = new uint[1024];  // Supporting a maximum of 1024 processes at once
+            int[] processList = new int[1024];  // Supporting a maximum of 1024 processes at once
             uint bytesReturned = 0;
             for (int retries = 3; retries > 0; --retries)
             {
@@ -97,19 +97,19 @@ namespace ProcessTools.Windows
                     int processesFound = (int)(bytesReturned / sizeof(uint));
                     if (processesFound < processList.Length)
                     {
-                        uint[] result = new uint[processesFound];
+                        int[] result = new int[processesFound];
                         Array.Copy(processList, result, processesFound);
                         return result;
                     }
 
-                    processList = new uint[processList.Length * 2];
+                    processList = new int[processList.Length * 2];
                 }
             }
             return null;
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern IntPtr OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, uint processId);
+        private static extern IntPtr OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, int processId);
 
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -121,7 +121,7 @@ namespace ProcessTools.Windows
 
         [DllImport("Psapi.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool EnumProcesses([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U4)] [In][Out] UInt32[] processIds,
+        private static extern bool EnumProcesses([MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.U4)] [In][Out] int[] processIds,
                UInt32 arraySizeBytes,
                [MarshalAs(UnmanagedType.U4)] out UInt32 pBytesReturned);
 
