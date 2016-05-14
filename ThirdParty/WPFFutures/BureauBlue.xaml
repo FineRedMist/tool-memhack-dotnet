@@ -3550,6 +3550,7 @@
                             <Rectangle x:Name="BackgroundGradientSelectedDisabled" RadiusX="1" RadiusY="1" Opacity="0" Fill="{DynamicResource ListItemSelectedBrush}" Stroke="{DynamicResource ListItemSelectedBorderBrush}"/>
                             <Rectangle x:Name="BackgroundGradientSelected" StrokeThickness="1" RadiusX="1" RadiusY="1" Opacity="0" Fill="{DynamicResource PressedBrush}" Stroke="{DynamicResource PressedBorderBrush}"/>
                             <GridViewRowPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Margin="0,2,0,2" VerticalAlignment="Stretch" />
+                            <Rectangle Fill="White" Opacity="0"/>
                         </Grid>
 
                     </Border>
