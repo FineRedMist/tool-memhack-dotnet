@@ -45,6 +45,7 @@
                     VerticalAlignment="Center"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
+                    IsEnabled="{Binding ElementName=RunningProcesses, Path=SelectedItem.Modifiable}"
                     ToolTip="Begin hacking the selected application.">
                 Select
             </Button>
