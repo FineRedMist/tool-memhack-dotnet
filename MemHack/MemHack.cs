@@ -25,7 +25,7 @@ namespace MemHack
 		private Label label1;
 		private ListBox nameList;
 		private Label label2;
-		SortedList<uint, ProcessInformation> m_plist = new SortedList<uint, ProcessInformation>();
+		SortedList<int, ProcessInformation> m_plist = new SortedList<int, ProcessInformation>();
 		uint m_lastid = 0xFFFFFFFF;
 
 		private System.Threading.Timer m_timer = null;
@@ -114,18 +114,18 @@ namespace MemHack
 			procList.BeginUpdate();
 			m_plist = Processes.GetProcessList(Resources.IdleProcessName, Resources.SystemName);
 
-			var sl = new SortedList<uint, ListViewItem>();
+			var sl = new SortedList<int, ListViewItem>();
 			// Remove old items
 			for(int i = 0; i < procList.Items.Count;)
 			{
 				uint id = IDFromPos(i);
                 ProcessInformation info;
-				if(!m_plist.TryGetValue(id, out info))
+				if(!m_plist.TryGetValue((int)id, out info))
 				{
 					procList.Items.RemoveAt(i);
 					continue;
 				}
-				sl[id] = procList.Items[i];
+				sl[(int)id] = procList.Items[i];
 				++i;
 			}
 			// Add new items
@@ -518,7 +518,7 @@ namespace MemHack
 			}
 			m_lastid = id;
 
-			ProcessInformation proc = m_plist[id];
+			ProcessInformation proc = m_plist[(int)id];
 			var sortedNames = new SortedList<string, ProcessFriendlyName>();
 			// I'm setting up some sorted names to make this quite a bit more clean
 			for(int i = 0; i < proc.FriendlyNames.Count; ++i)
@@ -586,7 +586,7 @@ namespace MemHack
 				goto Cleanup;
 			}
 
-			ProcessInformation s = m_plist[id];
+			ProcessInformation s = m_plist[(int)id];
 
 			// Don't attempt to modify a process that can't be modified
 			if(!s.Modifiable)
@@ -616,9 +616,9 @@ namespace MemHack
 				// owned by the process, such as whether the window is visible and the time of creation
 				// This was more of a debug feature to ensure I was sorting the service and window lists correctly
 				uint id = IDFromPos(procList.SelectedIndices[0]);
-				if(m_plist[id] != null)
+				if(m_plist[(int)id] != null)
 				{
-					ProcessFriendlyName f = m_plist[id].FriendlyNames[nameList.SelectedIndices[0]];
+					ProcessFriendlyName f = m_plist[(int)id].FriendlyNames[nameList.SelectedIndices[0]];
 					lblVisible.Text = (f.Visible) ? "Visible" : string.Empty;
 					if(f.Date != DateTime.FromFileTimeUtc(0))
 						lblDate.Text = f.Date.ToString();
