@@ -225,6 +225,16 @@ namespace MemHack2
             {
                 return;
             }
+
+            HackingWindow hacking = new HackingWindow();
+            ProcessQueryMemory query = ProcessQueryMemory.Create(procInfo);
+            if (query != null)
+            {
+                this.Hide();
+                hacking.DataContext = query;
+                hacking.ShowDialog();
+                this.Show();
+            }
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)

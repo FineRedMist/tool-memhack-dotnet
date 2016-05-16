@@ -75,6 +75,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="HackingWindow.xaml.cs">
+      <DependentUpon>HackingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SortAdorner.cs" />
     <Page Include="..\ThirdParty\WPFFutures\BureauBlack.xaml">
       <Link>WPFFutures\BureauBlack.xaml</Link>
@@ -110,6 +113,10 @@
       <Link>WPFFutures\WhistlerBlue.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="HackingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
