@@ -92,26 +92,27 @@ namespace mkLibrary.ThemeSelector
                     themeDictionary = new ThemeResourceDictionary();
                     themeDictionary.Source = dictionaryUri;
 
-                    // add the new dictionary to the collection of merged dictionaries of the target object
-                    mergedDictionaries.Insert(0, themeDictionary);
                 }
 
-                // find if the target element already has a theme applied
-                List<ThemeResourceDictionary> existingDictionaries =
-                    (from dictionary in mergedDictionaries.OfType<ThemeResourceDictionary>()
-                     select dictionary).ToList();
+                // Find if the target element already has a theme applied
+                // we always want to remove them in case 'None' was selected.
+                var existingDictionaries = mergedDictionaries
+                    .OfType<ThemeResourceDictionary>()
+                    .ToList();
 
-                // remove the existing dictionaries 
+                // Remove the existing dictionaries 
                 foreach (ThemeResourceDictionary thDictionary in existingDictionaries)
                 {
-                    if (themeDictionary == thDictionary) continue;  // don't remove the newly added dictionary
                     mergedDictionaries.Remove(thDictionary);
+                }
+
+                if (themeDictionary != null)
+                {
+                    // Add the new dictionary to the collection of merged dictionaries of the target object
+                    mergedDictionaries.Insert(0, themeDictionary);
                 }
             }
             finally { }
         }
-
-
-
     }
 }
