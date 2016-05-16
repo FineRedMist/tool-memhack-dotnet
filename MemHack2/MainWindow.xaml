@@ -89,7 +89,12 @@
         </DockPanel>
 
         <DockPanel DockPanel.Dock="Top">
-            <Label DockPanel.Dock="Left">Running Processes:</Label>
+            <Label DockPanel.Dock="Left">
+                <TextBlock Text="Running Processes: "/>
+            </Label>
+            <Label DockPanel.Dock="Left">
+                <TextBlock Text="{Binding ElementName=RunningProcesses, Path=Items.Count}"/>
+            </Label>
             <CheckBox Name="Modifiable"
                       DockPanel.Dock="Right"
                       IsThreeState="False" IsChecked="True"
