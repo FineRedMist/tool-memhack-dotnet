@@ -13,7 +13,8 @@
 
     <DockPanel x:Name="rootGrid"
           Background="{DynamicResource WindowBackgroundBrush}"
-          theme:MkThemeSelector.CurrentThemeDictionary="{Binding ElementName=cmbThemes, Path=SelectedItem.Tag}">
+          theme:MkThemeSelector.CurrentThemeDictionary="{Binding ElementName=cmbThemes, Path=SelectedItem.Tag}"
+          theme:MkThemeSelector.IsGlobalTheme="True">
 
         <DockPanel DockPanel.Dock="Bottom">
 

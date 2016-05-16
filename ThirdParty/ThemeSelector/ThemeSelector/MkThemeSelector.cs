@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
 
 namespace mkLibrary.ThemeSelector
@@ -21,6 +21,11 @@ namespace mkLibrary.ThemeSelector
             typeof(MkThemeSelector),
             new UIPropertyMetadata(null, CurrentThemeDictionaryChanged));
 
+        public static readonly DependencyProperty IsGlobalThemeProperty =
+            DependencyProperty.RegisterAttached("IsGlobalTheme", typeof(bool),
+            typeof(MkThemeSelector),
+            null);
+
         public static Uri GetCurrentThemeDictionary(DependencyObject obj)
         {
             return (Uri)obj.GetValue(CurrentThemeDictionaryProperty);
@@ -31,17 +36,53 @@ namespace mkLibrary.ThemeSelector
             obj.SetValue(CurrentThemeDictionaryProperty, value);
         }
 
+        public static bool GetIsGlobalTheme(DependencyObject obj)
+        {
+            return (bool)obj.GetValue(IsGlobalThemeProperty);
+        }
+
+        public static void SetIsGlobalTheme(DependencyObject obj, bool value)
+        {
+            obj.SetValue(IsGlobalThemeProperty, value);
+        }
+
         private static void CurrentThemeDictionaryChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
-            if (obj is FrameworkElement) // works only on FrameworkElement objects
+            if(GetIsGlobalTheme(obj))
+            {
+                ApplyGlobalTheme(GetCurrentThemeDictionary(obj));
+            }
+            else if (obj is FrameworkElement) // works only on FrameworkElement objects
             {
                 ApplyTheme(obj as FrameworkElement, GetCurrentThemeDictionary(obj));
             }
         }
 
+        private static void ApplyGlobalTheme(Uri dictionaryUri)
+        {
+            if (Application.Current == null
+                || Application.Current.Resources == null)
+            {
+                return;
+            }
+
+            ApplyTheme(Application.Current.Resources.MergedDictionaries, dictionaryUri);
+        }
+
         private static void ApplyTheme(FrameworkElement targetElement, Uri dictionaryUri)
         {
-            if (targetElement == null) return;
+            if (targetElement == null
+                || targetElement.Resources == null)
+            {
+                return;
+            }
+
+            ApplyTheme(targetElement.Resources.MergedDictionaries, dictionaryUri);
+        }
+
+        private static void ApplyTheme(Collection<ResourceDictionary> mergedDictionaries, Uri dictionaryUri)
+        {
+            if (mergedDictionaries == null) return;
 
             try
             {
@@ -52,19 +93,19 @@ namespace mkLibrary.ThemeSelector
                     themeDictionary.Source = dictionaryUri;
 
                     // add the new dictionary to the collection of merged dictionaries of the target object
-                    targetElement.Resources.MergedDictionaries.Insert(0, themeDictionary);
+                    mergedDictionaries.Insert(0, themeDictionary);
                 }
 
                 // find if the target element already has a theme applied
                 List<ThemeResourceDictionary> existingDictionaries =
-                    (from dictionary in targetElement.Resources.MergedDictionaries.OfType<ThemeResourceDictionary>()
+                    (from dictionary in mergedDictionaries.OfType<ThemeResourceDictionary>()
                      select dictionary).ToList();
 
                 // remove the existing dictionaries 
                 foreach (ThemeResourceDictionary thDictionary in existingDictionaries)
                 {
                     if (themeDictionary == thDictionary) continue;  // don't remove the newly added dictionary
-                    targetElement.Resources.MergedDictionaries.Remove(thDictionary);
+                    mergedDictionaries.Remove(thDictionary);
                 }
             }
             finally { }
