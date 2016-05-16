@@ -88,7 +88,17 @@
             </ListBox>
         </DockPanel>
 
-        <Label DockPanel.Dock="Top">Running Processes:</Label>
+        <DockPanel DockPanel.Dock="Top">
+            <Label DockPanel.Dock="Left">Running Processes:</Label>
+            <CheckBox Name="Modifiable"
+                      DockPanel.Dock="Right"
+                      IsThreeState="False" IsChecked="True"
+                      VerticalAlignment="Center"
+                      VerticalContentAlignment="Center"
+                      Click="Modifiable_Clicked"/>
+            <Label DockPanel.Dock="Right">Show modifiable only:</Label>
+            <Label/>
+        </DockPanel>
         <ListView Name="RunningProcesses"
                   MinHeight="100"
                   SelectionChanged="RunningProcesses_SelectionChanged"

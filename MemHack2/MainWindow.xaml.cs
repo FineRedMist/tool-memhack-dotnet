@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace MemHack2
 {
@@ -37,6 +38,9 @@ namespace MemHack2
                 }
             }
 
+            CollectionView view = (CollectionView)CollectionViewSource.GetDefaultView(RunningProcesses.ItemsSource);
+            view.Filter = ProcessFilter;
+
             mUpdateProcessListTimer = new Timer(UpdateProcessList, null, 0, 60 * 1000);
         }
 
@@ -48,6 +52,12 @@ namespace MemHack2
             {
                 Thread.Sleep(15);
             }
+        }
+
+        private bool ProcessFilter(object item)
+        {
+            var process = item as ProcessInformation;
+            return process == null || process.Modifiable || Modifiable.IsChecked == false;
         }
 
         private bool mIsUpdateRunning = false;
@@ -231,6 +241,18 @@ namespace MemHack2
         private void RunningProcesses_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             HackSelectedProcess();
+        }
+
+        private void Modifiable_Clicked(object sender, RoutedEventArgs e)
+        {
+            if (RunningProcesses != null)
+            {
+                var view = CollectionViewSource.GetDefaultView(RunningProcesses.ItemsSource);
+                if (view != null)
+                {
+                    view.Refresh();
+                }
+            }
         }
     }
 
