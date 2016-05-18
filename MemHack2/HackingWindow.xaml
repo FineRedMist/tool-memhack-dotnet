@@ -6,8 +6,65 @@
         xmlns:local="clr-namespace:MemHack2"
         mc:Ignorable="d"
         DataContextChanged="Window_DataContextChanged"
-        Height="300" Width="300">
+        Height="300" Width="460">
     <Grid Background="{DynamicResource WindowBackgroundBrush}">
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <DockPanel Grid.Column="0">
+            <DockPanel DockPanel.Dock="Top">
+                <Label DockPanel.Dock="Left">Search for:</Label>
+                <TextBox Name="SearchValue" MinWidth="80"/>
+            </DockPanel>
+            
+            <Grid HorizontalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" FontWeight="Bold">Integers</Label>
+
+                <StackPanel Grid.Column="0" Grid.Row="1">
+                    <Label HorizontalAlignment="Center">Signed</Label>
+                    <CheckBox Name="Signed1Byte">1 byte</CheckBox>
+                    <CheckBox Name="Signed2Bytes">2 bytes</CheckBox>
+                    <CheckBox Name="Signed4Bytes">4 bytes</CheckBox>
+                    <CheckBox Name="Signed8Bytes">8 bytes</CheckBox>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Grid.Row="1">
+                    <Label HorizontalAlignment="Center">Unsigned</Label>
+                    <CheckBox Name="Unsigned1Byte">1 byte</CheckBox>
+                    <CheckBox Name="Unsigned2Bytes">2 bytes</CheckBox>
+                    <CheckBox Name="Unsigned4Bytes">4 bytes</CheckBox>
+                    <CheckBox Name="Unsigned8Bytes">8 bytes</CheckBox>
+                </StackPanel>
+
+                <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" FontWeight="Bold">Floating point</Label>
+
+                <CheckBox Grid.Row="4" Grid.Column="0">4 bytes</CheckBox>
+                <CheckBox Grid.Row="4" Grid.Column="2">8 bytes</CheckBox>
+
+                <Button Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">Search</Button>
+            </Grid>
+        </DockPanel>
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+        <TabControl Grid.Column="2">
+            
+        </TabControl>
     </Grid>
 </Window>
