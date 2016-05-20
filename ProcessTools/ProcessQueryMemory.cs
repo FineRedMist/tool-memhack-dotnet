@@ -7,7 +7,7 @@ namespace ProcessTools
     /// <summary>
     /// Provides the necessary functionality for modifying a process.
     /// </summary>
-    public class ProcessQueryMemory
+    public class ProcessQueryMemory : IDisposable
     {
         AutoDispose<IntPtr> mProcessHandle;
         /// <summary>
@@ -70,6 +70,14 @@ namespace ProcessTools
             {
                 yield return current.Value;
             }
+        }
+
+        /// <summary>
+        /// Cleans up the handle held to the process being queried.
+        /// </summary>
+        public void Dispose()
+        {
+            mProcessHandle.Dispose();
         }
     }
 }

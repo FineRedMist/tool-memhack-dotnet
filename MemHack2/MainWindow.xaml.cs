@@ -227,13 +227,15 @@ namespace MemHack2
             }
 
             HackingWindow hacking = new HackingWindow();
-            ProcessQueryMemory query = ProcessQueryMemory.Create(procInfo);
-            if (query != null)
+            using (ProcessQueryMemory query = ProcessQueryMemory.Create(procInfo))
             {
-                this.Hide();
-                hacking.DataContext = query;
-                hacking.ShowDialog();
-                this.Show();
+                if (query != null)
+                {
+                    this.Hide();
+                    hacking.DataContext = query;
+                    hacking.ShowDialog();
+                    this.Show();
+                }
             }
         }
 
