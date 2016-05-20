@@ -1,6 +1,7 @@
 ﻿using ProcessTools.Windows;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ProcessTools
 {
@@ -9,6 +10,13 @@ namespace ProcessTools
     /// </summary>
     public class Processes
     {
+        private static readonly int CurrentProcessId;
+
+        static Processes()
+        {
+            CurrentProcessId = Process.GetCurrentProcess().Id;
+        }
+
         /// <summary>
         /// Returns the current process list.
         /// </summary>
@@ -192,7 +200,7 @@ namespace ProcessTools
             if (processHandle != null)
             {
                 // If I succeed to open the process with the options needed to modify it, I know it is modifiable
-                modifiable = true;
+                modifiable = CurrentProcessId != processId;
                 return processHandle;
             }
             // I failed to open the process for modification so just open it to read the path info
