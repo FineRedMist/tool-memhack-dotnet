@@ -42,5 +42,10 @@ namespace MemHack2
                 Title = "Hacking '" + Query.ProcessInfo.Name + "'";
             }
         }
+
+        private void Search_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

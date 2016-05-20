@@ -56,14 +56,17 @@
 
                 <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Center" FontWeight="Bold">Floating point</Label>
 
-                <CheckBox Grid.Row="4" Grid.Column="0">4 bytes</CheckBox>
-                <CheckBox Grid.Row="4" Grid.Column="2">8 bytes</CheckBox>
+                <CheckBox Name="Float4Bytes" Grid.Row="4" Grid.Column="0">4 bytes</CheckBox>
+                <CheckBox Name="Float8Bytes" Grid.Row="4" Grid.Column="2">8 bytes</CheckBox>
 
-                <Button Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">Search</Button>
+                <Button Name="Search" Grid.Row="6" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Search_Click">Search</Button>
             </Grid>
         </DockPanel>
+        
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-        <TabControl Grid.Column="2">
+        <Label Grid.Column="1" Content="⁞" Foreground="White" VerticalAlignment="Center" FontSize="26" FontWeight="Bold" IsHitTestVisible="False"/>
+        
+        <TabControl Name="ActiveHackSessions" Grid.Column="2">
             
         </TabControl>
     </Grid>
