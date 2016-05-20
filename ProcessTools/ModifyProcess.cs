@@ -34,6 +34,19 @@ namespace ProcessTools
             Query = processQuery;
         }
 
+        /* Thoughts:
+         *   I want to have a List of byte[] sequences to search.
+         *   A given address may match multiple byte[] sequences
+         *   I think I can just return the address and the largest number of bytes matched
+         *      The calling app can then use that information to query that address and corresponding byte[] range and evaluate the possible values
+         *      The calling app (memhack) can have a column for each type as relevant.
+         *      The active search in the calling app can then remove columns as appropriate.
+         *      Note that means FindNext will return previously found addresses where the new sequences matches any of the byte[] sequences provided in the list.
+         *   This moves up the translation of T -> byte[] to the caller, I only care about byte sequences.
+         *   I need to return in FindFirst and FindNext the list of addresses, block sizes, and current values.
+         *   I'll want an api to query the values for the current list as well.
+         */
+
         /// <summary>
         /// Finds all instances of <paramref name="value"/> in the process's writable memory.
         /// </summary>
