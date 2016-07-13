@@ -1,0 +1,1 @@
+git subtree pull --squash --prefix=ThirdParty/WPFFutures https://github.com/FineRedMist/WPFFutures.git master
