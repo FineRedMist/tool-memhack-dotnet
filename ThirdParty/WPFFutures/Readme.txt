@@ -1,1 +1,0 @@
-These themes were from WPF Futures at: http://wpf.codeplex.com/releases/view/14962
