@@ -152,6 +152,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="..\ThirdParty\WPFFutures\LICENSE.md">
+      <Link>WPFFutures\LICENSE.md</Link>
+    </None>
+    <None Include="..\ThirdParty\WPFFutures\README.md">
+      <Link>WPFFutures\README.md</Link>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -178,14 +184,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="..\ThirdParty\WPFFutures\License.txt">
-      <Link>WPFFutures\License.txt</Link>
-    </Resource>
-    <Resource Include="..\ThirdParty\WPFFutures\Readme.txt">
-      <Link>WPFFutures\Readme.txt</Link>
-    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
