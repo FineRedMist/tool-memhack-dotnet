@@ -8,6 +8,34 @@ using ProcessTools.Windows;
 
 namespace ProcessTools
 {
+
+    /// <summary>
+    /// Information about the byte sequence stored at a given address.
+    /// </summary>
+    public class AddressValueInformation
+    {
+        /// <summary>
+        /// The address at which the value was queried.
+        /// </summary>
+        public UIntPtr Address { get; private set; }
+        /// <summary>
+        /// The byte sequence at that location (size determined by request).
+        /// </summary>
+        public byte[] CurrentBuffer { get; private set; }
+    }
+
+    /// <summary>
+    /// Information about an address found during searching (including which byte values 
+    /// that were matched in the list of values to search for).
+    /// </summary>
+    public class FoundAddressInformation : AddressValueInformation
+    {
+        /// <summary>
+        /// A bitfield representing the indicies of matched values from the list of values provided.
+        /// </summary>
+        public uint MatchedValues { get; private set; }
+    }
+
     /// <summary>
     /// Class to facilitate modifying the process memory for serializable struct <typeparamref name="T"/>.
     /// </summary>
@@ -46,11 +74,11 @@ namespace ProcessTools
          *   I need to return in FindFirst and FindNext the list of addresses, block sizes, and current values.
          *   I'll want an api to query the values for the current list as well.
          */
-
+        
         /// <summary>
-        /// Finds all instances of <paramref name="value"/> in the process's writable memory.
+        /// Finds all instances of the <paramref name="values"/> in the process's writable memory.
         /// </summary>
-        public unsafe void FindFirst(T value, IProgressIndicator progress)
+        public unsafe void FindFirst(IReadOnlyList<byte[]> values, IProgressIndicator progress)
         {
             byte[] dataToFind = ValueToBytes(value);
             fixed(byte* data = dataToFind)

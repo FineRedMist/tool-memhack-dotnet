@@ -47,6 +47,7 @@
     <Compile Include="IProgressIndicator.cs" />
     <Compile Include="ModifyProcess.cs" />
     <Compile Include="Processes.cs" />
+    <Compile Include="ProcessExtensions.cs" />
     <Compile Include="ProcessFriendlyName.cs" />
     <Compile Include="ProcessInformation.cs" />
     <Compile Include="ProcessQueryMemory.cs" />
