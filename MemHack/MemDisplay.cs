@@ -85,7 +85,12 @@ namespace MemHack
 		static protected void UpdateList(object obj)
 		{
 			MemDisplay m = (MemDisplay) obj;
-			if(!m.m_noUpdates)
+            bool noUpdates = false;
+            lock (m.m_lockobj)
+            {
+                noUpdates = m.m_noUpdates;
+            }
+            if (!noUpdates)
 				m.InvokeUpdate();
 		}
 
@@ -105,7 +110,7 @@ namespace MemHack
 					return;
 				m_fRunning = true;
 			}
-			m_count = m_pm.Count;
+			m_count = (long)m_pm.Count;
 			bool fRetrieved = false;
 			CAddressValue[] avs = new CAddressValue[0];
 
@@ -157,7 +162,7 @@ namespace MemHack
 				if(pos2 >= m_last.Length || fWasEmpty)
 				{
 					ListViewItem lvi = new ListViewItem();
-					lvi.Text = "0x" + inf.Address.ToString("X8");
+					lvi.Text = inf.GetAddress();
 					lvi.SubItems.Add(inf.Value.ToString()); 
 					lstAddresses.Items.Add(lvi);
 				}
@@ -215,7 +220,10 @@ namespace MemHack
 		/// </summary>
 		protected override void Dispose( bool disposing )
 		{
-			m_noUpdates = true;
+            lock (m_lockobj)
+            {
+                m_noUpdates = true;
+            }
 			if( disposing )
 			{
 				if(m_timer != null)
@@ -531,7 +539,7 @@ namespace MemHack
 				txtMessages.Text = String.Format(Resources.SearchingForFormatString, ff.textValue.Text);
 				try
 				{
-					UInt64 count = m_pm.FindFirst(obj, pb);
+					ulong count = m_pm.FindFirst(obj, pb);
 					txtMessages.Text = String.Format(Resources.FindFirstFoundFormatString, count);
 				}
 				catch(System.Exception f)
@@ -599,11 +607,11 @@ namespace MemHack
 		{
 			if(lstAddresses.SelectedItems.Count == 0)
 				return;
-			uint addr = 0;
+			ulong addr = 0;
 			ulong val = 0;
 			lock(m_lockobj)
 			{
-				addr = Convert.ToUInt32(lstAddresses.SelectedItems[0].Text.Substring(2), 16);
+				addr = Convert.ToUInt64(lstAddresses.SelectedItems[0].Text.Substring(2));
 				val = Convert.ToUInt64(lstAddresses.SelectedItems[0].SubItems[1].Text);
 			}
 			if(addr == 0)
@@ -625,7 +633,7 @@ namespace MemHack
 					try
 					{
 						if(m_pm.SetValue(addr, obj))
-							txtMessages.Text = String.Format(Resources.ValueAtAddressSetFormatString, addr.ToString("X8"), sn.Value);
+							txtMessages.Text = String.Format(Resources.ValueAtAddressSetFormatString, addr.ToString("X16"), sn.Value);
 						else
 							txtMessages.Text = String.Format(Resources.ErrorValueNotSetFormatString, m_pm.LastError);
 						UpdateList();

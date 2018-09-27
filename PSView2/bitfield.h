@@ -12,7 +12,8 @@
   Template class declaration
 --------------------------------------------------*/
 
-#define BIT_NOT_FOUND   0xFFFFFFFF
+const DWORD BIT_NOT_FOUND = 0xFFFFFFFF;
+
 #ifndef ARRAYSIZE
 #define ARRAYSIZE(x)		(sizeof(x)/sizeof(x[0]))
 #endif

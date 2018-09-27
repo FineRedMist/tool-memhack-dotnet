@@ -32,14 +32,14 @@ namespace PSView2
 	DWORD LoWordList::GetValue(USHORT idx)
 	{
 		if (idx >= m_size)
-			return RESULT_NOT_FOUND;
+			return BIT_NOT_FOUND;
 		return m_sh[Translate(idx)];
 	}
 
 	DWORD LoWordList::GetIndex(USHORT val)
 	{
 		if (m_size == 0)
-			return RESULT_NOT_FOUND;
+			return BIT_NOT_FOUND;
 		// Have to use int--h could conceivably be assigned a -1 value
 		int l = 0, m = 0, h = (int)(m_size - 1);
 		// Binary search for the value
@@ -56,14 +56,14 @@ namespace PSView2
 
 		if (m_sh[m] == val)
 			return Translate(m);	// Return the fake to the caller
-		return RESULT_NOT_FOUND;
+		return BIT_NOT_FOUND;
 	}
 
 	// Returns the next value given a previous value
 	DWORD LoWordList::GetNext(USHORT val)
 	{
 		if (m_size == 0)
-			return RESULT_NOT_FOUND;
+			return BIT_NOT_FOUND;
 		// Have to use int--h could conceivably be assigned a -1 value
 		int l = 0, m = -1, h = (int)(m_size - 1);
 		// Binary search for the value
@@ -83,7 +83,7 @@ namespace PSView2
 		{
 			if (m != 0)
 				return m_sh[m - 1];
-			return RESULT_NOT_FOUND;
+			return BIT_NOT_FOUND;
 		}
 		// No old value in which case h has the index of the next largest value.
 		// Quick proof: the loop exited because h < l, in fact h == l - 1
@@ -91,7 +91,7 @@ namespace PSView2
 		//	If m_sh[m] was greater than val then it moved l to m + 1 so h = m.  So again m_sh[h] > val and m_sh[l] < val so h has the next value
 		// Unless of course h < 0
 		if (h < 0)
-			return RESULT_NOT_FOUND;
+			return BIT_NOT_FOUND;
 		return m_sh[h];
 
 	}
@@ -127,7 +127,7 @@ namespace PSView2
 	{
 		DWORD idx = GetIndex(val);
 
-		if (idx == RESULT_NOT_FOUND)
+		if (idx == BIT_NOT_FOUND)
 			return false;
 
 		return DeleteAt((USHORT)idx);

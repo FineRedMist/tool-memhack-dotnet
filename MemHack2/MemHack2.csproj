@@ -173,11 +173,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="..\ThirdParty\WPFFutures\License.txt">
-      <Link>WPFFutures\License.txt</Link>
+    <Resource Include="..\ThirdParty\WPFFutures\License.md">
+      <Link>WPFFutures\License.md</Link>
     </Resource>
-    <Resource Include="..\ThirdParty\WPFFutures\Readme.txt">
-      <Link>WPFFutures\Readme.txt</Link>
+    <Resource Include="..\ThirdParty\WPFFutures\Readme.md">
+      <Link>WPFFutures\Readme.md</Link>
     </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

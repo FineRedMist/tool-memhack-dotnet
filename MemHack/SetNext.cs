@@ -20,7 +20,7 @@ namespace MemHack
 		/// </summary>
 		private System.ComponentModel.Container components = null;
 
-		public SetNext(bool FindNext, uint addr, ulong val)
+		public SetNext(bool FindNext, ulong addr, ulong val)
 		{
 			//
 			// Required for Windows Form Designer support
@@ -42,7 +42,7 @@ namespace MemHack
 			{
 				Text = Resources.SetValue;
 				btnJob.Text = Resources.Set;
-				lblHeader.Text = String.Format(Resources.ValueAtAddressFormatString, addr.ToString("X8"), val);
+				lblHeader.Text = String.Format(Resources.ValueAtAddressFormatString, addr.ToString("X16"), val);
 			}
 			txtValue.Text = val.ToString();
 		}

@@ -9,19 +9,19 @@ namespace PSView2
 	class AddressList
 	{
 	public:
-		AddressList(DWORD dwBlockCount);
+		AddressList(SIZE_T dwBlockCount);
 		~AddressList();
 
 		// Add an address
-		void Add(DWORD dwAddr);
+		void Add(DWORD_PTR dwAddr);
 		// Indicates completion of the adding process (to commit the last addresses in the temporary storage variables)
 		void Complete();
 
 		// Whether a given address exists
-		bool Exists(DWORD dwAddr);
+		bool Exists(DWORD_PTR dwAddr);
 
 		// # of elements in the list
-		DWORD Count();
+		SIZE_T Count();
 
 		// Enumeration functions
 
@@ -32,23 +32,23 @@ namespace PSView2
 		// Sets the enumeration pointer to the next value
 		void Next();
 		// Returns the value at the current position of the enumeration pointer
-		DWORD GetValue();
+		DWORD_PTR GetValue();
 	protected:
-		DWORD FindBlockIndex(WORD wHigh);
-		AddressBlock *FindBlock(WORD wHigh);
+		SIZE_T FindBlockIndex(HIADDR wHigh);
+		AddressBlock *FindBlock(HIADDR wHigh);
 		AddressList();
 
 		// State variables for building the LoWordList/AddressBlock classes
-		WORD m_high;
+		HIADDR m_high;
 		MemoryBlock m_block;
 
 		AddressBlock *m_blocks;		// The list of blocks
-		DWORD m_count;				// Total number of addresses stored
-		DWORD m_curIndex;			// Next block to be used
-		DWORD m_blockCount;			// Total # of blocks
+		SIZE_T m_count;				// Total number of addresses stored
+		HIADDR m_curIndex;			// Next block to be used
+		SIZE_T m_blockCount;			// Total # of blocks
 
 									// Enumeration information
-		DWORD m_hiIdx;
-		DWORD m_loIdx;
+		SIZE_T m_hiIdx;
+		SIZE_T m_loIdx;
 	};
 }

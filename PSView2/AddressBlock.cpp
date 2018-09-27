@@ -17,15 +17,15 @@ namespace PSView2
 		mLoWords = 0;
 	}
 
-	void AddressBlock::Set(WORD wHigh, MemoryBlock block)
+	void AddressBlock::Set(HIADDR wHigh, MemoryBlock block)
 	{
 		mHiWord = wHigh;
 		DWORD dwCur = BIT_NOT_FOUND;
-		DWORD i = 0;
+		USHORT i = 0;
 		mLoWords = new LoWordList(block.InUse());
 		while ((dwCur = block.FindNextUsed(dwCur)) != BIT_NOT_FOUND)	// Use the built in bitfield search functions
 		{															// to find the next used bit
-			mLoWords->SetValue((WORD)i, (USHORT)dwCur);
+			mLoWords->SetValue(i, (USHORT)dwCur);
 			++i;
 		}
 		assert(i == block.InUse());		// Make sure a match, should work fine however
@@ -37,40 +37,43 @@ namespace PSView2
 			delete mLoWords;
 	}
 
-	DWORD AddressBlock::GetValue(USHORT idx)
+	DWORD_PTR AddressBlock::GetValue(USHORT idx)
 	{
 		DWORD dwRes = mLoWords->GetValue(idx);
-		if (dwRes == RESULT_NOT_FOUND)
+		if (dwRes == BIT_NOT_FOUND)
 			return dwRes;
-		return MAKELONG(dwRes, mHiWord);
+		return MAKEVALUE(dwRes, mHiWord);
 	}
 
-	DWORD AddressBlock::GetIndex(USHORT val)
+	SIZE_T AddressBlock::GetIndex(USHORT val)
 	{
 		return mLoWords->GetIndex(val);
 	}
 
-	DWORD AddressBlock::GetIndex(DWORD val)
+	SIZE_T AddressBlock::GetIndex(SIZE_T val)
 	{
-		if (HIWORD(val) != mHiWord)
-			return RESULT_NOT_FOUND;
-		return mLoWords->GetValue(LOWORD(val));
+		if (GETHIVALUE(val) != mHiWord)
+			return BIT_NOT_FOUND;
+		auto Result = mLoWords->GetValue(GETLOVALUE(val));
+		return Result == BIT_NOT_FOUND
+			? RESULT_NOT_FOUND
+			: Result;
 	}
 
-	DWORD AddressBlock::GetNext(USHORT val)
+	SIZE_T AddressBlock::GetNext(USHORT val)
 	{
-		DWORD dwAddr = mLoWords->GetNext(LOWORD(val));
-		if (dwAddr == RESULT_NOT_FOUND)
+		DWORD dwAddr = mLoWords->GetNext(GETLOVALUE(val));
+		if (dwAddr == BIT_NOT_FOUND)
 			return RESULT_NOT_FOUND;
-		return MAKELONG(dwAddr, mHiWord);
+		return MAKEVALUE(dwAddr, mHiWord);
 	}
 
-	DWORD AddressBlock::GetCount()
+	SIZE_T AddressBlock::GetCount()
 	{
 		return mLoWords->GetCount();
 	}
 
-	WORD AddressBlock::HighWord()
+	SIZE_T AddressBlock::HighWord()
 	{
 		return mHiWord;
 	}
@@ -80,11 +83,11 @@ namespace PSView2
 		return mLoWords->Delete(val);
 	}
 
-	bool AddressBlock::Delete(DWORD val)
+	bool AddressBlock::Delete(SIZE_T val)
 	{
-		if (HIWORD(val) != mHiWord)
+		if (GETHIVALUE(val) != mHiWord)
 			return false;
-		return mLoWords->Delete(LOWORD(val));
+		return mLoWords->Delete(GETLOVALUE(val));
 	}
 
 	bool AddressBlock::DeleteAt(USHORT idx)

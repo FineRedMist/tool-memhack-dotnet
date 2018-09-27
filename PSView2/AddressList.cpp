@@ -7,7 +7,7 @@ namespace PSView2
 	{
 	}
 
-	AddressList::AddressList(DWORD dwBlockCount)
+	AddressList::AddressList(DWORD_PTR dwBlockCount)
 	{
 		m_blockCount = dwBlockCount;
 		m_blocks = new AddressBlock[dwBlockCount];
@@ -25,9 +25,10 @@ namespace PSView2
 	}
 
 
-	void AddressList::Add(DWORD dwAddr)
+	void AddressList::Add(DWORD_PTR dwAddr)
 	{
-		WORD wHigh = HIWORD(dwAddr), wLow = LOWORD(dwAddr);
+		HIADDR wHigh = GETHIVALUE(dwAddr);
+		WORD wLow = GETLOVALUE(dwAddr);
 		// If we are adding an address that is at a new HIWORD block, then we are done 
 		// with the previous one and we can "commit" it.
 		if (wHigh != m_high)
@@ -55,12 +56,12 @@ namespace PSView2
 		m_curIndex++;
 	}
 
-	DWORD AddressList::FindBlockIndex(WORD wHigh)
+	HIADDR AddressList::FindBlockIndex(HIADDR wHigh)
 	{
 		if (m_curIndex == 0)
 			return RESULT_NOT_FOUND;
 
-		WORD l = 0, m = 0, h = (WORD)(m_curIndex - 1);
+		HIADDR l = 0, m = 0, h = (HIADDR)(m_curIndex - 1);
 		// Binary search for the block
 		while (l <= h)
 		{
@@ -78,18 +79,19 @@ namespace PSView2
 		return RESULT_NOT_FOUND;
 	}
 
-	AddressBlock *AddressList::FindBlock(WORD wHigh)
+	AddressBlock *AddressList::FindBlock(HIADDR wHigh)
 	{
-		DWORD idx = FindBlockIndex(wHigh);
+		HIADDR idx = FindBlockIndex(wHigh);
 		if (idx == RESULT_NOT_FOUND)
 			return 0;
 		return &m_blocks[idx];
 	}
 
-	bool AddressList::Exists(DWORD dwAddr)
+	bool AddressList::Exists(DWORD_PTR dwAddr)
 	{
 		assert(m_blocks);
-		WORD wHigh = HIWORD(dwAddr), wLow = LOWORD(dwAddr);
+		HIADDR wHigh = GETHIVALUE(dwAddr);
+		WORD wLow = GETLOVALUE(dwAddr);
 		AddressBlock *t = FindBlock(wHigh);
 
 		if (!t)
@@ -101,7 +103,7 @@ namespace PSView2
 		return false;
 	}
 
-	DWORD AddressList::Count()
+	SIZE_T AddressList::Count()
 	{
 		return m_count;
 	}
@@ -136,7 +138,7 @@ namespace PSView2
 		++m_loIdx;
 	}
 
-	DWORD AddressList::GetValue()
+	DWORD_PTR AddressList::GetValue()
 	{
 		if (m_hiIdx >= m_curIndex)
 			return RESULT_NOT_FOUND;

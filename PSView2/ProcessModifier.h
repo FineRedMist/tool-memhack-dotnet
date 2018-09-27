@@ -12,13 +12,19 @@ using namespace System;
 using namespace System::Collections::Generic;
 using namespace ProcessTools;
 
+#ifdef _WIN64 
+typedef UInt64 AddrType;
+#else
+typedef UInt32 AddrType;
+#endif
+
 namespace PSView2
 {
 
 	public ref struct CAddressValue
 	{
-		UInt32 Address;
-		UInt64 Value;
+		AddrType Address;
+		AddrType Value;
 	};
 
 	union UValueTest
@@ -54,8 +60,8 @@ namespace PSView2
 		ref class CRegion
 		{
 		public:
-			UInt32 StartAddress;
-			UInt32 AllocationSize;
+			AddrType StartAddress;
+			AddrType AllocationSize;
 		};
 
 	public:
@@ -67,15 +73,15 @@ namespace PSView2
 			UInt32 get() { return mLastProcessError; }
 		}
 
-		UInt64 FindFirst(Object^ obj);
-		UInt64 FindFirst(Object^ obj, IProgressIndicator^ pb);
-		UInt64 FindNext(Object^ obj);
-		UInt64 FindNext(Object^ obj, IProgressIndicator^ pb);
-		bool SetValue(UInt32 addr, Object^ obj);
+		AddrType FindFirst(Object^ obj);
+		AddrType FindFirst(Object^ obj, IProgressIndicator^ pb);
+		AddrType FindNext(Object^ obj);
+		AddrType FindNext(Object^ obj, IProgressIndicator^ pb);
+		bool SetValue(AddrType addr, Object^ obj);
 
-		property UInt32 Count
+		property AddrType Count
 		{
-			UInt32 get();
+			AddrType get();
 		}
 
 		property array<CAddressValue^>^ AddressValues
@@ -99,6 +105,6 @@ namespace PSView2
 
 	private:
 		ProcessModifier();
-		DWORD AddRegions(WORD &wLastHigh, DWORD dwAddr, const MEMORY_BASIC_INFORMATION & mbi, List<CRegion^>^ regions);
+		SIZE_T AddRegions(SIZE_T &wLastHigh, SIZE_T dwAddr, const MEMORY_BASIC_INFORMATION & mbi, List<CRegion^>^ regions);
 	};
 }
