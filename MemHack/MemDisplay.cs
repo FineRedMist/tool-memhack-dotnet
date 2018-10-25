@@ -611,7 +611,7 @@ namespace MemHack
 			ulong val = 0;
 			lock(m_lockobj)
 			{
-				addr = Convert.ToUInt64(lstAddresses.SelectedItems[0].Text.Substring(2));
+				addr = Convert.ToUInt64(lstAddresses.SelectedItems[0].Text.Substring(2), 16);
 				val = Convert.ToUInt64(lstAddresses.SelectedItems[0].SubItems[1].Text);
 			}
 			if(addr == 0)
