@@ -1,2 +1,0 @@
-git subtree pull --squash --prefix=ThirdParty/WPFFutures https://github.com/FineRedMist/WPFFutures.git master
-git subtree pull --squash --prefix=ThirdParty/ThemeSelector https://github.com/FineRedMist/ThemeSelector.git master

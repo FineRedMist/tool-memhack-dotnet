@@ -84,7 +84,7 @@ namespace ProcessTools.Windows
             return r.Left == Left && r.Top == Top && r.Right == Right && r.Bottom == Bottom;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is RECT)
                 return Equals((RECT)obj);
@@ -155,7 +155,7 @@ namespace ProcessTools.Windows
 
     internal partial class Interop
     {
-        public static string GetWindowText(IntPtr hWnd)
+        public static string? GetWindowText(IntPtr hWnd)
         {
             StringBuilder textBuffer = new StringBuilder(1024);
             if (0 == GetWindowText(hWnd, textBuffer, textBuffer.Capacity))

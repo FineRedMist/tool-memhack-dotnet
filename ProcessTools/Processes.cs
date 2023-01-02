@@ -52,7 +52,7 @@ namespace ProcessTools
         {
             SortedList<int, ProcessInformation> result = new SortedList<int, ProcessInformation>();
 
-            uint[] processList = Interop.EnumProcesses();
+            uint[]? processList = Interop.EnumProcesses();
             if (processList == null)
             {
                 return result;
@@ -82,7 +82,7 @@ namespace ProcessTools
                 uint threadId = Interop.GetWindowThreadProcessId(hwnd, out processId);
                 bool visible;
                 DateTime windowThreadDate = DateTime.MinValue;
-                string windowTitle;
+                string? windowTitle;
 
                 if (threadId == 0 || processId == 0)    // We somehow mystically failed to get one of the thread or process ids
                 {
@@ -129,7 +129,7 @@ namespace ProcessTools
                 }
 
                 ProcessFriendlyName windowFriendlyName = new ProcessFriendlyName(windowTitle, windowThreadDate, visible);
-                ProcessInformation processInfo = null;
+                ProcessInformation? processInfo = null;
                 if (!mProcesses.TryGetValue((int)processId, out processInfo))
                 {
                     processInfo = new ProcessInformation((int)processId, string.Empty);
@@ -154,7 +154,7 @@ namespace ProcessTools
             {
                 return;
             }
-            ProcessInformation processInfo = null;
+            ProcessInformation? processInfo = null;
             if (!processes.TryGetValue((int)processId, out processInfo))
             {
                 processInfo = new ProcessInformation((int)processId, string.Empty);
@@ -186,7 +186,7 @@ namespace ProcessTools
 
         private static readonly ProcessAccessFlags ProcessReadOnlyFlags = ProcessAccessFlags.QueryLimitedInformation/* | ProcessAccessFlags.VirtualMemoryRead*/;
 
-        private static AutoDispose<IntPtr> OpenProcess(int processId, out bool modifiable)
+        private static AutoDispose<IntPtr>? OpenProcess(int processId, out bool modifiable)
         {
             var processHandle = Interop.OpenProcessHandle(ProcessReadWriteFlags, false, (uint) processId);
             if (processHandle != null)
@@ -214,11 +214,11 @@ namespace ProcessTools
                 processInfo.Modifiable = modifiable;
                 if (null != processHandle)
                 {
-                    IntPtr[] moduleHandles = Interop.EnumProcessModules(processHandle.Value, 1);
+                    IntPtr[]? moduleHandles = Interop.EnumProcessModules(processHandle.Value, 1);
                     // Enumerate the modules in the process--the first one is the application which we can get the path from
                     if (moduleHandles != null && moduleHandles.Length > 0)
                     {   // Uses size in bytes
-                        string moduleFilename;
+                        string? moduleFilename;
                         if (Interop.GetModuleFileNameEx(processHandle.Value, moduleHandles[0], out moduleFilename))
                         {
                             processInfo.FullPath = moduleFilename;
@@ -234,8 +234,8 @@ namespace ProcessTools
         private static ProcessInformation GetProcessInfo(int processID, string idleProcessName, string systemName)
         {
             // Get a handle to the process and set some values for the process
-            string processName = (processID == 0) ? idleProcessName : ((processID == 4) ? systemName : null);
-            string fullProcessPath = null;
+            string? processName = (processID == 0) ? idleProcessName : ((processID == 4) ? systemName : null);
+            string? fullProcessPath = null;
 
             bool modifiable;
             using (var processHandle = OpenProcess(processID, out modifiable))
@@ -243,17 +243,17 @@ namespace ProcessTools
                 // Get the process name.
                 if (null != processHandle)
                 {
-                    IntPtr[] moduleHandles = Interop.EnumProcessModules(processHandle.Value, 1);
+                    IntPtr[]? moduleHandles = Interop.EnumProcessModules(processHandle.Value, 1);
 
                     // The first module is (typically) the application itself, so we can get the information we need from there
                     if (moduleHandles != null && moduleHandles.Length > 0)
                     {
-                        string moduleProcessName;
+                        string? moduleProcessName;
                         if (Interop.GetModuleBaseName(processHandle.Value, moduleHandles[0], out moduleProcessName))
                         {
                             processName = moduleProcessName;
                         }
-                        string moduleFilename;
+                        string? moduleFilename;
                         if (Interop.GetModuleFileNameEx(processHandle.Value, moduleHandles[0], out moduleFilename))
                         {
                             fullProcessPath = moduleFilename;

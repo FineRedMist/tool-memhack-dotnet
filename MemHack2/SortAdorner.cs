@@ -11,13 +11,17 @@ namespace MemHack2
     /// </summary>
     public class SortState
     {
-        private GridViewColumnHeader mSortColumn = null;
-        private SortAdorner mSortAdorner = null;
+        private GridViewColumnHeader? mSortColumn = null;
+        private SortAdorner? mSortAdorner = null;
 
         public void OnColumnHeader_Click(ListView listView, object sender, RoutedEventArgs e)
         {
-            GridViewColumnHeader column = (sender as GridViewColumnHeader);
-            string sortBy = column.Tag.ToString();
+            GridViewColumnHeader? column = (sender as GridViewColumnHeader);
+            if(column == null) 
+            {
+                return;
+            }
+            string? sortBy = column?.Tag.ToString();
             if (mSortColumn != null)
             {
                 AdornerLayer.GetAdornerLayer(mSortColumn).Remove(mSortAdorner);
@@ -25,11 +29,11 @@ namespace MemHack2
             }
 
             ListSortDirection newDir = ListSortDirection.Ascending;
-            if (mSortColumn == column && mSortAdorner.Direction == newDir)
+            if (mSortColumn == column && mSortAdorner != null && mSortAdorner.Direction == newDir)
                 newDir = ListSortDirection.Descending;
 
             mSortColumn = column;
-            mSortAdorner = new SortAdorner(mSortColumn, newDir);
+            mSortAdorner = new SortAdorner(column!, newDir);
             AdornerLayer.GetAdornerLayer(mSortColumn).Add(mSortAdorner);
             listView.Items.SortDescriptions.Add(new SortDescription(sortBy, newDir));
         }

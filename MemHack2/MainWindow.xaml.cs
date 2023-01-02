@@ -15,7 +15,7 @@ namespace MemHack2
     public partial class MainWindow : Window
     {
         private SortState mProcessSortState = new SortState();
-        private Timer mUpdateProcessListTimer = null;
+        private readonly Timer mUpdateProcessListTimer;
 
         public ObservableCollection<ProcessInformation> ActiveProcesses { get; set; }
         
@@ -54,7 +54,7 @@ namespace MemHack2
         private object mUpdateLock = new object();
         private bool IsUpdateRunning { get { lock (mUpdateLock) { return mIsUpdateRunning; } } }
 
-        private void UpdateProcessList(object context)
+        private void UpdateProcessList(object? context)
         {
             lock(mUpdateLock)
             {
@@ -86,7 +86,7 @@ namespace MemHack2
             var selectedProcess = RunningProcesses.SelectedItem as ProcessInformation;
             bool findNewProcessToSelect = false;
 
-            for(int i = ActiveProcesses.Count - 1; i >= 0; --i)
+            for (int i = ActiveProcesses.Count - 1; i >= 0; --i)
             {
                 ProcessInformation info = ActiveProcesses[i];
                 if (!processes.ContainsKey(info.ID))
@@ -136,7 +136,7 @@ namespace MemHack2
                 }
             }
 
-            if (findNewProcessToSelect && ActiveProcesses.Count > 0)
+            if (selectedProcess != null && findNewProcessToSelect && ActiveProcesses.Count > 0)
             {
                 ProcessInformation toSelect = ActiveProcesses[ActiveProcesses.Count - 1];
                 foreach (var proc in ActiveProcesses)
@@ -169,7 +169,7 @@ namespace MemHack2
             return Registry.CurrentUser.CreateSubKey("Software\\OneOddSock\\MemHack2");
         }
 
-        private string GetThemeFromRegistry()
+        private string? GetThemeFromRegistry()
         {
             using (var key = GetRegistryKey())
             {
@@ -177,7 +177,7 @@ namespace MemHack2
             }
         }
 
-        private void SetThemeInRegistry(string themeTag)
+        private void SetThemeInRegistry(string? themeTag)
         {
             using (var key = GetRegistryKey())
             {

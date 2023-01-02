@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MemHack2"
-        xmlns:theme="clr-namespace:mkLibrary.ThemeSelector"
+        xmlns:themeSelector="clr-namespace:mkLibrary.ThemeSelector;assembly=ThemeSelector"
         mc:Ignorable="d"
         Title="Memory Hacker 2" 
         Closing="Window_Closing"
@@ -13,7 +13,7 @@
 
     <DockPanel x:Name="rootGrid"
           Background="{DynamicResource WindowBackgroundBrush}"
-          theme:MkThemeSelector.CurrentThemeDictionary="{Binding ElementName=cmbThemes, Path=SelectedItem.Tag}">
+          themeSelector:MkThemeSelector.CurrentThemeDictionary="{Binding ElementName=cmbThemes, Path=SelectedItem.Tag}">
 
         <DockPanel DockPanel.Dock="Bottom">
 
@@ -28,13 +28,13 @@
                       SelectionChanged="cmbThemes_SelectionChanged">
                 
                 <ComboBoxItem Content="None" />
-                <ComboBoxItem Content="Bureau Black" Tag="WPFFutures/BureauBlack.xaml"/>
-                <ComboBoxItem Content="Bureau Blue" Tag="WPFFutures/BureauBlue.xaml"/>
-                <ComboBoxItem Content="Expression Dark" Tag="WPFFutures/ExpressionDark.xaml"/>
-                <ComboBoxItem Content="Expression Light" Tag="WPFFutures/ExpressionLight.xaml"/>
-                <ComboBoxItem Content="Shiny Blue" Tag="WPFFutures/ShinyBlue.xaml"/>
-                <ComboBoxItem Content="Shiny Red" Tag="WPFFutures/ShinyRed.xaml"/>
-                <ComboBoxItem Content="Whistler Blue" Tag="WPFFutures/WhistlerBlue.xaml"/>
+                <ComboBoxItem Content="Bureau Black" Tag="pack://application:,,,/WPF.Themes.Futures;component/BureauBlack.xaml"/>
+                <ComboBoxItem Content="Bureau Blue" Tag="pack://application:,,,/WPF.Themes.Futures;component/BureauBlue.xaml"/>
+                <ComboBoxItem Content="Expression Dark" Tag="pack://application:,,,/WPF.Themes.Futures;component/ExpressionDark.xaml"/>
+                <ComboBoxItem Content="Expression Light" Tag="pack://application:,,,/WPF.Themes.Futures;component/ExpressionLight.xaml"/>
+                <ComboBoxItem Content="Shiny Blue" Tag="pack://application:,,,/WPF.Themes.Futures;component/ShinyBlue.xaml"/>
+                <ComboBoxItem Content="Shiny Red" Tag="pack://application:,,,/WPF.Themes.Futures;component/ShinyRed.xaml"/>
+                <ComboBoxItem Content="Whistler Blue" Tag="pack://application:,,,/WPF.Themes.Futures;component/WhistlerBlue.xaml"/>
                 
             </ComboBox>
 

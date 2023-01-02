@@ -82,7 +82,7 @@ namespace ProcessTools.Windows
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr OpenProcess(ProcessAccessFlags processAccess, bool bInheritHandle, uint processId);
 
-        public static AutoDispose<IntPtr> OpenProcessHandle(ProcessAccessFlags processAccess, bool bInheritHandle, uint processId)
+        public static AutoDispose<IntPtr>? OpenProcessHandle(ProcessAccessFlags processAccess, bool bInheritHandle, uint processId)
         {
             var handle = OpenProcess(processAccess, bInheritHandle, processId);
             if (handle == IntPtr.Zero || handle == INVALID_HANDLE_VALUE)
@@ -135,7 +135,7 @@ namespace ProcessTools.Windows
         [DllImport("kernel32.dll")]
         private static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
 
-        public static AutoDispose<IntPtr> OpenThreadHandle(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId)
+        public static AutoDispose<IntPtr>? OpenThreadHandle(ThreadAccess dwDesiredAccess, bool bInheritHandle, uint dwThreadId)
         {
             IntPtr handle = OpenThread(dwDesiredAccess, bInheritHandle, dwThreadId);
             if (handle == IntPtr.Zero || handle == INVALID_HANDLE_VALUE)
@@ -173,7 +173,7 @@ namespace ProcessTools.Windows
                UInt32 arraySizeBytes,
                [MarshalAs(UnmanagedType.U4)] out UInt32 pBytesReturned);
 
-        public static UInt32[] EnumProcesses()
+        public static UInt32[]? EnumProcesses()
         {
             uint[] processList = new uint[1024];  // Supporting a maximum of 1024 processes at once
             uint bytesReturned = 0;
@@ -199,7 +199,7 @@ namespace ProcessTools.Windows
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool EnumProcessModules(IntPtr hProcess, [In][Out] IntPtr[] lphModule, uint cb, out uint lpcbNeeded);
 
-        public static IntPtr[] EnumProcessModules(IntPtr hProcess, uint countOfModulesToGet)
+        public static IntPtr[]? EnumProcessModules(IntPtr hProcess, uint countOfModulesToGet)
         {
             IntPtr[] moduleHandles = new IntPtr[countOfModulesToGet];
             uint bytesNeeded = 0;
@@ -222,7 +222,7 @@ namespace ProcessTools.Windows
         [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         private static extern uint GetModuleBaseName(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, uint nSize);
 
-        public static bool GetModuleBaseName(IntPtr hProcess, IntPtr hModule, out string baseName)
+        public static bool GetModuleBaseName(IntPtr hProcess, IntPtr hModule, out string? baseName)
         {
             baseName = null;
             StringBuilder nameBuffer = new StringBuilder(1024);
@@ -237,7 +237,7 @@ namespace ProcessTools.Windows
         [DllImport("psapi.dll", CallingConvention = CallingConvention.StdCall, CharSet = CharSet.Unicode)]
         private static extern uint GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, [Out] StringBuilder lpBaseName, uint nSize);
 
-        public static bool GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, out string moduleFileName)
+        public static bool GetModuleFileNameEx(IntPtr hProcess, IntPtr hModule, out string? moduleFileName)
         {
             moduleFileName = null;
             StringBuilder nameBuffer = new StringBuilder(1024);

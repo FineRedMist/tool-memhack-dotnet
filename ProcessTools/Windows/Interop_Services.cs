@@ -80,8 +80,8 @@ namespace ProcessTools.Windows
 
     internal partial class Interop
     {
-        public static IEnumerable<ENUM_SERVICE_STATUS_PROCESS> GetServices(
-            string machineName, string databaseName, AccessFlags accessFlags,   // From OpenSCManager
+        public static IEnumerable<ENUM_SERVICE_STATUS_PROCESS>? GetServices(
+            string? machineName, string? databaseName, AccessFlags accessFlags,   // From OpenSCManager
             ServiceEnumType infoLevel, ServiceType serviceType, ServiceStateRequest serviceStateRequest // From EnumServicesStatusEx
             )
         {
@@ -119,7 +119,9 @@ namespace ProcessTools.Windows
                         long pointer = serviceStatusBuffer.ToInt64();
                         for (int i = 0; i < (int)servicesReturned; i++)
                         {
+#pragma warning disable CS8605
                             serviceStatus = (ENUM_SERVICE_STATUS_PROCESS)Marshal.PtrToStructure(new IntPtr(pointer), typeof(ENUM_SERVICE_STATUS_PROCESS));
+#pragma warning restore CS8605
                             results.Add(serviceStatus);
 
                             // incremement by sizeof(ENUM_SERVICE_STATUS_PROCESS) allow Packing of 8
@@ -132,7 +134,9 @@ namespace ProcessTools.Windows
                         int pointer = serviceStatusBuffer.ToInt32();
                         for (int i = 0; i < (int)servicesReturned; i++)
                         {
+#pragma warning disable CS8605
                             serviceStatus = (ENUM_SERVICE_STATUS_PROCESS)Marshal.PtrToStructure(new IntPtr(pointer), typeof(ENUM_SERVICE_STATUS_PROCESS));
+#pragma warning restore CS8605
                             results.Add(serviceStatus);
 
                             // incremement by sizeof(ENUM_SERVICE_STATUS_PROCESS) allow Packing of 4
@@ -162,7 +166,7 @@ namespace ProcessTools.Windows
         }
 
         [DllImport("advapi32.dll", EntryPoint = "OpenSCManagerW", ExactSpelling = true, CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern IntPtr OpenSCManager(string machineName, string databaseName, AccessFlags dwAccess);
+        private static extern IntPtr OpenSCManager(string? machineName, string? databaseName, AccessFlags dwAccess);
 
         [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -170,7 +174,7 @@ namespace ProcessTools.Windows
             ServiceEnumType infoLevel, ServiceType dwServiceType,
             ServiceStateRequest dwServiceState, IntPtr lpServices, UInt32 cbBufSize,
             out uint pcbBytesNeeded, out uint lpServicesReturned,
-            ref uint lpResumeHandle, string pszGroupName);
+            ref uint lpResumeHandle, string? pszGroupName);
 
         [DllImport("advapi32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]

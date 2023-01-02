@@ -13,7 +13,7 @@ namespace ProcessTools
         /// <summary>
         /// The name of the process.
         /// </summary>
-        public string Name { get; private set; }
+        public string? Name { get; private set; }
         /// <summary>
         /// The ID of the process.
         /// </summary>
@@ -37,7 +37,7 @@ namespace ProcessTools
         /// <summary>
         /// The full path to the executable of this process (may not be available).
         /// </summary>
-		public string FullPath { get; set; }
+		public string? FullPath { get; set; }
 
         /// <summary>
         /// The default friendly name of this process, typically determined by the first visible window.
@@ -62,7 +62,7 @@ namespace ProcessTools
         /// <summary>
         /// Creates the process information for a given <paramref name="processID"/> and <paramref name="processName"/>.
         /// </summary>
-        public ProcessInformation(int processID, string processName)
+        public ProcessInformation(int processID, string? processName)
         {
             ID = processID;
             Modifiable = false;
